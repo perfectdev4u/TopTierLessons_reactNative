@@ -1,4 +1,4 @@
 export default {
-  black: '#00000',
-  themeBtn: '#',
+  BLACK: '#000000',
+  THEME_BTN: '#E38226',
 };

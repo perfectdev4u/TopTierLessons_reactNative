@@ -6,7 +6,10 @@ import Splash from '../screens/splash';
 const Stack = createStackNavigator();
 export default function MainNavigationContainer() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
     </Stack.Navigator>
   );
