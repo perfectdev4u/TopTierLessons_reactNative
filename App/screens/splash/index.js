@@ -1,18 +1,24 @@
 import React, {useEffect} from 'react';
-import {View, Image, StatusBar} from 'react-native';
+import {Image, ImageBackground} from 'react-native';
 import Images from '../../assets/Images';
-import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
+import {useNavigation} from '@react-navigation/native';
+import screenString from '../../navigation/screenString';
+import colors from '../../theme/colors';
 
 export default function Splash() {
+  const {navigate} = useNavigation();
   useEffect(() => {
-    StatusBar.setBarStyle('light-content');
-    // return () => StatusBar.setBarStyle('default');
+    setTimeout(() => {
+      navigate(screenString.ONBOARDING);
+    }, 2000);
   }, []);
 
   return (
-    <View style={commonStyle.centeredContent(colors.BLACK)}>
+    <ImageBackground
+      source={Images.appBackground}
+      style={commonStyle.centeredContent(colors.BLACK)}>
       <Image source={Images.LOGO} />
-    </View>
+    </ImageBackground>
   );
 }
