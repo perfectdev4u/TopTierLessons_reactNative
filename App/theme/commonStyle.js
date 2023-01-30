@@ -2,17 +2,18 @@ import {StyleSheet} from 'react-native';
 import color from './colors';
 
 export default StyleSheet.create({
-  container: (backgroundColor) => ({
+  container: backgroundColor => ({
     flex: 1,
     backgroundColor,
   }),
-  row: (width, justifyContent) => ({
+  row: (width, justifyContent, alignSelf) => ({
     width,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent,
+    alignSelf,
   }),
-  centeredContent: (backgroundColor) => ({
+  centeredContent: backgroundColor => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

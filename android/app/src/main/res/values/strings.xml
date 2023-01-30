@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">toptier</string>
+    <string name="facebook_app_id">588082386211978</string>
+    <string name="facebook_client_token">41ae14798a11dd463be365e3811f583a</string>
 </resources>

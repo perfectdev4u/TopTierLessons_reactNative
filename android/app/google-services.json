@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1076526613308",
+    "project_id": "toptierlessons-65603",
+    "storage_bucket": "toptierlessons-65603.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076526613308:android:8ad1063b02a7da42f15439",
+        "android_client_info": {
+          "package_name": "com.toptier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076526613308-glksjs6cmsj2me3gahjr0r7lt7sqdea3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4wQXmNXV_mUS0i5GcUmLNLCwN7rqp-AQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076526613308-glksjs6cmsj2me3gahjr0r7lt7sqdea3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076526613308-qrtfu1j8lqmbhn2tj13ns11kt8n0ln5o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cpm.beyondroot.ghost"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

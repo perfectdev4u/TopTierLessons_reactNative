@@ -1,11 +1,15 @@
 #import "AppDelegate.h"
-
+#import <Firebase.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
 #import <React/RCTBundleURLProvider.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
   self.moduleName = @"toptier";
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

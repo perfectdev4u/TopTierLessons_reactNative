@@ -2,6 +2,7 @@ import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import colors from '../../theme/colors';
 import CustomText from '../customText';
+import Icon from 'react-native-vector-icons/Fontisto';
 
 export default function CustomButton({
   width = '90%',
@@ -16,6 +17,9 @@ export default function CustomButton({
   isLoading = false,
   disabled = false,
   shadowProp = {},
+  icon = false,
+  name,
+  ...props
 }) {
   return (
     <TouchableOpacity
@@ -32,7 +36,16 @@ export default function CustomButton({
         alignItems: 'center',
         justifyContent: 'center',
         ...shadowProp,
+        ...props,
       }}>
+      {icon && (
+        <Icon
+          size={21}
+          name={name}
+          color={colors.WHITE}
+          style={{marginRight: 10}}
+        />
+      )}
       <CustomText
         color={fontColor}
         fontSize={15}

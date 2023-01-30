@@ -5,14 +5,15 @@ import colors from '../../theme/colors';
 export default function CustomText({
   children: ChildComponent,
   fontSize = 15,
-  fontWeight = 'normal',
+  fontWeight = '400',
   fontFamily = 'Poppins-Regular',
-  lineHeight=20,
+  lineHeight = 20,
   color = colors.WHITE,
   marginTop = 0,
   isPressable = false,
   onPress,
   alignSelf,
+  ...props
 }) {
   return (
     <TouchableOpacity
@@ -29,7 +30,8 @@ export default function CustomText({
           color,
           marginTop,
           fontFamily,
-          lineHeight
+          lineHeight,
+          ...props,
         }}>
         {ChildComponent}
       </Text>

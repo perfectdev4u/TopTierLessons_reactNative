@@ -1,5 +1,6 @@
 package com.toptier;
-
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import android.app.Application;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -28,6 +29,15 @@ public class MainApplication extends Application implements ReactApplication {
           return packages;
         }
 
+        // @Override
+        // protected List<ReactPackage> getPackages() {
+        // return Arrays.asList(
+        //    new VectorIconsPackage();
+        //     new FBSDKPackage();
+        //     new MainReactPackage();
+        //  );
+        // }  
+        
         @Override
         protected String getJSMainModuleName() {
           return "index";
