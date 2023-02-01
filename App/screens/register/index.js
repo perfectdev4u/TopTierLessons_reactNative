@@ -4,13 +4,17 @@ import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import CustomButton from '../../compnents/customButton';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import DropDown from '../../compnents/dropDown';
 
 export default function Register({navigation}) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('abcd@gmail.com');
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
+  const [isDropDown, setIsDropDown] = useState(false);
+  const [account, setAccount] = useState('I am creating this account');
+  const accountType = ['My Self', 'My Children'];
   return (
     <ContainerBgImage>
       <CustomText
@@ -48,6 +52,16 @@ export default function Register({navigation}) {
             onPress={() => setIsPasswordShow(!isPasswordShow)}
           />
         }
+      />
+      <DropDown
+        marginTop={30}
+        isDropDown={isDropDown}
+        lable={account}
+        setLable={setAccount}
+        onPress={() => setIsDropDown(!isDropDown)}
+        isShown={isDropDown}
+        onSelect={() => setIsDropDown(!isDropDown)}
+        data={accountType}
       />
       <CustomButton
         alignSelf={'center'}

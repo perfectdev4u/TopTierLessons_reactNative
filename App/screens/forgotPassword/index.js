@@ -3,23 +3,14 @@ import ContainerBgImage from '../../compnents/containerBackground';
 import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import CustomButton from '../../compnents/customButton';
-import colors from '../../theme/colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import screenString from '../../navigation/screenString';
+import CustomHeader from '../../compnents/customHeader';
 
 export default function ForgotPassword({navigation}) {
   const [email, setEmail] = useState('abcd@gmail.com');
   return (
     <ContainerBgImage>
-      <Icon
-        size={35}
-        name={'chevron-left'}
-        style={{
-          marginTop: 20,
-        }}
-        color={colors.WHITE}
-        onPress={() => navigation.goBack()}
-      />
+      <CustomHeader />
       <CustomText
         fontSize={32}
         lineHeight={38}
