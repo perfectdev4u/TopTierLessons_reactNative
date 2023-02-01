@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import screenString from '../../navigation/screenString';
 
-export default function NewPassword({navigation}) {
+export default function ResetPassword({navigation}) {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isNewPasswordShow, setIsNewPasswordShow] = useState(false);
@@ -30,10 +30,21 @@ export default function NewPassword({navigation}) {
         fontWeight={'700'}
         alignSelf={'center'}
         marginTop={60}>
-        Change Password
+        Reset Password
       </CustomText>
+      <CustomText
+        fontSize={15}
+        lineHeight={22}
+        fontWeight={'500'}
+        alignSelf={'center'}
+        color={'#BEBEBE'}
+        margin={20}
+        marginTop={80}>
+        Please create new password to sign in to your account.
+      </CustomText>
+
       <CustomInput
-        marginTop={50}
+        marginTop={10}
         borderBottomWidth={1}
         placeholder={'New Password'}
         value={newPassword}
