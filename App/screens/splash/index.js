@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
-import {Image, ImageBackground} from 'react-native';
+import {ImageBackground} from 'react-native';
 import Images from '../../assets/Images';
+import CustomImage from '../../compnents/customImage';
 import commonStyle from '../../theme/commonStyle';
 import {useNavigation} from '@react-navigation/native';
 import screenString from '../../navigation/screenString';
@@ -18,7 +19,7 @@ export default function Splash() {
     <ImageBackground
       source={Images.appBackground}
       style={commonStyle.centeredContent(colors.BLACK)}>
-      <Image source={Images.LOGO} />
+      <CustomImage source={Images.LOGO} />
     </ImageBackground>
   );
 }

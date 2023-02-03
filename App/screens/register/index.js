@@ -4,10 +4,15 @@ import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import CustomButton from '../../compnents/customButton';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import DropDown from '../../compnents/dropDown';
+import screenString from '../../navigation/screenString';
+import {useSelector, useDispatch} from 'react-redux';
+import {addUser} from '../../redux/reducers/authReducer';
 
 export default function Register({navigation}) {
+  const {user} = useSelector(state => state.authReducer);
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('abcd@gmail.com');
   const [password, setPassword] = useState('');
@@ -15,6 +20,12 @@ export default function Register({navigation}) {
   const [isDropDown, setIsDropDown] = useState(false);
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
+  const userAccount = type => {
+    console.log('type=>', type);
+    if (type === 'My Self') dispatch(addUser({...user, userType: 3}));
+    else if (type === 'My Children') dispatch(addUser({...user, userType: 4}));
+    else null;
+  };
   return (
     <ContainerBgImage>
       <CustomText
@@ -53,21 +64,32 @@ export default function Register({navigation}) {
           />
         }
       />
-      <DropDown
-        marginTop={30}
-        isDropDown={isDropDown}
-        lable={account}
-        setLable={setAccount}
-        onPress={() => setIsDropDown(!isDropDown)}
-        isShown={isDropDown}
-        onSelect={() => setIsDropDown(!isDropDown)}
-        data={accountType}
-      />
+
+      {user?.userType === 2 ? null : (
+        <DropDown
+          marginTop={30}
+          isDropDown={isDropDown}
+          lable={account}
+          setLable={setAccount}
+          onPress={() => setIsDropDown(!isDropDown)}
+          isShown={isDropDown}
+          onSelect={() => {
+            setIsDropDown(!isDropDown);
+            userAccount(account);
+          }}
+          data={accountType}
+        />
+      )}
+
       <CustomButton
         alignSelf={'center'}
         marginTop={40}
         lable="Sign up"
-        onPress={() => alert('in process')}
+        onPress={() => {
+          user?.userType === 2
+            ? navigation.navigate(screenString.COACHPROFILESETUP)
+            : navigation.navigate(screenString.USERPROFILESETUP);
+        }}
       />
       <CustomText
         marginTop={30}

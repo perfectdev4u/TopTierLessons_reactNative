@@ -8,7 +8,7 @@ export default function DropDown({
   height = 40,
   borderColor = colors.BORDER_COLOR,
   backgroundColor,
-  borderRadius = 5,
+  borderRadius = 0,
   textColor = colors.WHITE,
   marginTop = 0,
   borderWidth = 1,

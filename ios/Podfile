@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
-$RNFirebaseAsStaticFramework = true
+
 flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -14,7 +14,6 @@ end
 
 target 'toptier' do
   config = use_native_modules!
-  use_frameworks!
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
@@ -22,6 +21,7 @@ target 'toptier' do
   pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
   # Flags change depending on the env values.
   flags = get_default_flags()
+
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
@@ -42,11 +42,6 @@ target 'toptier' do
     inherit! :complete
     # Pods for testing
   end
-
-  $static_framework = ['FlipperKit', 'Flipper', 'Flipper-Folly',
-  'CocoaAsyncSocket', 'ComponentKit', 'DoubleConversion',
-  'glog', 'Flipper-PeerTalk', 'Flipper-RSocket', 'Yoga', 'YogaKit',
-  'CocoaLibEvent', 'OpenSSL-Universal', 'boost-for-react-native']
 
   post_install do |installer|
     react_native_post_install(

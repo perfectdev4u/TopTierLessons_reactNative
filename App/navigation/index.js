@@ -8,7 +8,8 @@ import ForgotPassword from '../screens/forgotPassword';
 import Register from '../screens/register';
 import ResetPassword from '../screens/resetPassword';
 import NewPassword from '../screens/newPassword';
-
+import UserProfileSetUp from '../screens/userProfileSetUp';
+import CoachProfileSetUp from '../screens/coachProfileSetUp';
 const Stack = createStackNavigator();
 export default function MainNavigationContainer() {
   return (
@@ -16,7 +17,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.SPLASH}>
+      initialRouteName={ScreenString.COACHPROFILESETUP}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -30,6 +31,8 @@ export default function MainNavigationContainer() {
         component={ResetPassword}
       />
       <Stack.Screen name={ScreenString.REGISTER} component={Register} />
+      <Stack.Screen name={ScreenString.USERPROFILESETUP} component={UserProfileSetUp} />
+      <Stack.Screen name={ScreenString.COACHPROFILESETUP} component={CoachProfileSetUp} />
     </Stack.Navigator>
   );
 }

@@ -4,7 +4,7 @@ import colors from '../../theme/colors';
 
 export default function CustomInput({
   width = '90%',
-  height = 35,
+  height = 40,
   borderColor = colors.BORDER_COLOR,
   backgroundColor,
   borderRadius = 0,
@@ -17,16 +17,18 @@ export default function CustomInput({
   secureTextEntry = false,
   keyboardType = 'default',
   borderWidth = 0,
-  borderBottomWidth = 0,
+  borderBottomWidth,
   paddingHorizontal = 0,
   onChangeText,
   editable = true,
+  multiline=false
 }) {
   return (
     <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         width,
         height,
         borderColor,
@@ -55,13 +57,14 @@ export default function CustomInput({
           cursorColor={colors.WHITE}
           editable={editable}
           value={value}
+          multiline={multiline}
           style={{
             flex: 1,
             fontSize: 14,
             color: textColor,
             fontWeight: '400',
             lineHeight: 22,
-            paddingBottom: 8,
+            padding: 8,
             fontFamily: 'Poppins-Regular',
           }}
         />

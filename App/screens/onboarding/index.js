@@ -6,9 +6,13 @@ import CustomText from '../../compnents/customText';
 import commonStyle from '../../theme/commonStyle';
 import screenString from '../../navigation/screenString';
 import colors from '../../theme/colors';
+import {useSelector, useDispatch} from 'react-redux';
+import {addUser} from '../../redux/reducers/authReducer';
 
 export default function Onboarding({navigation}) {
-    const handleNavigation = screen => screen && navigation.navigate(screen);
+  const {user} = useSelector(state => state.authReducer);
+  const dispatch = useDispatch();
+  const handleNavigation = screen => screen && navigation.navigate(screen);
   return (
     <ImageBackground
       source={Images.appBackground}
@@ -23,8 +27,22 @@ export default function Onboarding({navigation}) {
         lineHeight={38}>
         TOP TIER ATHLETES
       </CustomText>
-      <CustomButton marginTop={46} lable="Find Lessons" onPress={()=>handleNavigation(screenString.LOGIN)} />
-      <CustomButton marginTop={20} lable="I'm student athlete" onPress={()=>handleNavigation(screenString.LOGIN)} />
+      <CustomButton
+        marginTop={46}
+        lable="Find Lessons"
+        onPress={() => {
+          handleNavigation(screenString.LOGIN);
+          dispatch(addUser({...user, userType: 3}));
+        }}
+      />
+      <CustomButton
+        marginTop={20}
+        lable="I'm student athlete"
+        onPress={() => {
+          handleNavigation(screenString.LOGIN);
+          dispatch(addUser({...user, userType: 2}));
+        }}
+      />
     </ImageBackground>
   );
 }
