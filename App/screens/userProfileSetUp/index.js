@@ -71,7 +71,7 @@ export default function UserProfileSetUp({navigation}) {
   };
   return (
     <ContainerBgImage>
-      <CustomHeader />
+      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
       <CustomText
         fontSize={32}
         lineHeight={38}

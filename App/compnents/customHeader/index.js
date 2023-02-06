@@ -3,16 +3,16 @@ import {View, TouchableOpacity} from 'react-native';
 import colors from '../../theme/colors';
 import CustomText from '../customText';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
 
 export default function CustomHeader({
-  width = '90%',
+  width = '95%',
   height = 40,
   title = false,
   lable,
   rightIcon = false,
+  leftIcon,
+  leftIconClick,
 }) {
-  const {navigate, goBack} = useNavigation();
   return (
     <View
       style={{
@@ -21,26 +21,31 @@ export default function CustomHeader({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        alignSelf: 'center',
+        flex: 1,
       }}>
-      <TouchableOpacity onPress={() => goBack()}>
-        <Icon size={35} name={'chevron-left'} color={colors.WHITE} />
+      <TouchableOpacity onPress={leftIconClick && leftIconClick}>
+        <Icon size={30} name={leftIcon} color={colors.WHITE} />
       </TouchableOpacity>
-      {title && <CustomText>{lable}</CustomText>}
+      {title && (
+        <CustomText fontSize={16} fontWeight={'500'}>
+          {lable}
+        </CustomText>
+      )}
       {rightIcon && (
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: '10%',
           }}>
-          <TouchableOpacity onPress={() => alert('process')}>
-            <Icon size={23} name={'email-send-outline'} color={colors.WHITE} />
-          </TouchableOpacity>
           <TouchableOpacity
-            style={{marginLeft: 10}}
+            style={{marginRight: 5}}
             onPress={() => alert('process')}>
-            <Icon size={23} name={'bell-badge'} color={colors.WHITE} />
+            <Icon size={20} name={'email-send-outline'} color={colors.WHITE} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => alert('process')}>
+            <Icon size={20} name={'bell-badge'} color={colors.WHITE} />
           </TouchableOpacity>
         </View>
       )}

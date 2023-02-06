@@ -10,7 +10,7 @@ export default function ForgotPassword({navigation}) {
   const [email, setEmail] = useState('abcd@gmail.com');
   return (
     <ContainerBgImage>
-      <CustomHeader />
+      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
       <CustomText
         fontSize={32}
         lineHeight={38}

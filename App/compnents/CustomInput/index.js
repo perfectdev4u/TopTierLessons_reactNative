@@ -21,7 +21,7 @@ export default function CustomInput({
   paddingHorizontal = 0,
   onChangeText,
   editable = true,
-  multiline=false
+  multiline = false,
 }) {
   return (
     <View

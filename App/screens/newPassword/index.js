@@ -14,7 +14,7 @@ export default function NewPassword({navigation}) {
   const [isConfirmPasswordShow, setIsConfirmasswordShow] = useState(false);
   return (
     <ContainerBgImage>
-      <CustomHeader />
+      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
       <CustomText
         fontSize={32}
         lineHeight={38}

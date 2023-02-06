@@ -24,6 +24,8 @@ export default function CustomText({
         alignSelf,
       }}>
       <Text
+        numberOfLines={2}
+        ellipsizeMode="tail"
         style={{
           fontSize,
           fontWeight,

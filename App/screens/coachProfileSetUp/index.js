@@ -12,8 +12,6 @@ import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
 import DropDown from '../../compnents/dropDown';
 import {TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import commonStyle from '../../theme/commonStyle';
 import {useSelector, useDispatch} from 'react-redux';
 
 export default function CoachProfileSetUp({navigation}) {
@@ -28,27 +26,38 @@ export default function CoachProfileSetUp({navigation}) {
   const [venueList, setVenueList] = useState([]);
   const [isVenueDropDown, setIsVenueDropDown] = useState(false);
   const [price, setPrice] = useState();
+  const [skill, setSkill] = useState({name: 'Select Skills', id: null});
+  const [skillList, setSkillList] = useState([]);
+  const [isSkillsDropDown, setIsSkillDropDown] = useState(false);
   const [accomplishment, setAccomplishment] = useState('');
   const [experience, setExperience] = useState('');
   const [bio, setBio] = useState('');
 
   useEffect(() => {
     getAllSports();
+    getAllSkills();
   }, []);
-  const sportsPayload = {
+  const sports_skill_Payload = {
     page: 1,
-    pageSize: 20,
+    pageSize: 10,
   };
   const getAllSports = () => {
-    postReq(apiUrl.baseUrl + apiUrl.getAllSports, sportsPayload)
+    postReq(apiUrl.baseUrl + apiUrl.getAllSports, sports_skill_Payload)
       .then(res => {
         setSportsList(res?.data?.data);
       })
       .catch(err => console.log('err==>', err));
   };
+  const getAllSkills = () => {
+    postReq(apiUrl.baseUrl + apiUrl.geAllSkills, sports_skill_Payload)
+      .then(res => {
+        setSkillList(res?.data?.data);
+      })
+      .catch(err => console.log('err==>', err));
+  };
   return (
     <ContainerBgImage>
-      <CustomHeader />
+      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
       <View style={{flex: 1, paddingHorizontal: 20}}>
         <CustomText
           fontSize={32}
@@ -193,12 +202,40 @@ export default function CoachProfileSetUp({navigation}) {
         <DropDown
           width="100%"
           marginTop={20}
-          isDropDown={isVenueDropDown}
-          lable={'Skills'}
-          setLable={setVenue}
-          onPress={() => setIsVenueDropDown(!isVenueDropDown)}
+          isDropDown={isSkillsDropDown}
+          lable={skill.name}
+          setLable={setSkill}
+          onPress={() => setIsSkillDropDown(!isSkillsDropDown)}
           isShown={false}
         />
+        {isSkillsDropDown && (
+          <View
+            style={{
+              width: '100%',
+              marginTop: 10,
+              backgroundColor: colors.WHITE,
+              alignSelf: 'center',
+              padding: 10,
+            }}>
+            {skillList?.map((val, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setSkill({name: val.skill, id: val.skillId});
+                    setIsSkillDropDown(!isSkillsDropDown);
+                  }}>
+                  <CustomText
+                    color={colors.BLACK}
+                    fontSize={15}
+                    lineHeight={22}>
+                    {val.skill}
+                  </CustomText>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
         <CustomInput
           width="100%"
           height={70}
