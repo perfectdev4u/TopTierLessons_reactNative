@@ -3,7 +3,8 @@ import {View, TouchableOpacity} from 'react-native';
 import colors from '../../theme/colors';
 import CustomText from '../customText';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import screenString from '../../navigation/screenString';
+import {useNavigation} from '@react-navigation/native';
 export default function CustomHeader({
   width = '95%',
   height = 40,
@@ -12,7 +13,9 @@ export default function CustomHeader({
   rightIcon = false,
   leftIcon,
   leftIconClick,
+  chat = true,
 }) {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -22,7 +25,6 @@ export default function CustomHeader({
         justifyContent: 'space-between',
         alignItems: 'center',
         alignSelf: 'center',
-        flex: 1,
       }}>
       <TouchableOpacity onPress={leftIconClick && leftIconClick}>
         <Icon size={30} name={leftIcon} color={colors.WHITE} />
@@ -39,16 +41,18 @@ export default function CustomHeader({
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <TouchableOpacity
-            style={{marginRight: 5}}
-            onPress={() => alert('process')}>
+         {chat&& <TouchableOpacity
+            onPress={() => navigation.navigate(screenString.CHATSCREEN)}>
             <Icon size={20} name={'email-send-outline'} color={colors.WHITE} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => alert('process')}>
-            <Icon size={20} name={'bell-badge'} color={colors.WHITE} />
-          </TouchableOpacity>
+          </TouchableOpacity>}
+            <TouchableOpacity
+              style={{marginLeft: 5}}
+              onPress={() => navigation.navigate(screenString.NOTIFICATIONS)}>
+              <Icon size={20} name={'bell-badge'} color={colors.WHITE} />
+            </TouchableOpacity>
         </View>
       )}
+      {!rightIcon && <View />}
     </View>
   );
 }

@@ -22,12 +22,5 @@ export default StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     marginTop: 15,
-  },
-  mapContainer: {
-    marginTop: 30,
-    backgroundColor: colors.BLACK,
-    alignSelf: 'center',
-    height: 330,
-    width: '100%',
-  },
+  }
 });

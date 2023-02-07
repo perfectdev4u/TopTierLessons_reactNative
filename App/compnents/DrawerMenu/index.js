@@ -35,13 +35,15 @@ export default function DrawerMenu(props) {
       isActive: false,
       icon: 'alert-circle-outline',
       label: 'Terms of Services',
-      screen: screenString.TERMS_SERVICES,
+      screen: screenString.TERMS_PRIVACY,
+      type: 1,
     },
     {
       isActive: false,
       icon: 'file-document-outline',
       label: 'Privacy Policy',
-      screen: screenString.PRIVACY_POLICY,
+      screen: screenString.TERMS_PRIVACY,
+      type: 2,
     },
     {
       isActive: true,
@@ -57,8 +59,8 @@ export default function DrawerMenu(props) {
     },
   ];
   const [activeRoute, setActiveRoute] = useState(screenString.RESETPASSWORD);
-  const handleNavigation = (screen, method) =>
-    screen && navigation[method || 'navigate'](screen);
+  const handleNavigation = (screen, params, method) =>
+    screen && navigation[method || 'navigate'](screen, params);
   useEffect(() => {
     const {state} = props;
     const {routes, index} = state;
@@ -103,7 +105,7 @@ export default function DrawerMenu(props) {
               {...item}
               isActive={activeRoute === item.screen}
               key={index}
-              onPress={() => handleNavigation(item.screen)}
+              onPress={() => handleNavigation(item.screen, item.type)}
             />
           ))}
         </View>

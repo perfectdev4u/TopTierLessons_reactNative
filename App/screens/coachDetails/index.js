@@ -10,7 +10,8 @@ import CustomImage from '../../compnents/customImage';
 import CustomText from '../../compnents/customText';
 import style from './style';
 import CustomButton from '../../compnents/customButton';
-import screenString from '../../navigation/screenString';
+import MapView, {Marker} from 'react-native-maps';
+import Star from 'react-native-vector-icons/Entypo';
 
 export default function CoachDetails({navigation}) {
   const [isActive, setIsActive] = useState(0);
@@ -20,6 +21,35 @@ export default function CoachDetails({navigation}) {
     {name: 'Availability', width: '30%'},
     {name: 'Reviews', width: '25%'},
   ];
+  const bio = txt => {
+    return (
+      <View
+        style={{
+          marginTop: 20,
+          justifyContent: 'flex-start',
+          flexDirection: 'row',
+          alignSelf: 'center',
+          width: '95%',
+        }}>
+        <View
+          style={{
+            height: 7,
+            width: 7,
+            backgroundColor: '#C2C2C2',
+            borderRadius: 5,
+            marginTop: 6,
+          }}
+        />
+        <CustomText
+          fontSize={16}
+          fontWeight={'400'}
+          color={'#C2C2C2'}
+          marginLeft={'3%'}>
+          {txt}
+        </CustomText>
+      </View>
+    );
+  };
   return (
     <ContainerBgImage>
       <CustomHeader
@@ -99,9 +129,84 @@ export default function CoachDetails({navigation}) {
           );
         })}
       </View>
+      {isActive === 0 && (
+        <View>
+          {bio(
+            `Former GPTCA, PTR and USPTA Certified with 15 years experience`,
+          )}
+          {bio(
+            'Teach all level - great with intermediate and performance players Patient and encouraging teaching style',
+          )}
+          {bio(`Worked with high performance juniors`)}
+          {bio(`Former ITF Junior Player`)}
+        </View>
+      )}
+      {isActive === 1 && (
+        <View style={{flex: 1, width: '95%', alignSelf: 'center'}}>
+          <CustomText marginTop={20} color="#CFCFCF">
+            John Doe is available at mention location. You can navigate through
+            map by clicking given location.
+          </CustomText>
+          <View style={style.mapContainer}>
+            <MapView
+              style={{
+                flex: 1,
+                borderRadius: 30,
+              }}
+              initialRegion={{
+                latitude: 30.7333,
+                longitude: 76.7794,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Marker
+                coordinate={{latitude: 30.7333, longitude: 76.7794}}></Marker>
+            </MapView>
+          </View>
+        </View>
+      )}
+      {isActive === 3 && (
+        <View
+          style={[
+            commonStyle.row('95%', 'space-between', 'center'),
+            {
+              height: 70,
+              marginTop: 20,
+              borderBottomWidth: 0.4,
+              borderColor: '#F3F3F3',
+            },
+          ]}>
+          <View style={style.rowContent}>
+            <CustomImage style={{marginLeft: 10}} source={Images.USERPROFILE} />
+            <View style={{marginLeft: 10}}>
+              <CustomText fontSize={16} fontWeight={'600'}>
+                Bozenka Malina
+              </CustomText>
+              <CustomText color="#7A7A7A" fontSize={12} fontWeight={'400'}>
+                UI - Designer
+              </CustomText>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            {Array.from(Array(5).keys()).map((val, index) => (
+              <Star
+                key={index}
+                name={index <= 3 ? 'star' : 'star-outlined'}
+                color={colors.THEME_BTN}
+                size={22}
+              />
+            ))}
+          </View>
+        </View>
+      )}
       <CustomButton
         alignSelf={'center'}
-        marginTop={40}
+        marginTop={60}
         lable="Book Now"
         onPress={() => alert('in process')}
       />

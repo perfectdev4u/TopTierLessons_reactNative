@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function NearbyCoaches({data, onPress}) {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View
         style={[
           commonStyle.row('95%', 'space-between', 'center'),
@@ -25,7 +25,7 @@ export default function NearbyCoaches({data, onPress}) {
       </View>
       <ScrollView
         pagingEnabled={true}
-        style={{marginTop: 15}}
+        style={{marginTop: 15, flex: 1}}
         horizontal={false}
         showsVerticalScrollIndicator={false}>
         {data.map((val, index) => {

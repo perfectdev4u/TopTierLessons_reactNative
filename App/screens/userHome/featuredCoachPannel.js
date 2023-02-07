@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import CustomText from '../../compnents/customText';
 
-export default function FeaturedCoach({data,onPress}) {
+export default function FeaturedCoach({data, onPress}) {
   return (
     <View>
       <View
@@ -28,7 +28,7 @@ export default function FeaturedCoach({data,onPress}) {
         showsHorizontalScrollIndicator={false}>
         {data.map((val, index) => {
           return (
-            <TouchableOpacity onPress={onPress&&onPress} key={index}>
+            <TouchableOpacity onPress={onPress && onPress} key={index}>
               <ImageBackground
                 source={val.img}
                 style={{
@@ -39,7 +39,10 @@ export default function FeaturedCoach({data,onPress}) {
                   flex: 1,
                   paddingHorizontal: 10,
                 }}>
-                <CustomText alignSelf={'center'} fontSize={14}>
+                <CustomText
+                  numberOfLines={2}
+                  alignSelf={'center'}
+                  fontSize={14}>
                   {val.name}
                 </CustomText>
               </ImageBackground>

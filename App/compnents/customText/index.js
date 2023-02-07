@@ -13,6 +13,7 @@ export default function CustomText({
   isPressable = false,
   onPress,
   alignSelf,
+  numberOfLines,
   ...props
 }) {
   return (
@@ -24,7 +25,7 @@ export default function CustomText({
         alignSelf,
       }}>
       <Text
-        numberOfLines={2}
+      numberOfLines={numberOfLines}
         ellipsizeMode="tail"
         style={{
           fontSize,
