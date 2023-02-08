@@ -6,7 +6,6 @@ import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import {View, TouchableOpacity} from 'react-native';
 import CustomText from '../../compnents/customText';
-import screenString from '../../navigation/screenString';
 
 export default function Notifications({navigation}) {
   const [isPressed, setIsPressed] = useState(false);

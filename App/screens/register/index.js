@@ -9,25 +9,73 @@ import DropDown from '../../compnents/dropDown';
 import screenString from '../../navigation/screenString';
 import {useSelector, useDispatch} from 'react-redux';
 import {addUser} from '../../redux/reducers/authReducer';
+import {isValidEmail} from '../../utils/constants';
+import {postReq} from '../../api';
+import apiUrl from '../../api/apiUrl';
+import {Loader} from '../../compnents/loader';
 
 export default function Register({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('abcd@gmail.com');
+  const [email, setEmail] = useState('');
+  const [phonenumber, setPhonenumber] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isDropDown, setIsDropDown] = useState(false);
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
+  const [isLoading, setIsLoading] = useState(false);
+  const registerPayload = {
+    email: email.trim(),
+    name: name.trim(),
+    password: password.trim(),
+    phoneNumber: phonenumber.trim(),
+    userType: user?.userType,
+    fcmToken: '',
+  };
   const userAccount = type => {
     console.log('type=>', type);
     if (type === 'My Self') dispatch(addUser({...user, userType: 3}));
     else if (type === 'My Children') dispatch(addUser({...user, userType: 4}));
     else null;
   };
+  const handleSignUp = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.register, registerPayload)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200)
+          dispatch(
+            addUser({
+              access_token: res?.data?.data?.access_token,
+              user: res?.data?.data,
+            }),
+          );
+        user?.userType === 2
+          ? navigation.navigate(screenString.COACHPROFILESETUP)
+          : navigation.navigate(screenString.USERPROFILESETUP);
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('err==>', err);
+        alert(err?.returnMessage[0]);
+      });
+  };
+  const isValidSignUp = () => {
+    if (!name) alert('Please fill your full name.');
+    else if (!email) alert('Please fill your email.');
+    else if (!isValidEmail(email)) alert('Please enter valid email.');
+    else if (!phonenumber) alert('Please fill your phonenumber.');
+    else if (phonenumber.length != 10) alert('Please enter valid 10 digits phonenumber.');
+    else if (!password) alert('Please fill your password.');
+    else if (password.length < 6)
+      alert('Password should be more than 5 character.');
+    else handleSignUp();
+  };
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomText
         fontSize={32}
         lineHeight={38}
@@ -46,9 +94,17 @@ export default function Register({navigation}) {
       <CustomInput
         marginTop={30}
         borderBottomWidth={1}
-        placeholder={'Your Mail'}
+        placeholder={'Your Email'}
         value={email}
         onChangeText={txt => setEmail(txt)}
+      />
+      <CustomInput
+        marginTop={30}
+        borderBottomWidth={1}
+        placeholder={'Phone Number'}
+        keyboardType={'numeric'}
+        value={phonenumber}
+        onChangeText={txt => setPhonenumber(txt)}
       />
       <CustomInput
         marginTop={30}
@@ -64,7 +120,6 @@ export default function Register({navigation}) {
           />
         }
       />
-
       {user?.userType === 2 ? null : (
         <DropDown
           marginTop={30}
@@ -80,16 +135,11 @@ export default function Register({navigation}) {
           data={accountType}
         />
       )}
-
       <CustomButton
         alignSelf={'center'}
         marginTop={40}
         lable="Sign up"
-        onPress={() => {
-          user?.userType === 2
-            ? navigation.navigate(screenString.COACHPROFILESETUP)
-            : navigation.navigate(screenString.USERPROFILESETUP);
-        }}
+        onPress={() => isValidSignUp()}
       />
       <CustomText
         marginTop={30}

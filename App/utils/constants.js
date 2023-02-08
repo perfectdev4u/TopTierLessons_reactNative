@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const userType="userType"
-export const accountType = "accountType"
+export const userType = 'userType';
+export const accountType = 'accountType';
 
 export const saveData = async (key, value) => {
   try {
@@ -19,4 +19,9 @@ export const getData = async key => {
   } catch (e) {
     console.log(e);
   }
+};
+
+export const isValidEmail = email => {
+  const emailRegex = /\S+@\S+\.\S+/;
+  return emailRegex.test(email);
 };

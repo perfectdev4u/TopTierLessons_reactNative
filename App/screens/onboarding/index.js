@@ -8,11 +8,19 @@ import screenString from '../../navigation/screenString';
 import colors from '../../theme/colors';
 import {useSelector, useDispatch} from 'react-redux';
 import {addUser} from '../../redux/reducers/authReducer';
+import {CommonActions} from '@react-navigation/native';
 
 export default function Onboarding({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
-  const handleNavigation = screen => screen && navigation.navigate(screen);
+  const handleNavigation = screen =>
+    screen &&
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: screen}],
+      }),
+    );
   return (
     <ImageBackground
       source={Images.appBackground}

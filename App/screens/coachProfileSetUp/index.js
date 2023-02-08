@@ -13,9 +13,14 @@ import {postReq} from '../../api';
 import DropDown from '../../compnents/dropDown';
 import {TouchableOpacity, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import CustomImage from '../../compnents/customImage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Images from '../../assets/Images';
+import style from './style';
 
 export default function CoachProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  const [image, setImage] = useState(Images.USER);
   const [address, setAddress] = useState({name: '', lat: null, lan: null});
   const [sport, setSport] = useState({name: 'Select Sport', id: null});
   const [sportsList, setSportsList] = useState([]);
@@ -57,7 +62,10 @@ export default function CoachProfileSetUp({navigation}) {
   };
   return (
     <ContainerBgImage>
-      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
+      <CustomHeader
+        leftIcon={'chevron-left'}
+        leftIconClick={() => navigation.goBack()}
+      />
       <View style={{flex: 1, paddingHorizontal: 20}}>
         <CustomText
           fontSize={32}
@@ -66,6 +74,17 @@ export default function CoachProfileSetUp({navigation}) {
           alignSelf={'center'}>
           Set Up Profile
         </CustomText>
+        <View style={style.imageContaioner}>
+          <CustomImage source={image} />
+          <TouchableOpacity style={style.iconContainer}>
+            <Icon
+              size={20}
+              name={'camera-outline'}
+              color={colors.WHITE}
+              onPress={() => alert('inprocess')}
+            />
+          </TouchableOpacity>
+        </View>
         <GooglePlacesAutocomplete
           placeholder="Address"
           onPress={(data, details = null) => {
@@ -90,7 +109,7 @@ export default function CoachProfileSetUp({navigation}) {
           }}
           styles={{
             textInputContainer: {
-              marginTop: 50,
+              marginTop: 30,
               borderColor: colors.BORDER_COLOR,
               borderWidth: 1,
             },

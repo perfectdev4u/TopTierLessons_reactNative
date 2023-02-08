@@ -6,6 +6,7 @@ import Splash from '../screens/splash';
 import Onboarding from '../screens/onboarding';
 import Login from '../screens/login';
 import ForgotPassword from '../screens/forgotPassword';
+import OtpScreen from '../screens/otpScreen';
 import Register from '../screens/register';
 import ResetPassword from '../screens/resetPassword';
 import NewPassword from '../screens/newPassword';
@@ -16,6 +17,7 @@ import CoachDetails from '../screens/coachDetails';
 import Notifications from '../screens/notification';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
+import UserChatScreen from '../screens/userChatScreen';
 import screenString from './screenString';
 import DrawerMenu from '../compnents/DrawerMenu';
 const Stack = createStackNavigator();
@@ -23,14 +25,14 @@ const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
   return (
     <Drawer.Navigator
+      initialRouteName={screenString.USERHOME}
       drawerContent={props => <DrawerMenu {...props} />}
       screenOptions={{
         headerShown: false,
         drawerStyle: {
           width: '60%',
         },
-      }}
-      initialRouteName={screenString.USERHOME}>
+      }}>
       <Drawer.Screen name={screenString.USERHOME} component={UserHome} />
       <Drawer.Screen
         name={screenString.RESETPASSWORD}
@@ -53,7 +55,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.DRAWER}>
+      initialRouteName={ScreenString.USERPROFILESETUP}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -61,6 +63,7 @@ export default function MainNavigationContainer() {
         name={ScreenString.FORGOTPASSWORD}
         component={ForgotPassword}
       />
+      <Stack.Screen name={ScreenString.OTPSCREEN} component={OtpScreen} />
       <Stack.Screen name={ScreenString.NEWPASSWORD} component={NewPassword} />
       <Stack.Screen name={ScreenString.REGISTER} component={Register} />
       <Stack.Screen
@@ -74,6 +77,10 @@ export default function MainNavigationContainer() {
       <Stack.Screen name={ScreenString.DRAWER} component={DrawerContainer} />
       <Stack.Screen name={ScreenString.COACHDETAILS} component={CoachDetails} />
       <Stack.Screen name={ScreenString.CHATSCREEN} component={ChatScreen} />
+      <Stack.Screen
+        name={ScreenString.USERCHATSCREEN}
+        component={UserChatScreen}
+      />
     </Stack.Navigator>
   );
 }

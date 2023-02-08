@@ -32,6 +32,7 @@ export default function UserProfileSetUp({navigation}) {
       skillLevel: 'Skill Level',
     },
   ];
+  const [image, setImage] = useState(Images.USER);
   //const [sport, setSport] = useState({name: 'Sport', id: null});
   //const [sportsList, setSportsList] = useState([]);
   const [isSkillDropDown, setIsSkillDropDown] = useState(false);
@@ -71,7 +72,10 @@ export default function UserProfileSetUp({navigation}) {
   };
   return (
     <ContainerBgImage>
-      <CustomHeader leftIcon={'chevron-left'} leftIconClick={()=>navigation.goBack()} />
+      <CustomHeader
+        leftIcon={'chevron-left'}
+        leftIconClick={() => navigation.goBack()}
+      />
       <CustomText
         fontSize={32}
         lineHeight={38}
@@ -80,9 +84,9 @@ export default function UserProfileSetUp({navigation}) {
         Set Up Profile
       </CustomText>
 
-      {user?.userType === 3 && (
+      {user?.user?.userType === 3 && (
         <View style={style.imageContaioner}>
-          <CustomImage source={Images.USER} />
+          <CustomImage source={image} />
           <TouchableOpacity style={style.iconContainer}>
             <Icon
               size={20}
@@ -206,7 +210,7 @@ export default function UserProfileSetUp({navigation}) {
         );
       })}
 
-      {user?.userType === 4 && (
+      {user?.user?.userType === 4 && (
         <View style={[commonStyle.row('90%', 'center'), {marginTop: 30}]}>
           <Icon
             size={25}
@@ -224,7 +228,7 @@ export default function UserProfileSetUp({navigation}) {
         alignSelf={'center'}
         marginTop={40}
         lable="Confirm"
-        onPress={() => navigation.navigate(screenString.LOGIN)}
+        onPress={() => navigation.navigate(screenString.DRAWER)}
       />
     </ContainerBgImage>
   );

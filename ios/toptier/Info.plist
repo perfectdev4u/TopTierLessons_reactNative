@@ -54,6 +54,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>Top Tier Lessons wants to access your Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Top Tier Lessons wants to access your Microphones</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Top Tier Lessons wants to access your Image Library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Bold.ttf</string>

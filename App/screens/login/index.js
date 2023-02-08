@@ -10,14 +10,66 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomButton from '../../compnents/customButton';
 import screenString from '../../navigation/screenString';
 import {LoginwithFsbk} from '../../compnents/socialLogin';
+import apiUrl from '../../api/apiUrl';
+import {postReq} from '../../api';
+import {useDispatch} from 'react-redux';
+import {isValidEmail} from '../../utils/constants';
+import {Loader} from '../../compnents/loader';
+import {addUser} from '../../redux/reducers/authReducer';
+import {CommonActions} from '@react-navigation/native';
 
 export default function Login({navigation}) {
-  const [email, setEmail] = useState('abcd@gmail.com');
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loginpayload = {
+    email: email.trim(),
+    password: password.trim(),
+    refreshToken: '',
+    extrenalLoginToken: '',
+    grantType: 'password',
+    fcmToken: '',
+  };
+  const handleLogin = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.logIn, loginpayload)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200)
+          dispatch(
+            addUser({
+              access_token: res?.data?.data?.access_token,
+              user: res?.data?.data,
+            }),
+          );
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.DRAWER}],
+          }),
+        );
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('err==>', err);
+        alert(err?.returnMessage[0]);
+      });
+  };
+  const isValidLogin = () => {
+    if (!email) alert('Please fill your email.');
+    else if (!isValidEmail(email)) alert('Please enter valid email.');
+    else if (!password) alert('Please fill your password.');
+    else if (password.length < 6)
+      alert('Password should be more than 5 character.');
+    else handleLogin();
+  };
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomText
         fontSize={32}
         lineHeight={38}
@@ -29,7 +81,7 @@ export default function Login({navigation}) {
       <CustomInput
         marginTop={84}
         borderBottomWidth={1}
-        placeholder={'Your Mail'}
+        placeholder={'Your Email'}
         value={email}
         onChangeText={txt => setEmail(txt)}
       />
@@ -77,7 +129,7 @@ export default function Login({navigation}) {
         alignSelf={'center'}
         marginTop={40}
         lable="Login"
-        onPress={() => alert('in process')}
+        onPress={() => isValidLogin()}
       />
       <View
         style={[

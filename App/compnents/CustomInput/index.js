@@ -11,6 +11,7 @@ export default function CustomInput({
   leftComponent,
   rightComponent,
   placeholder = '',
+  placeholderTextColor="#D4D4D4",
   value = '',
   textColor = colors.WHITE,
   marginTop = 0,
@@ -50,7 +51,7 @@ export default function CustomInput({
         }}>
         <TextInput
           placeholder={placeholder}
-          placeholderTextColor={'#D4D4D4'}
+          placeholderTextColor={placeholderTextColor}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           onChangeText={onChangeText}
