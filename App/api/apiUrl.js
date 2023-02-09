@@ -8,4 +8,5 @@ export default {
   changePassword: 'Auth/ChangePassword',
   uploadProfilePic: 'User/UpdateProfilePic',
   updateProfile: 'User/UpdateUserProfile',
+  getNearVenue: 'Sport/GetNearbyVenue',
 };

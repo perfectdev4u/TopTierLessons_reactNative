@@ -8,20 +8,21 @@ import CustomHeader from '../../compnents/customHeader';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import colors from '../../theme/colors';
 import apiUrl from '../../api/apiUrl';
-import {postReq} from '../../api';
+import {postReq, profileImageReq} from '../../api';
 import {TextInputMask} from 'react-native-masked-text';
 import DropDown from '../../compnents/dropDown';
-import {TouchableOpacity, View} from 'react-native';
+import {Alert, Platform, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import commonStyle from '../../theme/commonStyle';
 import CustomImage from '../../compnents/customImage';
 import Images from '../../assets/Images';
 import style from './style';
 import {useSelector, useDispatch} from 'react-redux';
-
+import {openCamera, launchGallery} from '../../compnents/imageUpload';
+import {Loader} from '../../compnents/loader';
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
-  console.log(user);
+  const [isLoading, setIsLoading] = useState(false);
   const defaultFormData = [
     {
       name: '',
@@ -32,7 +33,7 @@ export default function UserProfileSetUp({navigation}) {
       skillLevel: 'Skill Level',
     },
   ];
-  const [image, setImage] = useState(Images.USER);
+  const [image, setImage] = useState(null);
   //const [sport, setSport] = useState({name: 'Sport', id: null});
   //const [sportsList, setSportsList] = useState([]);
   const [isSkillDropDown, setIsSkillDropDown] = useState(false);
@@ -53,6 +54,42 @@ export default function UserProfileSetUp({navigation}) {
   //     })
   //     .catch(err => console.log('err==>', err));
   // };
+
+  const uploadImage = async image => {
+    setIsLoading(true);
+    let imagePayload = new FormData();
+    imagePayload.append('file', {
+      name: image.fileName,
+      type: image.type,
+      uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri,
+    });
+    profileImageReq(
+      apiUrl.baseUrl + apiUrl.uploadProfilePic,
+      imagePayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        setIsLoading(false);
+        if (data?.statusCode === 200) {
+          alert('Profile pic uploaded successfully');
+          setImage(data?.data?.url);
+        } else alert('Something went wrong');
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('error==>', err);
+        alert('Something went wrong');
+      });
+  };
+
+  const imageUpload = () =>
+    Alert.alert('Select Image From', '', [
+      {
+        text: 'Camera',
+        onPress: () => openCamera(uploadImage),
+      },
+      {text: 'Album', onPress: () => launchGallery(uploadImage)},
+    ]);
   const onChangeHandler = (label, value, index) => {
     let newFormValues = [...formData];
     newFormValues[index][label] = value;
@@ -72,6 +109,7 @@ export default function UserProfileSetUp({navigation}) {
   };
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -86,14 +124,24 @@ export default function UserProfileSetUp({navigation}) {
 
       {user?.user?.userType === 3 && (
         <View style={style.imageContaioner}>
-          <CustomImage source={image} />
-          <TouchableOpacity style={style.iconContainer}>
-            <Icon
-              size={20}
-              name={'camera-outline'}
-              color={colors.WHITE}
-              onPress={() => alert('inprocess')}
+          {image === null ? (
+            <CustomImage source={Images.USER} />
+          ) : (
+            <CustomImage
+              source={{uri: image}}
+              style={{
+                height: 106,
+                width: 106,
+                resizeMode: 'cover',
+                borderRadius: 100,
+                alignSelf: 'center',
+              }}
             />
+          )}
+          <TouchableOpacity
+            onPress={() => imageUpload()}
+            style={style.iconContainer}>
+            <Icon size={20} name={'camera-outline'} color={colors.WHITE} />
           </TouchableOpacity>
         </View>
       )}
@@ -101,13 +149,16 @@ export default function UserProfileSetUp({navigation}) {
       {formData.map((item, i) => {
         return (
           <View style={{flex: 1}} key={i}>
-            <CustomInput
-              marginTop={50}
-              borderWidth={1}
-              placeholder={'Child Name'}
-              value={item.name}
-              onChangeText={name => onChangeHandler('name', name, i)}
-            />
+            {user?.user?.userType === 4 && (
+              <CustomInput
+                marginTop={50}
+                borderWidth={1}
+                placeholder={'Child Name'}
+                value={item.name}
+                onChangeText={name => onChangeHandler('name', name, i)}
+              />
+            )}
+
             <GooglePlacesAutocomplete
               placeholder="Address"
               onPress={(data, details = null) => {

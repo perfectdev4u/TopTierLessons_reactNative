@@ -4097,7 +4097,7 @@ internal-slot@^1.0.3, internal-slot@^1.0.4:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@*, invariant@2.2.4, invariant@^2.2.4:
+invariant@*, invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -6137,7 +6137,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -6318,6 +6318,14 @@ react-native-screens@^3.19.0:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-tag-input@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/react-native-tag-input/-/react-native-tag-input-0.0.21.tgz#07e361c58ce063b04670bd7ead6773464de98129"
+  integrity sha512-xvkkNdIG9tdbNB99J1jg7iGfgWTEUZkx2QfrDBjQpIwCwNrnGQpbkWixgOpV+OgMkP2VMYztYar4uNjXL/GQPA==
+  dependencies:
+    invariant "^2.2.2"
+    prop-types "^15.5.10"
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"

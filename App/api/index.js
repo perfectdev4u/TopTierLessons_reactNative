@@ -29,11 +29,11 @@ export const profileImageReq = (url, data = null, accessToken = null) => {
     axios({
       method: 'POST',
       url,
-      data: data,
+      data,
       headers: {
         accept: 'application/json',
-        'content-type': 'multipart/form-data',
         Authorization: `Bearer ${accessToken}`,
+        'content-type': 'multipart/form-data',
       },
     })
       .then(function (response) {

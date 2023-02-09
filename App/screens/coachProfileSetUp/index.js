@@ -9,32 +9,39 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import colors from '../../theme/colors';
 import apiUrl from '../../api/apiUrl';
-import {postReq} from '../../api';
+import {postReq, profileImageReq} from '../../api';
 import DropDown from '../../compnents/dropDown';
-import {TouchableOpacity, View} from 'react-native';
+import {Alert, TouchableOpacity, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import CustomImage from '../../compnents/customImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Images from '../../assets/Images';
 import style from './style';
+import {openCamera, launchGallery} from '../../compnents/imageUpload';
+import {Loader} from '../../compnents/loader';
+import TagInput from 'react-native-tag-input';
 
 export default function CoachProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
-  const [image, setImage] = useState(Images.USER);
+  const [isLoading, setIsLoading] = useState(false);
+  const [image, setImage] = useState(null);
   const [address, setAddress] = useState({name: '', lat: null, lan: null});
   const [sport, setSport] = useState({name: 'Select Sport', id: null});
   const [sportsList, setSportsList] = useState([]);
   const [isSportsDropDown, setIsSportsDropDown] = useState(false);
   const [sliderValue, setSliderValue] = useState([10]);
   const SliderValuesChange = value => setSliderValue(value[0]);
-  const [venue, setVenue] = useState({name: 'Venue', id: null});
+  const [venue, setVenue] = useState([]);
   const [venueList, setVenueList] = useState([]);
   const [isVenueDropDown, setIsVenueDropDown] = useState(false);
+  const [isSelected, setIsSelected] = useState(null);
   const [price, setPrice] = useState();
-  const [skill, setSkill] = useState({name: 'Select Skills', id: null});
+  const [skill, setSkill] = useState([]);
   const [skillList, setSkillList] = useState([]);
   const [isSkillsDropDown, setIsSkillDropDown] = useState(false);
-  const [accomplishment, setAccomplishment] = useState('');
+  const [accomplishment, setAccomplishment] = useState([]);
+  console.log('accomplishment', accomplishment);
+  const [text, setText] = useState('');
   const [experience, setExperience] = useState('');
   const [bio, setBio] = useState('');
 
@@ -42,14 +49,60 @@ export default function CoachProfileSetUp({navigation}) {
     getAllSports();
     getAllSkills();
   }, []);
+  useEffect(() => {
+    if (address.lat && sport.id && sliderValue) getVenueList();
+  }, [address.lat, sport.id, sliderValue]);
   const sports_skill_Payload = {
     page: 1,
     pageSize: 10,
+  };
+  const venuesPayload = {
+    lat: address.lat,
+    long: address.lan,
+    radius: sliderValue,
+    sportId: sport.id,
+  };
+  const updateProfilePayload = {
+    users: [
+      {
+        address: address.name,
+        bio: bio,
+        userType: user?.user?.userType,
+        sportId: sport.id,
+        profileImage: image,
+        latitude: address.lat,
+        longitude: address.lan,
+        price: price,
+        radius: sliderValue,
+        accomplishments: ['string'],
+        isTaughtKids: true,
+        pastExperience: experience,
+        strengths: ['string'],
+        sKills: skill,
+      },
+    ],
+    venueList: [
+      {
+        venueId: 0,
+      },
+    ],
   };
   const getAllSports = () => {
     postReq(apiUrl.baseUrl + apiUrl.getAllSports, sports_skill_Payload)
       .then(res => {
         setSportsList(res?.data?.data);
+      })
+      .catch(err => console.log('err==>', err));
+  };
+  const getVenueList = () => {
+    postReq(
+      apiUrl.baseUrl + apiUrl.getNearVenue,
+      venuesPayload,
+      user?.access_token,
+    )
+      .then(res => {
+        console.log(res?.data?.data);
+        setVenueList(res?.data?.data);
       })
       .catch(err => console.log('err==>', err));
   };
@@ -60,8 +113,47 @@ export default function CoachProfileSetUp({navigation}) {
       })
       .catch(err => console.log('err==>', err));
   };
+  const uploadImage = async image => {
+    setIsLoading(true);
+    let imagePayload = new FormData();
+    imagePayload.append('file', {
+      name: image.fileName,
+      type: image.type,
+      uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri,
+    });
+    profileImageReq(
+      apiUrl.baseUrl + apiUrl.uploadProfilePic,
+      imagePayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        setIsLoading(false);
+        if (data?.statusCode === 200) {
+          alert('Profile pic uploaded successfully');
+          setImage(data?.data?.url);
+        } else alert('Something went wrong');
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('error==>', err);
+        alert('Something went wrong');
+      });
+  };
+  const imageUpload = () =>
+    Alert.alert('Select Image From', '', [
+      {
+        text: 'Camera',
+        onPress: () => openCamera(uploadImage),
+      },
+      {text: 'Album', onPress: () => launchGallery(uploadImage)},
+    ]);
+  const handleAcomplishment = txt => {
+    setAccomplishment([...accomplishment, txt]);
+  };
+
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -75,20 +167,29 @@ export default function CoachProfileSetUp({navigation}) {
           Set Up Profile
         </CustomText>
         <View style={style.imageContaioner}>
-          <CustomImage source={image} />
-          <TouchableOpacity style={style.iconContainer}>
-            <Icon
-              size={20}
-              name={'camera-outline'}
-              color={colors.WHITE}
-              onPress={() => alert('inprocess')}
+          {image === null ? (
+            <CustomImage source={Images.USER} />
+          ) : (
+            <CustomImage
+              source={{uri: image}}
+              style={{
+                height: 106,
+                width: 106,
+                resizeMode: 'cover',
+                borderRadius: 100,
+                alignSelf: 'center',
+              }}
             />
+          )}
+          <TouchableOpacity
+            onPress={() => imageUpload()}
+            style={style.iconContainer}>
+            <Icon size={20} name={'camera-outline'} color={colors.WHITE} />
           </TouchableOpacity>
         </View>
         <GooglePlacesAutocomplete
           placeholder="Address"
           onPress={(data, details = null) => {
-            console.log(details);
             setAddress({
               name: data?.description,
               lat: details?.geometry?.location?.lat,
@@ -196,11 +297,76 @@ export default function CoachProfileSetUp({navigation}) {
           width="100%"
           marginTop={10}
           isDropDown={isVenueDropDown}
-          lable={venue.name}
+          lable={venue.length === 0 ? 'Select Venue' : venue}
           setLable={setVenue}
           onPress={() => setIsVenueDropDown(!isVenueDropDown)}
           isShown={false}
         />
+        {isVenueDropDown && (
+          <View
+            style={{
+              width: '100%',
+              marginTop: 10,
+              backgroundColor: colors.WHITE,
+              alignSelf: 'center',
+              padding: 10,
+            }}>
+            {venueList.length === 0 ? (
+              <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
+                {'No venues found'}
+              </CustomText>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsVenueDropDown(!isVenueDropDown);
+                  setVenue(['All selected']);
+                }}>
+                <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
+                  Select all venue
+                </CustomText>
+              </TouchableOpacity>
+            )}
+
+            {venueList?.map((val, index) => {
+              return (
+                <View key={index}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                    }}
+                    onPress={() => {
+                      setVenue([...venue, val.name]);
+                      setIsSelected(index);
+                      setIsVenueDropDown(!isVenueDropDown);
+                    }}>
+                    <Icon
+                      name={
+                        isSelected === index
+                          ? 'checkbox-marked-outline'
+                          : 'checkbox-blank-outline'
+                      }
+                      color={
+                        isSelected === index ? colors.THEME_BTN : colors.BLACK
+                      }
+                      size={18}
+                    />
+                    <CustomText
+                      color={
+                        isSelected === index ? colors.THEME_BTN : colors.BLACK
+                      }
+                      fontSize={15}
+                      marginLeft={'5%'}
+                      lineHeight={22}>
+                      {val.name}
+                    </CustomText>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        )}
         <CustomInput
           width="100%"
           marginTop={20}
@@ -216,13 +382,26 @@ export default function CoachProfileSetUp({navigation}) {
           borderWidth={1}
           placeholder={'Acomplishment'}
           value={accomplishment}
-          onChangeText={txt => setAccomplishment(txt)}
+          onChangeText={txt => handleAcomplishment(txt)}
         />
+        <View>
+          {/* <TagInput
+          value={accomplishment}
+          onChange={value => setAccomplishment(value)}
+          labelExtractor={accomplishment => accomplishment}
+          text={text}
+          onChangeText={txt => setText(txt)}
+          tagColor={colors.THEME_BTN}
+          tagTextColor={colors.BLACK}
+          inputColor={colors.WHITE}
+          inputProps={{returnKeyType:'done'}}
+        /> */}
+        </View>
         <DropDown
           width="100%"
           marginTop={20}
           isDropDown={isSkillsDropDown}
-          lable={skill.name}
+          lable={skill.length === 0 ? 'Select Skills' : skill}
           setLable={setSkill}
           onPress={() => setIsSkillDropDown(!isSkillsDropDown)}
           isShown={false}
@@ -240,13 +419,24 @@ export default function CoachProfileSetUp({navigation}) {
               return (
                 <TouchableOpacity
                   key={index}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                  }}
                   onPress={() => {
-                    setSkill({name: val.skill, id: val.skillId});
+                    setSkill([...skill, val.skill]);
                     setIsSkillDropDown(!isSkillsDropDown);
                   }}>
+                  <Icon
+                    name={'checkbox-blank-outline'}
+                    color={colors.BLACK}
+                    size={18}
+                  />
                   <CustomText
                     color={colors.BLACK}
                     fontSize={15}
+                    marginLeft={'5%'}
                     lineHeight={22}>
                     {val.skill}
                   </CustomText>
