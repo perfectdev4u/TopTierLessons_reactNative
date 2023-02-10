@@ -7,8 +7,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Images from '../../assets/Images';
 import FeaturedCoach from './featuredCoachPannel';
 import NearbyCoaches from './NearbyCoachesPannel';
+import {useSelector, useDispatch} from 'react-redux';
 
 export default function UserHome({navigation}) {
+  const {user} = useSelector(state => state.authReducer);
+  console.log("user===>",user);
   const [searchTxt, setSearchTxt] = useState('');
   const featuredCoach = [
     {
