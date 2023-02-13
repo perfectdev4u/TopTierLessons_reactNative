@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import ContainerBgImage from '../../compnents/containerBackground';
 import CustomText from '../../compnents/customText';
 import colors from '../../theme/colors';
@@ -40,12 +40,12 @@ export default function Login({navigation}) {
       .then(res => {
         setIsLoading(false);
         if (res?.status === 200)
-          dispatch(
-            addUser({
-              access_token: res?.data?.data?.access_token,
-              user: res?.data?.data,
-            }),
-          );
+        dispatch(
+          addUser({
+            access_token: res?.data?.data?.access_token,
+            user: res?.data?.data,
+          }),
+        );
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -56,15 +56,15 @@ export default function Login({navigation}) {
       .catch(err => {
         setIsLoading(false);
         console.log('err==>', err);
-        alert(err?.returnMessage[0]);
+        Alert.alert(err?.returnMessage[0]);
       });
   };
   const isValidLogin = () => {
-    if (!email) alert('Please fill your email.');
-    else if (!isValidEmail(email)) alert('Please enter valid email.');
-    else if (!password) alert('Please fill your password.');
+    if (!email) Alert.alert('Please fill your email.');
+    else if (!isValidEmail(email)) Alert.alert('Please enter valid email.');
+    else if (!password) Alert.alert('Please fill your password.');
     else if (password.length < 6)
-      alert('Password should be more than 5 character.');
+      Alert.alert('Password should be more than 5 character.');
     else handleLogin();
   };
   return (

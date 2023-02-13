@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import colors from '../theme/colors';
 import CustomText from './customText';
 import Icon from 'react-native-vector-icons/AntDesign';
-export default function DropDown({
+export default memo(function DropDown({
   width = '90%',
   height = 40,
   borderColor = colors.BORDER_COLOR,
@@ -79,4 +79,4 @@ export default function DropDown({
       )}
     </View>
   );
-}
+});

@@ -103,7 +103,7 @@ export default function OtpScreen({navigation}) {
           alignSelf={'center'}
           marginTop={50}
           lable="Confirm"
-          onPress={() => navigation.navigate(screenString.NEWPASSWORD)}
+          onPress={() => navigation.navigate(screenString.RESETPASSWORD)}
         />
       </View>
     </ContainerBgImage>

@@ -35,8 +35,8 @@ const DrawerContainer = () => {
       }}>
       <Drawer.Screen name={screenString.USERHOME} component={UserHome} />
       <Drawer.Screen
-        name={screenString.RESETPASSWORD}
-        component={ResetPassword}
+        name={screenString.NEWPASSWORD}
+        component={NewPassword}
       />
       <Drawer.Screen
         name={screenString.NOTIFICATIONS}
@@ -55,7 +55,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.COACHPROFILESETUP}>
+      initialRouteName={ScreenString.USERPROFILESETUP}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -64,7 +64,7 @@ export default function MainNavigationContainer() {
         component={ForgotPassword}
       />
       <Stack.Screen name={ScreenString.OTPSCREEN} component={OtpScreen} />
-      <Stack.Screen name={ScreenString.NEWPASSWORD} component={NewPassword} />
+      <Stack.Screen name={ScreenString.RESETPASSWORD} component={ResetPassword} />
       <Stack.Screen name={ScreenString.REGISTER} component={Register} />
       <Stack.Screen
         name={ScreenString.USERPROFILESETUP}

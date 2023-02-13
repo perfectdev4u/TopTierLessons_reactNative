@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import ContainerBgImage from '../../compnents/containerBackground';
 import CustomHeader from '../../compnents/customHeader';
 import {useNavigation} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';

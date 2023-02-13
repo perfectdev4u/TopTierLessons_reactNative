@@ -20,26 +20,29 @@ import style from './style';
 import {useSelector, useDispatch} from 'react-redux';
 import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {Loader} from '../../compnents/loader';
+import {CommonActions} from '@react-navigation/native';
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [isLoading, setIsLoading] = useState(false);
   const defaultFormData = [
     {
-      name: '',
+      name: null,
       address: '',
-      age: '',
-      // sportsName: 'Sport',
-      //sportsId: '',
-      skillLevel: 'Skill Level',
+      dateOfBirth: '',
+      skill: 'Skill Level',
+      skillLevel: null,
+      userType: user?.userType,
+      latitude: 0,
+      longitude: 0,
     },
   ];
+
+  const [formData, setFormData] = useState(defaultFormData);
   const [image, setImage] = useState(null);
   //const [sport, setSport] = useState({name: 'Sport', id: null});
   //const [sportsList, setSportsList] = useState([]);
   const [isSkillDropDown, setIsSkillDropDown] = useState(false);
   const SkillType = ['Begginer', 'Intermidate', 'Expert'];
-  const [formData, setFormData] = useState(defaultFormData);
-
   // useEffect(() => {
   //   getAllSports();
   // }, []);
@@ -55,6 +58,9 @@ export default function UserProfileSetUp({navigation}) {
   //     .catch(err => console.log('err==>', err));
   // };
 
+  const updateProfilePayload = {
+    users: [...formData],
+  };
   const uploadImage = async image => {
     setIsLoading(true);
     let imagePayload = new FormData();
@@ -71,14 +77,15 @@ export default function UserProfileSetUp({navigation}) {
       .then(({data}) => {
         setIsLoading(false);
         if (data?.statusCode === 200) {
-          alert('Profile pic uploaded successfully');
+          Alert.alert('Profile pic uploaded successfully');
+          setFormData({...formData, profileImage: data?.data?.url});
           setImage(data?.data?.url);
-        } else alert('Something went wrong');
+        } else Alert.alert('Something went wrong');
       })
       .catch(err => {
         setIsLoading(false);
         console.log('error==>', err);
-        alert('Something went wrong');
+        Alert.alert('Something went wrong');
       });
   };
 
@@ -107,6 +114,46 @@ export default function UserProfileSetUp({navigation}) {
     };
     setFormData([...formData, obj]);
   };
+  const handleUpdateProfile = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.updateProfile,
+      updateProfilePayload,
+      user?.access_token,
+    )
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200) console.log(res);
+        // dispatch(
+        //   addUser({
+        //     user: res?.data?.data,
+        //   }),
+        // );
+        // navigation.dispatch(
+        //   CommonActions.reset({
+        //     index: 0,
+        //     routes: [{name: screenString.DRAWER}],
+        //   }),
+        // );
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('Update_User_Err==>', err);
+        Alert.alert(err?.returnMessage[0]);
+      });
+  };
+  const confirmHandler = e => {
+    e.preventDefault();
+    if (
+      formData[0].address === '' ||
+      formData[0].dateOfBirth === '' ||
+      formData[0].skill === ''
+    ) {
+      Alert.alert('please fill all fields');
+    } else {
+      handleUpdateProfile();
+    }
+  };
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
@@ -121,8 +168,7 @@ export default function UserProfileSetUp({navigation}) {
         alignSelf={'center'}>
         Set Up Profile
       </CustomText>
-
-      {user?.user?.userType === 3 && (
+      {user?.userType === 3 && (
         <View style={style.imageContaioner}>
           {image === null ? (
             <CustomImage source={Images.USER} />
@@ -163,6 +209,11 @@ export default function UserProfileSetUp({navigation}) {
               placeholder="Address"
               onPress={(data, details = null) => {
                 onChangeHandler('address', data?.description, i);
+                // setFormData({
+                //   ...formData,
+                //   latitude: details?.geometry?.location?.lat,
+                //   longitude: details?.geometry?.location?.lan,
+                // });
               }}
               query={{
                 key: 'AIzaSyDx_6SY-xRPDGlQoPt8PTRbCtTHKCbiCXQ',
@@ -201,9 +252,9 @@ export default function UserProfileSetUp({navigation}) {
               options={{
                 format: 'YYYY-MM-DD',
               }}
-              value={item.age}
-              onChangeText={age => {
-                onChangeHandler('age', age, i);
+              value={item.dateOfBirth}
+              onChangeText={dateOfBirth => {
+                onChangeHandler('dateOfBirth', dateOfBirth, i);
               }}
               style={style.dobInput}
             />
@@ -248,10 +299,8 @@ export default function UserProfileSetUp({navigation}) {
             <DropDown
               marginTop={20}
               isDropDown={isSkillDropDown}
-              lable={item.skillLevel}
-              setLable={skillLevel =>
-                onChangeHandler('skillLevel', skillLevel, i)
-              }
+              lable={item.skill}
+              setLable={skill => onChangeHandler('skill', skill, i)}
               onPress={() => setIsSkillDropDown(!isSkillDropDown)}
               isShown={isSkillDropDown}
               onSelect={() => setIsSkillDropDown(!isSkillDropDown)}
@@ -261,7 +310,7 @@ export default function UserProfileSetUp({navigation}) {
         );
       })}
 
-      {user?.user?.userType === 4 && (
+      {user?.userType === 4 && (
         <View style={[commonStyle.row('90%', 'center'), {marginTop: 30}]}>
           <Icon
             size={25}
@@ -279,7 +328,7 @@ export default function UserProfileSetUp({navigation}) {
         alignSelf={'center'}
         marginTop={40}
         lable="Confirm"
-        onPress={() => navigation.navigate(screenString.DRAWER)}
+        onPress={confirmHandler}
       />
     </ContainerBgImage>
   );

@@ -11,7 +11,7 @@ import colors from '../../theme/colors';
 import apiUrl from '../../api/apiUrl';
 import {postReq, profileImageReq} from '../../api';
 import DropDown from '../../compnents/dropDown';
-import {Alert, Platform, TouchableOpacity, View} from 'react-native';
+import {Alert, Platform, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import CustomImage from '../../compnents/customImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,28 +19,10 @@ import Images from '../../assets/Images';
 import style from './style';
 import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {Loader} from '../../compnents/loader';
-import TagInput from 'react-native-tag-input';
+import Tags from 'react-native-tags';
 import {CommonActions} from '@react-navigation/native';
 import {addUser} from '../../redux/reducers/authReducer';
 
-const inputProps = {
-  keyboardType: 'default',
-  placeholder: 'Acomplishment',
-  placeholderTextColor: '#D4D4D4',
-  autoFocus: true,
-  paddingHorizontal: 10,
-  style: {
-    fontSize: 15,
-    marginVertical: Platform.OS == 'ios' ? 10 : -2,
-    fontWeight: '400',
-    color: colors.WHITE,
-    fontFamily: 'Poppins-Regular',
-  },
-};
-const horizontalScrollViewProps = {
-  horizontal: true,
-  showsHorizontalScrollIndicator: false,
-};
 export default function CoachProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
@@ -58,12 +40,12 @@ export default function CoachProfileSetUp({navigation}) {
   const [isVenueDropDown, setIsVenueDropDown] = useState(false);
   const [price, setPrice] = useState();
   const [skill, setSkill] = useState([]);
+  const [skillId, setSkillId] = useState([]);
   const [skillList, setSkillList] = useState([]);
   const [isSkillsDropDown, setIsSkillDropDown] = useState(false);
   const [experience, setExperience] = useState('');
   const [bio, setBio] = useState('');
   const [tags, setTags] = useState([]);
-  const [text, setText] = useState('');
   useEffect(() => {
     getAllSports();
     getAllSkills();
@@ -98,7 +80,7 @@ export default function CoachProfileSetUp({navigation}) {
         isTaughtKids: true,
         pastExperience: experience,
         strengths: ['string'],
-        sKills: skill,
+        sKills: skillId,
       },
     ],
     venueList: venueId,
@@ -117,7 +99,6 @@ export default function CoachProfileSetUp({navigation}) {
       user?.access_token,
     )
       .then(res => {
-        console.log(res?.data?.data);
         setVenueList(res?.data?.data);
       })
       .catch(err => console.log('err==>', err));
@@ -145,14 +126,14 @@ export default function CoachProfileSetUp({navigation}) {
       .then(({data}) => {
         setIsLoading(false);
         if (data?.statusCode === 200) {
-          alert('Profile pic uploaded successfully');
+          Alert.alert('Profile pic uploaded successfully');
           setImage(data?.data?.url);
-        } else alert('Something went wrong');
+        } else Alert.alert('Something went wrong');
       })
       .catch(err => {
         setIsLoading(false);
         console.log('error==>', err);
-        alert('Something went wrong');
+        Alert.alert('Something went wrong');
       });
   };
   const imageUpload = () =>
@@ -164,8 +145,7 @@ export default function CoachProfileSetUp({navigation}) {
       {text: 'Album', onPress: () => launchGallery(uploadImage)},
     ]);
 
-  const addedVenue = val => {
-    setIsVenueDropDown(!isVenueDropDown);
+  const handleAddId = val => {
     let newObj = {...val.venueId, venueId: val.venueId};
     let index = venueId.findIndex(item => item.venueId === val.venueId);
     if (index === -1) {
@@ -184,17 +164,7 @@ export default function CoachProfileSetUp({navigation}) {
       : true;
     setList(copy);
   };
-  const onChangeText = txt => {
-    setText(txt);
-    const lastTyped = txt.charAt(txt.length - 1);
-    const parseWhen = [',', ' ', ';', '\n'];
-    if (parseWhen.indexOf(lastTyped) > -1) {
-      setTags([...tags, text]);
-      setText('');
-    }
-  };
 
-  const labelExtractor = tag => tag;
   const handleConfirm = () => {
     setIsLoading(true);
     postReq(
@@ -204,34 +174,34 @@ export default function CoachProfileSetUp({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200) console.log(res?.data?.data);
-        dispatch(
-          addUser({
-            user: res?.data?.data,
-          }),
-        );
-        // navigation.dispatch(
-        //   CommonActions.reset({
-        //     index: 0,
-        //     routes: [{name: screenString.DRAWER}],
+        if (res?.status === 200) console.log(res);
+        // dispatch(
+        //   addUser({
+        //     user: res?.data?.data,
         //   }),
         // );
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.DRAWER}],
+          }),
+        );
       })
       .catch(err => {
         setIsLoading(false);
-        console.log('err==>', err);
-        alert(err?.returnMessage[0]);
+        console.log('Update_User_Err==>', err);
+        Alert.alert(err?.returnMessage[0]);
       });
   };
   const isValidConfirm = () => {
-    if (!address) alert('Please fill your address.');
-    else if (!sport.id) alert('Please select sports.');
-    else if (!venue) alert('Please select venue.');
-    else if (!price) alert('Please enter your fee');
-    else if (!tags) alert('Please enter accomplishment');
-    else if (!skill) alert('Please enter your skills');
-    else if (!experience) alert('Please enter your experience');
-    else if (!bio) alert('Please fill bio about yourself');
+    if (!address) Alert.alert('Please fill your address.');
+    else if (!sport.id) Alert.alert('Please select sports.');
+    else if (!venue) Alert.alert('Please select venue.');
+    else if (!price) Alert.alert('Please enter your fee');
+    else if (!tags) Alert.alert('Please enter accomplishment');
+    else if (!skill) Alert.alert('Please enter your skills');
+    else if (!experience) Alert.alert('Please enter your experience');
+    else if (!bio) Alert.alert('Please fill bio about yourself');
     else handleConfirm();
   };
   return (
@@ -410,7 +380,7 @@ export default function CoachProfileSetUp({navigation}) {
                   }}
                   onPress={() => {
                     setVenue([...venue, val.name]);
-                    addedVenue(val);
+                    handleAddId(val);
                     setActiveValue(index, venueList, setVenueList);
                   }}>
                   <Icon
@@ -443,32 +413,50 @@ export default function CoachProfileSetUp({navigation}) {
           value={price}
           onChangeText={txt => setPrice(txt)}
         />
-        <View
-          style={{
+        <Tags
+          textInputProps={{
+            placeholder: 'Accomplishment',
+            color: 'white',
+          }}
+          initialTags={tags}
+          maxNumberOfTags={5}
+          onChangeTags={tags => setTags(tags)}
+          onTagPress={(index, tagLabel, event, deleted) =>
+            console.log('tagLabel=>', tagLabel)
+          }
+          containerStyle={{
             borderWidth: 1,
             borderColor: colors.BORDER_COLOR,
             backgroundColor: colors.BLACK,
             width: '100%',
             height: 40,
-            alignSelf: 'center',
             marginTop: 20,
-          }}>
-          <TagInput
-            value={tags}
-            onChange={tags => setTags(tags)}
-            labelExtractor={labelExtractor}
-            text={text}
-            onChangeText={onChangeText}
-            tagColor={colors.THEME_BTN}
-            tagTextColor="white"
-            inputProps={inputProps}
-            scrollViewProps={horizontalScrollViewProps}
-            tagContainerStyle={{
-              height: 30,
-              alignSelf: 'center',
-            }}
-          />
-        </View>
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+          inputStyle={{
+            backgroundColor: colors.BLACK,
+            color: 'white',
+            fontSize: 14,
+            fontWeight: '400',
+            fontFamily: 'Poppins-Regular',
+          }}
+          renderTag={({tag, index, onPress, deleteTagOnPress, readonly}) => (
+            <TouchableOpacity
+              style={{
+                backgroundColor: colors.THEME_BTN,
+                borderRadius: 5,
+                height: 35,
+                paddingHorizontal: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              key={`${tag}-${index}`}
+              onPress={onPress}>
+              <CustomText>{tag}</CustomText>
+            </TouchableOpacity>
+          )}
+        />
         <DropDown
           width="100%"
           marginTop={20}
@@ -498,6 +486,7 @@ export default function CoachProfileSetUp({navigation}) {
                   }}
                   onPress={() => {
                     setSkill([...skill, val.skill]);
+                    setSkillId([...skillId,val.skillId]);
                     setIsSkillDropDown(!isSkillsDropDown);
                     setActiveValue(index, skillList, setSkillList);
                   }}>
