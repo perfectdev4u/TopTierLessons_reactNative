@@ -23,6 +23,7 @@ import {Loader} from '../../compnents/loader';
 import {CommonActions} from '@react-navigation/native';
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  console.log(user);
   const [isLoading, setIsLoading] = useState(false);
   const defaultFormData = [
     {
@@ -168,7 +169,7 @@ export default function UserProfileSetUp({navigation}) {
         alignSelf={'center'}>
         Set Up Profile
       </CustomText>
-      {user?.userType === 3 && (
+      {user?.user?.userType === 3 && (
         <View style={style.imageContaioner}>
           {image === null ? (
             <CustomImage source={Images.USER} />
@@ -310,7 +311,7 @@ export default function UserProfileSetUp({navigation}) {
         );
       })}
 
-      {user?.userType === 4 && (
+      {user?.user?.userType === 4 && (
         <View style={[commonStyle.row('90%', 'center'), {marginTop: 30}]}>
           <Icon
             size={25}

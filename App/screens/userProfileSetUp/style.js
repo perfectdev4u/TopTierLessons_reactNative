@@ -38,7 +38,7 @@ export default StyleSheet.create({
     fontWeight: '400',
     lineHeight: 22,
     padding: 8,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Gotham Bold',
     marginTop: 20,
   },
 });

@@ -39,6 +39,8 @@
 	<string>41ae14798a11dd463be365e3811f583a</string>
 	<key>FacebookDisplayName</key>
 	<string>Top Tier</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -52,22 +54,17 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSCameraUsageDescription</key>
 	<string>Top Tier Lessons wants to access your Camera</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Top Tier Lessons wants to access your Microphones</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Top Tier Lessons wants to access your Image Library</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Poppins-Bold.ttf</string>
-		<string>Poppins-Light.ttf</string>
-		<string>Poppins-Medium.ttf</string>
-		<string>Poppins-Regular.ttf</string>
-		<string>Poppins-SemiBold.ttf</string>
-		<string>Poppins-Thin.ttf</string>
+		<string>Gotham Bold.otf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>

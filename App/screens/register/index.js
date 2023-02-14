@@ -79,7 +79,6 @@ export default function Register({navigation}) {
       <CustomText
         fontSize={32}
         lineHeight={38}
-        fontWeight={'700'}
         alignSelf={'center'}
         marginTop={80}>
         Sign Up
@@ -165,7 +164,6 @@ export default function Register({navigation}) {
         <CustomText
           onPress={() => navigation.goBack()}
           isPressable={true}
-          fontWeight="500"
           fontSize={13}
           lineHeight={16}>
           {' '}

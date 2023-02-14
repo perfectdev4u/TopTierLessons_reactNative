@@ -5,8 +5,7 @@ import colors from '../../theme/colors';
 export default function CustomText({
   children: ChildComponent,
   fontSize = 15,
-  fontWeight = '400',
-  fontFamily = 'Poppins-Regular',
+  fontFamily = 'Gotham Bold',
   lineHeight = 20,
   color = colors.WHITE,
   marginTop = 0,
@@ -25,11 +24,10 @@ export default function CustomText({
         alignSelf,
       }}>
       <Text
-      numberOfLines={numberOfLines}
+        numberOfLines={numberOfLines}
         ellipsizeMode="tail"
         style={{
           fontSize,
-          fontWeight,
           color,
           marginTop,
           fontFamily,

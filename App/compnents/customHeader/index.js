@@ -30,7 +30,7 @@ export default function CustomHeader({
         <Icon size={30} name={leftIcon} color={colors.WHITE} />
       </TouchableOpacity>
       {title && (
-        <CustomText fontSize={16} fontWeight={'500'}>
+        <CustomText fontSize={16}>
           {lable}
         </CustomText>
       )}

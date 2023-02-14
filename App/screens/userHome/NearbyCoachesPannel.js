@@ -13,7 +13,7 @@ export default function NearbyCoaches({data, onPress}) {
           commonStyle.row('95%', 'space-between', 'center'),
           {marginTop: 15},
         ]}>
-        <CustomText fontSize={16} fontWeight={'500'}>
+        <CustomText fontSize={16}>
           Nearby Coaches
         </CustomText>
         <Icon
@@ -49,7 +49,7 @@ export default function NearbyCoaches({data, onPress}) {
                 }}>
                 <CustomImage style={{marginLeft: 10}} source={val.img} />
                 <View style={{marginLeft: 10}}>
-                  <CustomText fontSize={13} fontWeight={'500'}>
+                  <CustomText fontSize={13}>
                     {val.name}
                   </CustomText>
                   <View
@@ -63,7 +63,7 @@ export default function NearbyCoaches({data, onPress}) {
                       color={colors.THEME_BTN}
                       size={15}
                     />
-                    <CustomText marginLeft={3} fontSize={13} fontWeight={'300'}>
+                    <CustomText marginLeft={3} fontSize={13}>
                       {val.address}
                     </CustomText>
                   </View>
@@ -78,7 +78,7 @@ export default function NearbyCoaches({data, onPress}) {
                       color={colors.THEME_BTN}
                       size={15}
                     />
-                    <CustomText marginLeft={3} fontSize={13} fontWeight={'400'}>
+                    <CustomText marginLeft={3} fontSize={13}>
                       {val.ratings}
                     </CustomText>
                   </View>
@@ -94,10 +94,10 @@ export default function NearbyCoaches({data, onPress}) {
                   borderTopLeftRadius: 100,
                   borderBottomLeftRadius: 30,
                 }}>
-                <CustomText fontSize={10} fontWeight={'500'}>
+                <CustomText fontSize={10}>
                   {val.sports}
                 </CustomText>
-                <CustomText fontSize={16} fontWeight={'500'}>
+                <CustomText fontSize={16}>
                   {val.price}
                 </CustomText>
               </View>

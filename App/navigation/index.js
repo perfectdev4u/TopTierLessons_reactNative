@@ -15,6 +15,7 @@ import CoachProfileSetUp from '../screens/coachProfileSetUp';
 import UserHome from '../screens/userHome';
 import CoachDetails from '../screens/coachDetails';
 import Notifications from '../screens/notification';
+import Slots from '../screens/slots';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
@@ -35,13 +36,11 @@ const DrawerContainer = () => {
       }}>
       <Drawer.Screen name={screenString.USERHOME} component={UserHome} />
       <Drawer.Screen
-        name={screenString.NEWPASSWORD}
-        component={NewPassword}
-      />
-      <Drawer.Screen
         name={screenString.NOTIFICATIONS}
         component={Notifications}
       />
+      <Drawer.Screen name={screenString.SLOTS} component={Slots} />
+      <Drawer.Screen name={screenString.NEWPASSWORD} component={NewPassword} />
       <Drawer.Screen
         name={screenString.TERMS_PRIVACY}
         component={Terms_Privacy}
@@ -55,7 +54,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.USERPROFILESETUP}>
+      initialRouteName={ScreenString.SPLASH}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -64,7 +63,10 @@ export default function MainNavigationContainer() {
         component={ForgotPassword}
       />
       <Stack.Screen name={ScreenString.OTPSCREEN} component={OtpScreen} />
-      <Stack.Screen name={ScreenString.RESETPASSWORD} component={ResetPassword} />
+      <Stack.Screen
+        name={ScreenString.RESETPASSWORD}
+        component={ResetPassword}
+      />
       <Stack.Screen name={ScreenString.REGISTER} component={Register} />
       <Stack.Screen
         name={ScreenString.USERPROFILESETUP}

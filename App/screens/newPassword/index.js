@@ -71,7 +71,6 @@ export default function NewPassword({navigation}) {
       <CustomText
         fontSize={32}
         lineHeight={38}
-        fontWeight={'700'}
         alignSelf={'center'}
         marginTop={60}>
         Change Password

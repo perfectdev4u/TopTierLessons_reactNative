@@ -11,7 +11,7 @@ import colors from '../../theme/colors';
 import apiUrl from '../../api/apiUrl';
 import {postReq, profileImageReq} from '../../api';
 import DropDown from '../../compnents/dropDown';
-import {Alert, Platform, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Platform, TouchableOpacity, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import CustomImage from '../../compnents/customImage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -439,7 +439,7 @@ export default function CoachProfileSetUp({navigation}) {
             color: 'white',
             fontSize: 14,
             fontWeight: '400',
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Gotham Bold',
           }}
           renderTag={({tag, index, onPress, deleteTagOnPress, readonly}) => (
             <TouchableOpacity
@@ -486,7 +486,7 @@ export default function CoachProfileSetUp({navigation}) {
                   }}
                   onPress={() => {
                     setSkill([...skill, val.skill]);
-                    setSkillId([...skillId,val.skillId]);
+                    setSkillId([...skillId, val.skillId]);
                     setIsSkillDropDown(!isSkillsDropDown);
                     setActiveValue(index, skillList, setSkillList);
                   }}>

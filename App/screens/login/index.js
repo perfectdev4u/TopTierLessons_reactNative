@@ -40,12 +40,12 @@ export default function Login({navigation}) {
       .then(res => {
         setIsLoading(false);
         if (res?.status === 200)
-        dispatch(
-          addUser({
-            access_token: res?.data?.data?.access_token,
-            user: res?.data?.data,
-          }),
-        );
+          dispatch(
+            addUser({
+              access_token: res?.data?.data?.access_token,
+              user: res?.data?.data,
+            }),
+          );
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -73,7 +73,6 @@ export default function Login({navigation}) {
       <CustomText
         fontSize={32}
         lineHeight={38}
-        fontWeight={'700'}
         alignSelf={'center'}
         marginTop={80}>
         Sign In
@@ -137,12 +136,7 @@ export default function Login({navigation}) {
           {marginTop: 27},
         ]}>
         <View style={styles.rowLine}></View>
-        <CustomText
-          color="#96969B"
-          fontWeight="400"
-          fontSize={13}
-          lineHeight={22}
-          flex={1}>
+        <CustomText color="#96969B" fontSize={13} lineHeight={22} flex={1}>
           or
         </CustomText>
         <View style={styles.rowLine}></View>
@@ -172,7 +166,14 @@ export default function Login({navigation}) {
           Do you have an account?
         </CustomText>
         <CustomText
-          onPress={() => navigation.navigate(screenString.REGISTER)}
+          onPress={() =>
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: screenString.REGISTER}],
+              }),
+            )
+          }
           isPressable={true}
           fontWeight="500"
           fontSize={13}

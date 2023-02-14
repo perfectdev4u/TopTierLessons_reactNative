@@ -169,7 +169,7 @@ export default function DrawerMenu(props) {
                 width: 50,
                 borderRadius: 50,
                 alignSelf: 'center',
-                resizeMode: 'contain',
+                //resizeMode: 'contain',
               }}
             />
             <TouchableOpacity style={style.iconContainer}>

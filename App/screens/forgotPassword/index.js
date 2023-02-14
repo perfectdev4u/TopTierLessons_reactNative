@@ -54,7 +54,6 @@ export default function ForgotPassword({navigation}) {
       <CustomText
         fontSize={32}
         lineHeight={38}
-        fontWeight={'700'}
         alignSelf={'center'}
         marginTop={60}>
         Forgot Password
@@ -62,7 +61,6 @@ export default function ForgotPassword({navigation}) {
       <CustomText
         fontSize={15}
         lineHeight={22}
-        fontWeight={'500'}
         alignSelf={'center'}
         color={'#BEBEBE'}
         margin={20}

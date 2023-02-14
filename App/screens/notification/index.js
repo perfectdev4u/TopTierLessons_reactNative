@@ -43,7 +43,7 @@ export default function Notifications({navigation}) {
             commonStyle.row('100%', 'space-between', 'center'),
             {marginTop: 20},
           ]}>
-          <CustomText fontSize={16} fontWeight={'500'} lineHeight={24}>
+          <CustomText fontSize={16} lineHeight={24}>
             {isPressed ? 'Mark All' : `All`}
           </CustomText>
           {isPressed && (

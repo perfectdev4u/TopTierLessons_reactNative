@@ -31,14 +31,14 @@ export default function ChatListItem({
         <CustomImage source={profilePic} />
         <View style={{marginLeft: 10}}>
           <View style={style.rowContent}>
-            <CustomText fontSize={13} fontWeight={'500'}>
+            <CustomText fontSize={13}>
               {name}
             </CustomText>
             <CustomText marginLeft={'5%'} fontSize={9}>
               {msgTime}
             </CustomText>
           </View>
-          <CustomText color={colors.THEME_BTN} fontWeight={'600'}>
+          <CustomText color={colors.THEME_BTN}>
             {msg}
           </CustomText>
         </View>

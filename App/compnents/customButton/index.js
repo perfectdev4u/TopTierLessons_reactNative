@@ -49,7 +49,6 @@ export default function CustomButton({
       <CustomText
         color={fontColor}
         fontSize={15}
-        fontWeight="700"
         lineHeight={22}>
         {lable}
       </CustomText>

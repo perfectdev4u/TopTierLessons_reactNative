@@ -10,4 +10,8 @@ export default {
   updateProfile: 'User/UpdateUserProfile',
   getUserProfile: 'User/GetUserProfile',
   getNearVenue: 'Sport/GetNearbyVenue',
+  getAllTimeSlots: 'TimeSlots/GetAllTimeSlots',
+  deleteTimeSlot: 'TimeSlots/DeleteTimeSlot',
+  getSlotById: 'TimeSlots/GetSlotById',
+  addSlot: 'TimeSlots/AddTimeSlot',
 };

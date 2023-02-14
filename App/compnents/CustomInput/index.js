@@ -63,10 +63,9 @@ export default function CustomInput({
             flex: 1,
             fontSize: 14,
             color: textColor,
-            fontWeight: '400',
-            lineHeight: 22,
+            lineHeight: 18,
             padding: 8,
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Gotham Bold',
           }}
         />
       </View>

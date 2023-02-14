@@ -93,10 +93,10 @@ export default function CoachDetails({navigation}) {
           </View>
         </View>
         <View style={style.rowRight}>
-          <CustomText fontSize={10} fontWeight={'500'}>
+          <CustomText fontSize={10}>
             Cricket
           </CustomText>
-          <CustomText fontSize={16} fontWeight={'500'}>
+          <CustomText fontSize={16}>
             105$
           </CustomText>
         </View>
@@ -179,10 +179,10 @@ export default function CoachDetails({navigation}) {
           <View style={style.rowContent}>
             <CustomImage style={{marginLeft: 10}} source={Images.USERPROFILE} />
             <View style={{marginLeft: 10}}>
-              <CustomText fontSize={16} fontWeight={'600'}>
+              <CustomText fontSize={16}>
                 Bozenka Malina
               </CustomText>
-              <CustomText color="#7A7A7A" fontSize={12} fontWeight={'400'}>
+              <CustomText color="#7A7A7A" fontSize={12}>
                 UI - Designer
               </CustomText>
             </View>

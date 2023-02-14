@@ -25,13 +25,12 @@ export default function Onboarding({navigation}) {
     <ImageBackground
       source={Images.appBackground}
       style={commonStyle.centeredContent(colors.BLACK)}>
-      <CustomText fontSize={24} fontWeight={'700'} lineHeight={38}>
+      <CustomText fontSize={24} lineHeight={38}>
         TOP TIER COACHES FOR
       </CustomText>
       <CustomText
         marginTop={5}
         fontSize={24}
-        fontWeight={'700'}
         lineHeight={38}>
         TOP TIER ATHLETES
       </CustomText>

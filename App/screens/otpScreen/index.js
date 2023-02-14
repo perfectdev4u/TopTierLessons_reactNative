@@ -52,7 +52,6 @@ export default function OtpScreen({navigation}) {
       <CustomText
         marginTop={60}
         fontSize={32}
-        fontWeight="700"
         lineHeight={38}
         color={colors.WHITE}
         textAlign={'center'}>
@@ -91,7 +90,6 @@ export default function OtpScreen({navigation}) {
         <TouchableOpacity onPress={resendHandle} style={styles.resend}>
           <CustomText
             fontSize={17}
-            fontWeight="500"
             lineHeight={20}
             color={colors.THEME_BTN}
             textAlign={'right'}

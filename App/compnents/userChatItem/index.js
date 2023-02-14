@@ -30,7 +30,6 @@ export default function UserChatItem({isSender, message, time}) {
         </View>
         <CustomText
           fontSize={10}
-          fontWeight={'300'}
           color="rgba(255, 255, 255, 0.5)"
           alignSelf={isSender ? 'flex-end' : 'flex-start'}>
           {time}
