@@ -23,6 +23,7 @@ export default function CustomInput({
   onChangeText,
   editable = true,
   multiline = false,
+  onPressIn
 }) {
   return (
     <View
@@ -50,6 +51,7 @@ export default function CustomInput({
           justifyContent: 'center',
         }}>
         <TextInput
+        onPressIn={onPressIn&&onPressIn}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={secureTextEntry}

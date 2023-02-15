@@ -16,6 +16,7 @@ import UserHome from '../screens/userHome';
 import CoachDetails from '../screens/coachDetails';
 import Notifications from '../screens/notification';
 import Slots from '../screens/slots';
+import Documents from '../screens/document';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
@@ -26,7 +27,7 @@ const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
   return (
     <Drawer.Navigator
-      initialRouteName={screenString.USERHOME}
+      initialRouteName={screenString.DOCUMENTS}
       drawerContent={props => <DrawerMenu {...props} />}
       screenOptions={{
         headerShown: false,
@@ -40,6 +41,7 @@ const DrawerContainer = () => {
         component={Notifications}
       />
       <Drawer.Screen name={screenString.SLOTS} component={Slots} />
+      <Drawer.Screen name={screenString.DOCUMENTS} component={Documents} />
       <Drawer.Screen name={screenString.NEWPASSWORD} component={NewPassword} />
       <Drawer.Screen
         name={screenString.TERMS_PRIVACY}
@@ -54,7 +56,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.SPLASH}>
+      initialRouteName={ScreenString.DRAWER}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />

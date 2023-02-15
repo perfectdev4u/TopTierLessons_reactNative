@@ -51,11 +51,20 @@ export default function Slots({navigation}) {
   };
   const addSlotPayload = {
     isRecurring: isActive === 0 ? true : false,
-    slotDate: moment(slotDate).format('YYYY-MM-DD'),
+    slotDate: slotDate,
     fromTime: startTime,
     toTime: endTime,
     ageGroup: group === 'Under Eleven' ? 1 : 2,
     weekDays: isActive === 0 ? weekDays : null,
+  };
+  const updateSlotPayload = {
+    coachId: user?.user?.userId,
+    slotId: slotId,
+    fromTime: startTime,
+    toTime: endTime,
+    weekDays: isActive === 0 ? weekDays : null,
+    ageGroup: group === 'Under Eleven' ? 1 : 2,
+    slotDate: slotDate,
   };
   const getAllTimeSlots = () => {
     setIsLoading(true);
@@ -74,21 +83,45 @@ export default function Slots({navigation}) {
         console.log('slots_err==>', err);
       });
   };
-  const addSlot = () => {
-    setIsLoading(true);
-    postReq(apiUrl.baseUrl + apiUrl.addSlot, addSlotPayload, user?.access_token)
-      .then(res => {
-        if (res?.data?.statusCode === 200) {
+  const getDayName = day => {
+    if (day === '1') return 'Mon';
+    else if (day === '2') return 'Tue';
+    else if (day === '3') return 'Wed';
+    else if (day === '4') return 'Thu';
+    else if (day === '5') return 'Fri';
+    else if (day === '6') return 'Sat';
+    else if (day === '7') return 'Sun';
+  };
+  const isValidSlot = () => {
+    if (!startTime) return Alert.alert('Please select start time.');
+    else if (!endTime) return Alert.alert('Please select end time.');
+    else if (group === 'Age Group')
+      return Alert.alert('Please select Age group.');
+    else return true;
+  };
+  const handleAddSlot = () => {
+    if (isValidSlot()) {
+      setIsLoading(true);
+      postReq(
+        apiUrl.baseUrl + apiUrl.addSlot,
+        addSlotPayload,
+        user?.access_token,
+      )
+        .then(res => {
+          if (res?.data?.statusCode === 200) {
+            Alert.alert(res?.data?.returnMessage[0]);
+            setIsLoading(false);
+            setIsModalVisible(false);
+            getAllTimeSlots();
+            console.log('Addslot==>', res?.data);
+          }
+        })
+        .catch(err => {
+          Alert.alert(err?.returnMessage[0]);
           setIsLoading(false);
-          setIsModalVisible(false);
-          getAllTimeSlots();
-          console.log('Addslot==>', res?.data?.data);
-        }
-      })
-      .catch(err => {
-        setIsLoading(false);
-        console.log('slots_err==>', err);
-      });
+          console.log('Addslot_err==>', err);
+        });
+    } else null;
   };
   const deleteSlot = () => {
     setIsLoading(true);
@@ -127,6 +160,7 @@ export default function Slots({navigation}) {
           setGroup(
             res?.data?.data?.ageGroup === 1 ? 'Under Eleven' : 'Above Eleven',
           );
+          setSlotDate(moment(res?.data?.data?.slotDate).format('YYYY-MM-DD'));
         }
       })
       .catch(err => {
@@ -134,6 +168,31 @@ export default function Slots({navigation}) {
         console.log('slotInfo_err==>', err);
       });
   };
+  const handleUpdateSlot = () => {
+    if (isValidSlot()) {
+      setIsLoading(true);
+      postReq(
+        apiUrl.baseUrl + apiUrl.updateSlot,
+        updateSlotPayload,
+        user?.access_token,
+      )
+        .then(res => {
+          if (res?.data?.statusCode === 200) {
+            Alert.alert(res?.data?.returnMessage[0]);
+            setIsLoading(false);
+            setIsModalVisible(false);
+            getAllTimeSlots();
+            console.log('UpdateSlot==>', res?.data);
+          }
+        })
+        .catch(err => {
+          Alert.alert(err?.returnMessage[0]);
+          setIsLoading(false);
+          console.log('UpdateSlot_err==>', err);
+        });
+    } else null;
+  };
+
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
@@ -204,15 +263,37 @@ export default function Slots({navigation}) {
               <CustomText fontSize={15}>Start Time</CustomText>
               <CustomText fontSize={12}>{val.fromTime}</CustomText>
             </View>
-            <View style={style.colomContent}>
+            <View style={[style.colomContent]}>
               <CustomText fontSize={15}>End Time</CustomText>
               <CustomText fontSize={12}>{val.toTime}</CustomText>
             </View>
-            <View style={style.colomContent}>
+            <View style={[style.colomContent]}>
               <CustomText fontSize={15}>Slot day</CustomText>
-              <CustomText numberOfLines={1} fontSize={12}>
-                Sun-Mon-Fri
-              </CustomText>
+              {isActive === 1 && (
+                <CustomText fontSize={12}>
+                  {moment(val.slotDate).format('YYYY-MM-DD')}
+                </CustomText>
+              )}
+              {isActive === 0 && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {val?.weekDays.map((day, index) => {
+                    return (
+                      <View key={index}>
+                        {index <= 2 && (
+                          <CustomText fontSize={12}>
+                            {getDayName(day)}{' '}
+                          </CustomText>
+                        )}
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
             </View>
             <View style={style.rowRight}>
               <TouchableOpacity
@@ -240,7 +321,7 @@ export default function Slots({navigation}) {
       <AddSlot
         modalVisible={isModalVisible}
         setModalVisible={setIsModalVisible}
-        title={type === 'edit' ? 'Edit Bookin Slot' : 'Add Booking Slot'}
+        title={type === 'edit' ? 'Edit Booking Slot' : 'Add Booking Slot'}
         isRecuring={isActive === 1 ? true : false}
         startTime={startTime}
         setStartTime={setStartTime}
@@ -250,7 +331,9 @@ export default function Slots({navigation}) {
         setGroup={setGroup}
         slotDate={slotDate}
         setSlotDate={setSlotDate}
-        addSlot={addSlot}
+        weekDays={weekDays}
+        setWeekDays={setWeekDays}
+        handleSubmitSlot={type === 'edit' ? handleUpdateSlot : handleAddSlot}
       />
     </ContainerBgImage>
   );

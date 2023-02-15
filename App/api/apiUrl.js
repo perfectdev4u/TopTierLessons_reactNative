@@ -14,4 +14,5 @@ export default {
   deleteTimeSlot: 'TimeSlots/DeleteTimeSlot',
   getSlotById: 'TimeSlots/GetSlotById',
   addSlot: 'TimeSlots/AddTimeSlot',
+  updateSlot: 'TimeSlots/UpdateTimeSlot',
 };
