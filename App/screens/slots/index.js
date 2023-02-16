@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import ContainerBgImage from '../../compnents/containerBackground';
 import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Images from '../../assets/Images';
 import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import {View, TouchableOpacity, Alert} from 'react-native';

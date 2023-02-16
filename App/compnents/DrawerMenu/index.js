@@ -19,7 +19,6 @@ import {addUser} from '../../redux/reducers/authReducer';
 
 export default function DrawerMenu(props) {
   const {user} = useSelector(state => state.authReducer);
-  console.log('user==>', user?.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const userMenuItems = [

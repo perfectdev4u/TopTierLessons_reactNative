@@ -17,6 +17,8 @@ import CoachDetails from '../screens/coachDetails';
 import Notifications from '../screens/notification';
 import Slots from '../screens/slots';
 import Documents from '../screens/document';
+import Venues from '../screens/venues';
+import Booking from '../screens/booking';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
@@ -27,7 +29,7 @@ const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
   return (
     <Drawer.Navigator
-      initialRouteName={screenString.DOCUMENTS}
+      initialRouteName={screenString.BOOKING}
       drawerContent={props => <DrawerMenu {...props} />}
       screenOptions={{
         headerShown: false,
@@ -42,6 +44,8 @@ const DrawerContainer = () => {
       />
       <Drawer.Screen name={screenString.SLOTS} component={Slots} />
       <Drawer.Screen name={screenString.DOCUMENTS} component={Documents} />
+      <Drawer.Screen name={screenString.VENUE} component={Venues} />
+      <Drawer.Screen name={screenString.BOOKING} component={Booking} />
       <Drawer.Screen name={screenString.NEWPASSWORD} component={NewPassword} />
       <Drawer.Screen
         name={screenString.TERMS_PRIVACY}

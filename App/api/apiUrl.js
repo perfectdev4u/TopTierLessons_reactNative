@@ -1,5 +1,5 @@
 export default {
-  baseUrl: 'http://54.82.14.3:8080/api/v1.0/',
+  baseUrl: 'https://api.toptierlessons.com:4436/api/v1.0/',
   getAllSports: 'Sport/GetAllSport',
   geAllSkills: 'Admin/GetAllSkills',
   logIn: 'Auth/SignIn',
@@ -15,4 +15,10 @@ export default {
   getSlotById: 'TimeSlots/GetSlotById',
   addSlot: 'TimeSlots/AddTimeSlot',
   updateSlot: 'TimeSlots/UpdateTimeSlot',
+  uploadFile: 'User/UploadFile',
+  documentUpload: 'Document/UploadDocument',
+  deleteVenue: 'Venue/DeleteCoachVenue',
+  previousBookings: 'Booking/GetBookingHistory',
+  upcomingBookings: 'Booking/GetUpComingBookings',
+  updateBookingStatus: 'Booking/UpdateBookingStatus',
 };
