@@ -74,7 +74,6 @@ export default function Slots({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
-        console.log('slots==>', res?.data?.data);
         setSlotList(res?.data?.data);
       })
       .catch(err => {

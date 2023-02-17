@@ -1,24 +1,41 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import CustomText from '../../compnents/customText';
 import CustomButton from '../../compnents/customButton';
 import colors from '../../theme/colors';
 import ContainerBgImage from '../../compnents/containerBackground';
 import screenString from '../../navigation/screenString';
 import CustomHeader from '../../compnents/customHeader';
-import {useFocusEffect} from '@react-navigation/native';
+import OtpInputs from 'react-native-otp-inputs';
+import {Loader} from '../../compnents/loader';
+import {postReq} from '../../api';
+import apiUrl from '../../api/apiUrl';
 
-export default function OtpScreen({navigation}) {
-  const [otp, setOtp] = useState(['-', '-', '-', '-']);
-  const [otpVal, setOtpVal] = useState('');
-  const [isFocus, setIsFocus] = useState(true);
-  const resendHandle = () => {};
+export default function OtpScreen({route, navigation}) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [otp, setOtp] = useState('');
+  const resendpayload = {
+    email: route?.params?.email,
+    otp: '',
+  };
+  const otppayload = {
+    email: route?.params?.email,
+    otp: otp.trim(),
+  };
+  const resendHandle = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.forgotPassword, resendpayload)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200) console.log('res?.data?.data=>', res?.data);
+        Alert.alert(res?.data?.returnMessage[0]);
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('err==>', err);
+        Alert.alert(err?.returnMessage[0]);
+      });
+  };
 
   const isValidConfirm = () => {
     if (otp.length < 1) {
@@ -30,21 +47,32 @@ export default function OtpScreen({navigation}) {
     }
     return true;
   };
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.forgotPassword, otppayload)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200)
+          navigation.navigate(screenString.RESETPASSWORD, {
+            email: route?.params?.email,
+            _token: res?.data?.data?.token,
+          });
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('error==>', err);
+        Alert.alert(err?.returnMessage[0]);
+      });
+  };
   const isConfirm = () => {
     if (isValidConfirm()) {
       handleConfirm();
     }
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsFocus(true);
-    }, [isFocus]),
-  );
-
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -58,35 +86,37 @@ export default function OtpScreen({navigation}) {
         Enter OTP
       </CustomText>
       <View>
-        <TextInput
-          onChangeText={value => {
-            if (isNaN(value)) {
-              return;
-            }
-            if (value.length > 4) {
-              return;
-            }
-            let val = value + '----'.substr(0, 4 - value.length);
-            let a = [...val];
-            setOtpVal(a);
-            setOtp(value);
+        <OtpInputs
+          handleChange={setOtp}
+          numberOfInputs={4}
+          // autofillFromClipboard={true}
+          autoFocus={true}
+          focusStyles={{
+            borderColor: colors.THEME_BTN,
           }}
-          style={{height: 0}}
-          autoFocus={isFocus}
-          maxLength={4}
-          keyboardType={'numeric'}
-          isFocused={isFocus}
+          inputStyles={{
+            fontSize: 18,
+            color: colors.WHITE,
+            fontFamily: 'Gotham Bold',
+          }}
+          inputContainerStyles={{
+            height: 40,
+            borderWidth: 2,
+            borderColor: colors.BORDER_COLOR,
+            width: 40,
+            borderRadius: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          style={{
+            width: '60%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 50,
+            maxWidth: 400,
+            alignSelf: 'center',
+          }}
         />
-        <View style={styles.otpBoxesContainer}>
-          {[0, 1, 2, 3].map((item, index) => (
-            <Text
-              onPress={() => setIsFocus(!isFocus)}
-              style={styles.otpBox}
-              key={index}>
-              {otp[item]}
-            </Text>
-          ))}
-        </View>
         <TouchableOpacity onPress={resendHandle} style={styles.resend}>
           <CustomText
             fontSize={17}
@@ -101,7 +131,7 @@ export default function OtpScreen({navigation}) {
           alignSelf={'center'}
           marginTop={50}
           lable="Confirm"
-          onPress={() => navigation.navigate(screenString.RESETPASSWORD)}
+          onPress={isConfirm}
         />
       </View>
     </ContainerBgImage>
@@ -113,22 +143,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignSelf: 'flex-end',
     alignItems: 'center',
-  },
-
-  otpBoxesContainer: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    marginTop: 50,
-  },
-  otpBox: {
-    padding: 10,
-    marginRight: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: colors.THEME_BTN,
-    height: 40,
-    width: 40,
-    textAlign: 'center',
-    color: colors.WHITE,
   },
 });

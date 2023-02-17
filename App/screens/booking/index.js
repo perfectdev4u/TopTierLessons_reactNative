@@ -19,12 +19,16 @@ import {useSelector, useDispatch} from 'react-redux';
 import Images from '../../assets/Images';
 import CustomImage from '../../compnents/customImage';
 import style from './style';
+import {BookingDetails} from '../../compnents/bookingDetails';
+import {addUser} from '../../redux/reducers/authReducer';
 
 export default function Booking({navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [isActive, setIsActive] = useState(0);
   const [isBookingsList, setIsBookingsList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [id, setId] = useState({
     bookingId: null,
     bookingStatus: null,
@@ -43,12 +47,17 @@ export default function Booking({navigation}) {
     bookingStatus: id.bookingStatus,
     coachId: id.coachId,
   };
+  const bookingDetailsPayload = {
+    bookingId: id.bookingId,
+  };
   useEffect(() => {
     if (isActive === 0) getBookingsList(apiUrl.previousBookings);
     else getBookingsList(apiUrl.upcomingBookings);
   }, [isActive]);
   useEffect(() => {
     if (id.coachId && id.bookingStatus && id.bookingId) updateBokingStatus();
+    else if (id.bookingId && !id.coachId && !id.bookingStatus)
+      getBookingDetails();
   }, [id.coachId, id.bookingStatus, id.bookingId]);
   const getBookingsList = type => {
     setIsLoading(true);
@@ -64,7 +73,10 @@ export default function Booking({navigation}) {
   };
   const bookingsItemList = ({item, index}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          setId({bookingId: item.bookingId});
+        }}
         key={index}
         style={[
           commonStyle.row('95%', 'space-between', 'center'),
@@ -140,7 +152,7 @@ export default function Booking({navigation}) {
             )}
           </View>
         )}
-      </View>
+      </TouchableOpacity>
     );
   };
   const updateBokingStatus = () => {
@@ -161,6 +173,25 @@ export default function Booking({navigation}) {
       .catch(err => {
         setIsLoading(false);
         console.log('upDate_err==>', err);
+      });
+  };
+  const getBookingDetails = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.getBookingDetails,
+      bookingDetailsPayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        setIsLoading(false);
+        if (data?.statusCode === 200) {
+          dispatch(addUser({...user, bookingDetails: data.data}));
+          setIsModalVisible(true);
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('details_err==>', err);
       });
   };
   return (
@@ -209,6 +240,10 @@ export default function Booking({navigation}) {
           showsVerticalScrollIndicator={false}
         />
       </ImageBackground>
+      <BookingDetails
+        modalVisible={isModalVisible}
+        setModalVisible={setIsModalVisible}
+      />
     </SafeAreaView>
   );
 }

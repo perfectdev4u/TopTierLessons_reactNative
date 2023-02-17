@@ -7,10 +7,9 @@ import screenString from '../../navigation/screenString';
 import CustomHeader from '../../compnents/customHeader';
 import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
-import {useDispatch} from 'react-redux';
 import {isValidEmail} from '../../utils/constants';
 import {Loader} from '../../compnents/loader';
-import {addUser} from '../../redux/reducers/authReducer';
+import {Alert} from 'react-native';
 
 export default function ForgotPassword({navigation}) {
   const [email, setEmail] = useState('');
@@ -24,24 +23,19 @@ export default function ForgotPassword({navigation}) {
     postReq(apiUrl.baseUrl + apiUrl.forgotPassword, forgotpayload)
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200)
-          // dispatch(
-          //   addUser({
-          //     access_token: res?.data?.data?.access_token,
-          //     user: res?.data?.data,
-          //   }),
-          // );
-          navigation.navigate(screenString.OTPSCREEN);
+        if (res?.status === 200) console.log('res?.data?.data=>', res?.data);
+        Alert.alert(res?.data?.returnMessage[0]);
+        navigation.navigate(screenString.OTPSCREEN, {email: email});
       })
       .catch(err => {
         setIsLoading(false);
         console.log('err==>', err);
-        alert(err?.returnMessage[0]);
+        Alert.alert(err?.returnMessage[0]);
       });
   };
   const isValidConfirm = () => {
-    if (!email) alert('Please enter your registered email.');
-    else if (!isValidEmail(email)) alert('Please enter valid email.');
+    if (!email) Alert.alert('Please enter your registered email.');
+    else if (!isValidEmail(email)) Alert.alert('Please enter valid email.');
     else handleConfirm();
   };
   return (

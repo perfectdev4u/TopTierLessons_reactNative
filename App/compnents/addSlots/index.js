@@ -256,6 +256,7 @@ export const AddSlot = ({
           )}
           <CustomButton
             marginTop={30}
+            marginBottom={20}
             lable={'Submit'}
             width={'80%'}
             alignSelf={'center'}
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
   card: {
     width: '95%',
     alignSelf: 'center',
-    backgroundColor: colors.BLACK,
+    backgroundColor: '#1F1F1F',
     borderRadius: 10,
     padding: 10,
   },

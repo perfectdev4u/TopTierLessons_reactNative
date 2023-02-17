@@ -22,6 +22,7 @@ import Booking from '../screens/booking';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
+import ContactUs from '../screens/contactUs';
 import screenString from './screenString';
 import DrawerMenu from '../compnents/DrawerMenu';
 const Stack = createStackNavigator();
@@ -29,7 +30,7 @@ const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
   return (
     <Drawer.Navigator
-      initialRouteName={screenString.BOOKING}
+      initialRouteName={screenString.SLOTS}
       drawerContent={props => <DrawerMenu {...props} />}
       screenOptions={{
         headerShown: false,
@@ -51,6 +52,7 @@ const DrawerContainer = () => {
         name={screenString.TERMS_PRIVACY}
         component={Terms_Privacy}
       />
+      <Drawer.Screen name={screenString.CONTACTUS} component={ContactUs} />
     </Drawer.Navigator>
   );
 };

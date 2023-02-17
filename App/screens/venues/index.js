@@ -14,14 +14,26 @@ import {getReq, postReq} from '../../api';
 import {useSelector, useDispatch} from 'react-redux';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
+import {VenuesList} from '../../compnents/addVenues';
 
 export default function Venues({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVenueList, setIsVenueList] = useState([]);
+  const [venueList, setVenueList] = useState([]);
   const [venueId, setVenueId] = useState(null);
+  const [latLan, setLatLan] = useState({lat: null, lan: null});
+  const [radius, setRadius] = useState(0);
+  const [sportsId, setSportsId] = useState(null);
   const removePayload = {
     coachVenueId: venueId,
+  };
+  const venuesPayload = {
+    lat: latLan.lat,
+    long: latLan.lan,
+    radius: radius,
+    sportId: sportsId,
   };
   useEffect(() => {
     getUserProfile();
@@ -35,13 +47,29 @@ export default function Venues({navigation}) {
       .then(({data}) => {
         setIsLoading(false);
         if (data?.statusCode === 200) {
+          console.log(data?.data);
           setIsVenueList(data?.data?.venueList);
+          setLatLan({lat: data?.data?.latitude, lan: data?.data?.longitude});
+          setRadius(data?.data?.radius);
+          setSportsId(data?.data?.sportId);
         }
       })
       .catch(err => {
         setIsLoading(false);
         console.log(err);
       });
+  };
+  const getVenueList = () => {
+    postReq(
+      apiUrl.baseUrl + apiUrl.getNearVenue,
+      venuesPayload,
+      user?.access_token,
+    )
+      .then(res => {
+        setVenueList(res?.data?.data);
+        setIsModalVisible(true);
+      })
+      .catch(err => console.log('err==>', err));
   };
   const deleteById = () => {
     setIsLoading(true);
@@ -80,8 +108,8 @@ export default function Venues({navigation}) {
         height={35}
         alignSelf={'flex-end'}
         marginRight={'2.5%'}
+        onPress={() => getVenueList()}
       />
-
       {isVenueList?.map((val, index) => {
         return (
           <View
@@ -123,6 +151,13 @@ export default function Venues({navigation}) {
           </View>
         );
       })}
+      <VenuesList
+        modalVisible={isModalVisible}
+        setModalVisible={setIsModalVisible}
+        data={venueList}
+        setData={setVenueList}
+        update={getUserProfile}
+      />
     </ContainerBgImage>
   );
 }

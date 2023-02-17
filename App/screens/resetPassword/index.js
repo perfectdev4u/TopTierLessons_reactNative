@@ -6,14 +6,62 @@ import CustomButton from '../../compnents/customButton';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import screenString from '../../navigation/screenString';
 import CustomHeader from '../../compnents/customHeader';
+import {CommonActions} from '@react-navigation/native';
+import {Loader} from '../../compnents/loader';
+import {postReq} from '../../api';
+import apiUrl from '../../api/apiUrl';
+import {Alert} from 'react-native';
 
-export default function ResetPassword({navigation}) {
+export default function ResetPassword({route, navigation}) {
+  const [isLoading, setIsLoading] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isNewPasswordShow, setIsNewPasswordShow] = useState(false);
   const [isConfirmPasswordShow, setIsConfirmasswordShow] = useState(false);
+  const resetPasswordPayload = {
+    email: route?.params?.email,
+    token: route?.params?._token,
+    newPassword: newPassword.trim(),
+  };
+  const handleIsConfirm = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.resetPassword, resetPasswordPayload)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200) console.log('res?.data?.data=>', res?.data);
+        Alert.alert(res?.data?.returnMessage[0]);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.LOGIN}],
+          }),
+        );
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('error==>', err);
+        Alert.alert(err?.returnMessage[0]);
+      });
+  };
+  const isValidConfirm = () => {
+    if (!newPassword) {
+      Alert.alert('Please enter your new password.');
+      return false;
+    } else if (newPassword.length < 6) {
+      Alert.alert('Password should be more than 5 character.');
+      return false;
+    } else if (!confirmPassword) {
+      Alert.alert('Please enter confirm password.');
+      return false;
+    } else if (newPassword != confirmPassword) {
+      Alert.alert('Password is mismatched.');
+      return false;
+    }
+    return handleIsConfirm();
+  };
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -68,7 +116,7 @@ export default function ResetPassword({navigation}) {
         alignSelf={'center'}
         marginTop={40}
         lable="Confirm"
-        onPress={() => navigation.navigate(screenString.LOGIN)}
+        onPress={isValidConfirm}
       />
     </ContainerBgImage>
   );

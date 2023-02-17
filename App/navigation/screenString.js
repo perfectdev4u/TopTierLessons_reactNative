@@ -21,5 +21,5 @@ export default {
   VENUE: 'VENUE',
   BOOKING: 'BOOKING',
   TERMS_PRIVACY: 'TERMS_PRIVACY',
-  HELP: 'HELP',
+  CONTACTUS: 'CONTACTUS',
 };

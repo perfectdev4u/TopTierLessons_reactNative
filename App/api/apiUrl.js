@@ -6,6 +6,7 @@ export default {
   register: 'Auth/Register',
   forgotPassword: 'Auth/ForgotPassword',
   changePassword: 'Auth/ChangePassword',
+  resetPassword: 'Auth/ResetPassword',
   uploadProfilePic: 'User/UpdateProfilePic',
   updateProfile: 'User/UpdateUserProfile',
   getUserProfile: 'User/GetUserProfile',
@@ -21,4 +22,6 @@ export default {
   previousBookings: 'Booking/GetBookingHistory',
   upcomingBookings: 'Booking/GetUpComingBookings',
   updateBookingStatus: 'Booking/UpdateBookingStatus',
+  getBookingDetails: 'Booking/GetBookingDetailsById',
+  contactUs: 'ContactUs/ContactUs'
 };

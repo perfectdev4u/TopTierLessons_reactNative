@@ -11,7 +11,6 @@ import commonStyle from '../../theme/commonStyle';
 import colors from '../../theme/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomImage from '../customImage';
-import Images from '../../assets/Images';
 import style from './style';
 import {getReq} from '../../api';
 import apiUrl from '../../api/apiUrl';
@@ -57,8 +56,8 @@ export default function DrawerMenu(props) {
     {
       isActive: false,
       icon: 'alert-circle-outline',
-      label: 'Help',
-      screen: screenString.HELP,
+      label: 'Contact Us',
+      screen: screenString.CONTACTUS,
     },
   ];
   const coachMenuItems = [
@@ -115,8 +114,8 @@ export default function DrawerMenu(props) {
     {
       isActive: false,
       icon: 'alert-circle-outline',
-      label: 'Help',
-      screen: screenString.HELP,
+      label: 'Contact Us',
+      screen: screenString.CONTACTUS,
     },
   ];
   const [activeRoute, setActiveRoute] = useState(screenString.RESETPASSWORD);
@@ -171,17 +170,14 @@ export default function DrawerMenu(props) {
                 //resizeMode: 'contain',
               }}
             />
-            <TouchableOpacity style={style.iconContainer}>
-              <Icon
-                size={10}
-                name={'pencil'}
-                color={colors.THEME_BTN}
-                onPress={() => alert('inprocess')}
-              />
+            <TouchableOpacity
+              onPress={() => alert('inprocess')}
+              style={style.iconContainer}>
+              <Icon size={10} name={'pencil'} color={colors.THEME_BTN} />
             </TouchableOpacity>
           </View>
           <View style={{marginLeft: 10}}>
-            <CustomText fontSize={13} fontWeight={'600'}>
+            <CustomText fontSize={13}>
               {user?.userName}
             </CustomText>
             <CustomText fontSize={10}>{user?.userEmail}</CustomText>
