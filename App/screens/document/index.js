@@ -18,6 +18,7 @@ import {
   uploadRoaster,
 } from '../../compnents/imageUpload';
 import commonStyle from '../../theme/commonStyle';
+import { goBackHandle } from '../../utils/constants';
 
 export default function Documents({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -102,7 +103,7 @@ export default function Documents({navigation}) {
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Documents'}
         rightIcon={true}

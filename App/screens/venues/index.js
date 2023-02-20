@@ -15,6 +15,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import {VenuesList} from '../../compnents/addVenues';
+import { goBackHandle } from '../../utils/constants';
 
 export default function Venues({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -96,7 +97,7 @@ export default function Venues({navigation}) {
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Venues'}
         rightIcon={true}

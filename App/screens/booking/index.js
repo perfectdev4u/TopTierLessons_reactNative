@@ -21,6 +21,7 @@ import CustomImage from '../../compnents/customImage';
 import style from './style';
 import {BookingDetails} from '../../compnents/bookingDetails';
 import {addUser} from '../../redux/reducers/authReducer';
+import { goBackHandle } from '../../utils/constants';
 
 export default function Booking({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -202,7 +203,7 @@ export default function Booking({navigation}) {
         source={Images.appBackground}>
         <CustomHeader
           leftIcon={'chevron-left'}
-          leftIconClick={() => navigation.goBack()}
+          leftIconClick={() => goBackHandle(navigation)}
           title={true}
           lable={'Booking'}
           rightIcon={true}

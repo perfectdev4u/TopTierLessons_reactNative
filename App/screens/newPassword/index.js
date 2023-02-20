@@ -12,6 +12,7 @@ import apiUrl from '../../api/apiUrl';
 import {useSelector} from 'react-redux';
 import {Alert} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
+import { goBackHandle } from '../../utils/constants';
 
 export default function NewPassword({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -66,7 +67,7 @@ export default function NewPassword({navigation}) {
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
       />
       <CustomText
         fontSize={32}

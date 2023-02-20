@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
 import {SafeAreaView, View} from 'react-native';
 import colors from '../../theme/colors';
+import { goBackHandle } from '../../utils/constants';
 export default function Terms_Privacy({route}) {
   const navigation = useNavigation();
   const weblink =
@@ -14,7 +15,7 @@ export default function Terms_Privacy({route}) {
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={route?.params === 1 ? 'Terms of Services' : 'Privacy & Policy'}
       />

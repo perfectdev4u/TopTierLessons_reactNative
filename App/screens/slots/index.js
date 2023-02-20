@@ -14,6 +14,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import style from './style';
 import {AddSlot} from '../../compnents/addSlots';
 import moment from 'moment';
+import { goBackHandle } from '../../utils/constants';
 
 export default function Slots({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -196,7 +197,7 @@ export default function Slots({navigation}) {
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Slots'}
         rightIcon={true}

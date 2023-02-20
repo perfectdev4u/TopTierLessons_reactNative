@@ -5,6 +5,7 @@ import colors from '../../theme/colors';
 import Images from '../../assets/Images';
 import style from './style';
 import ChatListItem from '../../compnents/chatListItem';
+import { goBackHandle } from '../../utils/constants';
 export default function ChatScreen({navigation}) {
   const chatlist = [
     {
@@ -47,7 +48,7 @@ export default function ChatScreen({navigation}) {
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Messages'}
         rightIcon={true}

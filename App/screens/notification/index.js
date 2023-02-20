@@ -6,6 +6,7 @@ import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import {View, TouchableOpacity} from 'react-native';
 import CustomText from '../../compnents/customText';
+import { goBackHandle } from '../../utils/constants';
 
 export default function Notifications({navigation}) {
   const [isPressed, setIsPressed] = useState(false);
@@ -33,7 +34,7 @@ export default function Notifications({navigation}) {
     <ContainerBgImage>
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Notifications'}
       />

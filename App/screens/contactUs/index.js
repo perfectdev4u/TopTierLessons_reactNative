@@ -3,7 +3,6 @@ import ContainerBgImage from '../../compnents/containerBackground';
 import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import CustomButton from '../../compnents/customButton';
-import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import screenString from '../../navigation/screenString';
 import CustomHeader from '../../compnents/customHeader';
 import {Loader} from '../../compnents/loader';
@@ -12,7 +11,7 @@ import apiUrl from '../../api/apiUrl';
 import {useSelector} from 'react-redux';
 import {Alert} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
-import {isValidEmail} from '../../utils/constants';
+import {goBackHandle, isValidEmail} from '../../utils/constants';
 
 export default function ContactUs({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -65,7 +64,7 @@ export default function ContactUs({navigation}) {
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
+        leftIconClick={() => goBackHandle(navigation)}
         title={true}
         lable={'Contact Us'}
         rightIcon={true}

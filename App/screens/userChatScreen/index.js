@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import CustomInput from '../../compnents/CustomInput';
+import { goBackHandle } from '../../utils/constants';
 export default function UserChatScreen({navigation}) {
   const [bottomPadding, setBottomPadding] = useState(0);
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function UserChatScreen({navigation}) {
           {height: 45},
         ]}>
         <View style={style.rowContent}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => goBackHandle(navigation)}>
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
           <CustomImage
