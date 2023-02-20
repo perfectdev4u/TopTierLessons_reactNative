@@ -11,7 +11,6 @@ import {useSelector, useDispatch} from 'react-redux';
 
 export default function UserHome({navigation}) {
   const {user} = useSelector(state => state.authReducer);
-  console.log("user===>",user);
   const [searchTxt, setSearchTxt] = useState('');
   const featuredCoach = [
     {

@@ -35,7 +35,6 @@ export default StyleSheet.create({
     height: 40,
     fontSize: 14,
     color: colors.WHITE,
-    fontWeight: '400',
     lineHeight: 22,
     padding: 8,
     fontFamily: 'Gotham Bold',

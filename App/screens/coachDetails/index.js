@@ -12,15 +12,70 @@ import style from './style';
 import CustomButton from '../../compnents/customButton';
 import MapView, {Marker} from 'react-native-maps';
 import Star from 'react-native-vector-icons/Entypo';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {Loader} from '../../compnents/loader';
+import apiUrl from '../../api/apiUrl';
+import {postReq} from '../../api';
+import {addUser} from '../../redux/reducers/authReducer';
 export default function CoachDetails({navigation}) {
+  const {user} = useSelector(state => state.authReducer);
+  const dispatch = useDispatch();
   const [isActive, setIsActive] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isReviews, setIsReviews] = useState([]);
   const title = [
-    {name: 'Bio', width: '19%'},
-    {name: 'Location', width: '26%'},
-    {name: 'Availability', width: '30%'},
-    {name: 'Reviews', width: '25%'},
+    {name: 'Bio', width: '33.3%'},
+    {name: 'Location', width: '33.4%'},
+    {name: 'Reviews', width: '33.3%'},
   ];
+  const detailsPayload = {
+    coachId: 4,
+  };
+  const reviewsPayload = {
+    userId: 4,
+    page: 1,
+    pageSize: 20,
+  };
+  useEffect(() => {
+    if (isActive === 2) getAllReviews();
+    else getCoachDetails();
+  }, [isActive]);
+  const getCoachDetails = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.getCoachById,
+      detailsPayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        setIsLoading(false);
+        if (data?.statusCode === 200) {
+          dispatch(addUser({...user, coachDetails: data.data}));
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('getCoachDetails_err==>', err);
+      });
+  };
+  const getAllReviews = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.getAllReviews,
+      reviewsPayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        setIsLoading(false);
+        if (data?.statusCode === 200) {
+          setIsReviews(data.data);
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('getAllReviews_err==>', err);
+      });
+  };
   const bio = txt => {
     return (
       <View
@@ -42,7 +97,6 @@ export default function CoachDetails({navigation}) {
         />
         <CustomText
           fontSize={16}
-          fontWeight={'400'}
           color={'#C2C2C2'}
           marginLeft={'3%'}>
           {txt}
@@ -52,6 +106,7 @@ export default function CoachDetails({navigation}) {
   };
   return (
     <ContainerBgImage>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -69,36 +124,33 @@ export default function CoachDetails({navigation}) {
           },
         ]}>
         <View style={style.rowContent}>
-          <CustomImage style={{marginLeft: 10}} source={Images.USERPROFILE} />
-          <View style={{marginLeft: 10}}>
-            <CustomText fontSize={13} fontWeight={'500'}>
-              Bozenka Malina
-            </CustomText>
+          <CustomImage
+            style={style.profile}
+            source={{uri: user?.coachDetails?.profileImage}}
+          />
+          <View style={{marginLeft: '5%'}}>
+            <CustomText fontSize={13}>{user?.coachDetails?.name}</CustomText>
             <View style={style.rowContent}>
               <Icon
                 name={'location-outline'}
                 color={colors.THEME_BTN}
                 size={15}
               />
-              <CustomText marginLeft={3} fontSize={13} fontWeight={'300'}>
-                Panjer,South Denpasar
+              <CustomText marginLeft={3} fontSize={13}>
+                {user?.coachDetails?.address}
               </CustomText>
             </View>
             <View style={style.rowContent}>
               <Icon name={'star-outline'} color={colors.THEME_BTN} size={15} />
-              <CustomText marginLeft={3} fontSize={13} fontWeight={'400'}>
+              <CustomText marginLeft={3} fontSize={13}>
                 4.2/5
               </CustomText>
             </View>
           </View>
         </View>
         <View style={style.rowRight}>
-          <CustomText fontSize={10}>
-            Cricket
-          </CustomText>
-          <CustomText fontSize={16}>
-            105$
-          </CustomText>
+          <CustomText fontSize={10}>{user?.coachDetails?.sportName}</CustomText>
+          <CustomText fontSize={16}>{user?.coachDetails?.price}$</CustomText>
         </View>
       </View>
       <View style={style.divider} />
@@ -121,7 +173,6 @@ export default function CoachDetails({navigation}) {
                 alignItems: 'center',
               }}>
               <CustomText
-                fontWeight="600"
                 color={isActive === index ? colors.THEME_BTN : '#6B6B6B'}>
                 {val.name}
               </CustomText>
@@ -129,23 +180,12 @@ export default function CoachDetails({navigation}) {
           );
         })}
       </View>
-      {isActive === 0 && (
-        <View>
-          {bio(
-            `Former GPTCA, PTR and USPTA Certified with 15 years experience`,
-          )}
-          {bio(
-            'Teach all level - great with intermediate and performance players Patient and encouraging teaching style',
-          )}
-          {bio(`Worked with high performance juniors`)}
-          {bio(`Former ITF Junior Player`)}
-        </View>
-      )}
+      {isActive === 0 && <View>{bio(user?.coachDetails?.bio)}</View>}
       {isActive === 1 && (
         <View style={{flex: 1, width: '95%', alignSelf: 'center'}}>
           <CustomText marginTop={20} color="#CFCFCF">
-            John Doe is available at mention location. You can navigate through
-            map by clicking given location.
+            {user?.coachDetails?.name} is available at mention location. You can
+            navigate through map by clicking given location.
           </CustomText>
           <View style={style.mapContainer}>
             <MapView
@@ -154,62 +194,75 @@ export default function CoachDetails({navigation}) {
                 borderRadius: 30,
               }}
               initialRegion={{
-                latitude: 30.7333,
-                longitude: 76.7794,
+                latitude: user?.coachDetails?.latitude,
+                longitude: user?.coachDetails?.longitude,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}>
               <Marker
-                coordinate={{latitude: 30.7333, longitude: 76.7794}}></Marker>
+                coordinate={{
+                  latitude: user?.coachDetails?.latitude,
+                  longitude: user?.coachDetails?.longitude,
+                }}></Marker>
             </MapView>
           </View>
         </View>
       )}
-      {isActive === 3 && (
-        <View
-          style={[
-            commonStyle.row('95%', 'space-between', 'center'),
-            {
-              height: 70,
-              marginTop: 20,
-              borderBottomWidth: 0.4,
-              borderColor: '#F3F3F3',
-            },
-          ]}>
-          <View style={style.rowContent}>
-            <CustomImage style={{marginLeft: 10}} source={Images.USERPROFILE} />
-            <View style={{marginLeft: 10}}>
-              <CustomText fontSize={16}>
-                Bozenka Malina
-              </CustomText>
-              <CustomText color="#7A7A7A" fontSize={12}>
-                UI - Designer
-              </CustomText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            }}>
-            {Array.from(Array(5).keys()).map((val, index) => (
-              <Star
+      {isActive === 2 && (
+        <View>
+          {isReviews?.map((val, index) => {
+            return (
+              <View
                 key={index}
-                name={index <= 3 ? 'star' : 'star-outlined'}
-                color={colors.THEME_BTN}
-                size={22}
-              />
-            ))}
-          </View>
+                style={[
+                  commonStyle.row('95%', 'space-between', 'center'),
+                  {
+                    height: 70,
+                    marginTop: 20,
+                    borderBottomWidth: 0.4,
+                    borderColor: '#F3F3F3',
+                  },
+                ]}>
+                <View style={style.rowContent}>
+                  <CustomImage
+                    style={style.profile}
+                    source={{uri: val.studentImage}}
+                  />
+                  <View style={{marginLeft: '5%'}}>
+                    <CustomText fontSize={16}>{val.studentName}</CustomText>
+                    <CustomText numberOfLines={2} color="#7A7A7A" fontSize={12}>
+                      {val.review}
+                    </CustomText>
+                  </View>
+                </View>
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}>
+                  {Array.from(Array(5).keys()).map((item, index) => (
+                    <Star
+                      name={index <= val.rating ? 'star' : 'star-outlined'}
+                      color={colors.THEME_BTN}
+                      size={22}
+                    />
+                  ))}
+                </View>
+              </View>
+            );
+          })}
         </View>
       )}
-      <CustomButton
-        alignSelf={'center'}
-        marginTop={60}
-        lable="Book Now"
-        onPress={() => alert('in process')}
-      />
+      {!isLoading && (
+        <CustomButton
+          alignSelf={'center'}
+          marginTop={60}
+          lable="Book Now"
+          onPress={() => alert('in process')}
+        />
+      )}
     </ContainerBgImage>
   );
 }

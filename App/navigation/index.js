@@ -12,6 +12,7 @@ import ResetPassword from '../screens/resetPassword';
 import NewPassword from '../screens/newPassword';
 import UserProfileSetUp from '../screens/userProfileSetUp';
 import CoachProfileSetUp from '../screens/coachProfileSetUp';
+import EditProfile from '../screens/editProfile';
 import UserHome from '../screens/userHome';
 import CoachDetails from '../screens/coachDetails';
 import Notifications from '../screens/notification';
@@ -30,7 +31,7 @@ const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
   return (
     <Drawer.Navigator
-      initialRouteName={screenString.SLOTS}
+      initialRouteName={screenString.USERHOME}
       drawerContent={props => <DrawerMenu {...props} />}
       screenOptions={{
         headerShown: false,
@@ -39,6 +40,7 @@ const DrawerContainer = () => {
         },
       }}>
       <Drawer.Screen name={screenString.USERHOME} component={UserHome} />
+      <Drawer.Screen name={screenString.EDITPROFILE} component={EditProfile} />
       <Drawer.Screen
         name={screenString.NOTIFICATIONS}
         component={Notifications}

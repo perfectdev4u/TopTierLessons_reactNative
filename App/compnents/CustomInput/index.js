@@ -20,6 +20,7 @@ export default function CustomInput({
   borderWidth = 0,
   borderBottomWidth,
   paddingHorizontal = 0,
+  padding=8,
   onChangeText,
   editable = true,
   multiline = false,
@@ -66,7 +67,7 @@ export default function CustomInput({
             fontSize: 14,
             color: textColor,
             lineHeight: 18,
-            padding: 8,
+            padding,
             fontFamily: 'Gotham Bold',
           }}
         />

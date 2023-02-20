@@ -11,6 +11,8 @@ export default {
   updateProfile: 'User/UpdateUserProfile',
   getUserProfile: 'User/GetUserProfile',
   getNearVenue: 'Sport/GetNearbyVenue',
+  getCoachById: 'Sport/GetCoachById',
+  getAllReviews: 'ReviewRating/GetAllReviews',
   getAllTimeSlots: 'TimeSlots/GetAllTimeSlots',
   deleteTimeSlot: 'TimeSlots/DeleteTimeSlot',
   getSlotById: 'TimeSlots/GetSlotById',
@@ -23,5 +25,5 @@ export default {
   upcomingBookings: 'Booking/GetUpComingBookings',
   updateBookingStatus: 'Booking/UpdateBookingStatus',
   getBookingDetails: 'Booking/GetBookingDetailsById',
-  contactUs: 'ContactUs/ContactUs'
+  contactUs: 'ContactUs/ContactUs',
 };

@@ -175,7 +175,6 @@ export default function Login({navigation}) {
             )
           }
           isPressable={true}
-          fontWeight="500"
           fontSize={13}
           lineHeight={16}>
           {' '}

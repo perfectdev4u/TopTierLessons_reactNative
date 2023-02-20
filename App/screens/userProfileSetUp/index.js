@@ -23,7 +23,6 @@ import {Loader} from '../../compnents/loader';
 import {CommonActions} from '@react-navigation/native';
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
-  console.log(user);
   const [isLoading, setIsLoading] = useState(false);
   const defaultFormData = [
     {
@@ -165,7 +164,6 @@ export default function UserProfileSetUp({navigation}) {
       <CustomText
         fontSize={32}
         lineHeight={38}
-        fontWeight={'700'}
         alignSelf={'center'}>
         Set Up Profile
       </CustomText>

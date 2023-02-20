@@ -23,6 +23,13 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginTop: 15,
   },
+  profile: {
+    marginLeft: '5%',
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    alignSelf: 'center',
+  },
   mapContainer: {
     marginTop: 30,
     backgroundColor: colors.BLACK,

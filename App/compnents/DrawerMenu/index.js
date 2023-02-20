@@ -167,19 +167,16 @@ export default function DrawerMenu(props) {
                 width: 50,
                 borderRadius: 50,
                 alignSelf: 'center',
-                //resizeMode: 'contain',
               }}
             />
             <TouchableOpacity
-              onPress={() => alert('inprocess')}
+              onPress={() => navigation.navigate(screenString.EDITPROFILE)}
               style={style.iconContainer}>
               <Icon size={10} name={'pencil'} color={colors.THEME_BTN} />
             </TouchableOpacity>
           </View>
           <View style={{marginLeft: 10}}>
-            <CustomText fontSize={13}>
-              {user?.userName}
-            </CustomText>
+            <CustomText fontSize={13}>{user?.userName}</CustomText>
             <CustomText fontSize={10}>{user?.userEmail}</CustomText>
           </View>
         </View>

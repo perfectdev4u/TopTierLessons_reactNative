@@ -212,11 +212,7 @@ export default function CoachProfileSetUp({navigation}) {
         leftIconClick={() => navigation.goBack()}
       />
       <View style={{flex: 1, paddingHorizontal: 20}}>
-        <CustomText
-          fontSize={32}
-          lineHeight={38}
-          fontWeight={'700'}
-          alignSelf={'center'}>
+        <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
           Set Up Profile
         </CustomText>
         <View style={style.imageContaioner}>
@@ -339,7 +335,6 @@ export default function CoachProfileSetUp({navigation}) {
           />
           <CustomText
             fontSize={18}
-            fontWeight="600"
             lineHeight={20}
             color={colors.WHITE}
             textAlign={'center'}>
@@ -438,7 +433,6 @@ export default function CoachProfileSetUp({navigation}) {
             backgroundColor: colors.BLACK,
             color: 'white',
             fontSize: 14,
-            fontWeight: '400',
             fontFamily: 'Gotham Bold',
           }}
           renderTag={({tag, index, onPress, deleteTagOnPress, readonly}) => (
