@@ -21,7 +21,7 @@ import CustomImage from '../../compnents/customImage';
 import style from './style';
 import {BookingDetails} from '../../compnents/bookingDetails';
 import {addUser} from '../../redux/reducers/authReducer';
-import { goBackHandle } from '../../utils/constants';
+import {goBackHandle} from '../../utils/constants';
 
 export default function Booking({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -201,45 +201,49 @@ export default function Booking({navigation}) {
       <ImageBackground
         style={{flex: 1, backgroundColor: colors.BLACK}}
         source={Images.appBackground}>
-        <CustomHeader
-          leftIcon={'chevron-left'}
-          leftIconClick={() => goBackHandle(navigation)}
-          title={true}
-          lable={'Booking'}
-          rightIcon={true}
-        />
-        <View
-          style={[
-            commonStyle.row('95%', 'space-between', 'center'),
-            {marginTop: 20},
-          ]}>
-          {title.map((val, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setIsActive(index)}
-                style={{
-                  borderBottomWidth: 2,
-                  borderColor:
-                    isActive === index ? colors.THEME_BTN : '#595959',
-                  width: val.width,
-                  paddingBottom: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <CustomText
-                  color={isActive === index ? colors.THEME_BTN : '#6B6B6B'}>
-                  {val.name}
-                </CustomText>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-        <FlatList
-          data={isBookingsList}
-          renderItem={bookingsItemList}
-          showsVerticalScrollIndicator={false}
-        />
+        {!isLoading && (
+          <View style={{flex: 1}}>
+            <CustomHeader
+              leftIcon={'chevron-left'}
+              leftIconClick={() => goBackHandle(navigation)}
+              title={true}
+              lable={'Booking'}
+              rightIcon={true}
+            />
+            <View
+              style={[
+                commonStyle.row('95%', 'space-between', 'center'),
+                {marginTop: 20},
+              ]}>
+              {title.map((val, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setIsActive(index)}
+                    style={{
+                      borderBottomWidth: 2,
+                      borderColor:
+                        isActive === index ? colors.THEME_BTN : '#595959',
+                      width: val.width,
+                      paddingBottom: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <CustomText
+                      color={isActive === index ? colors.THEME_BTN : '#6B6B6B'}>
+                      {val.name}
+                    </CustomText>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <FlatList
+              data={isBookingsList}
+              renderItem={bookingsItemList}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        )}
       </ImageBackground>
       <BookingDetails
         modalVisible={isModalVisible}

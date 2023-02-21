@@ -18,7 +18,7 @@ import {
   uploadRoaster,
 } from '../../compnents/imageUpload';
 import commonStyle from '../../theme/commonStyle';
-import { goBackHandle } from '../../utils/constants';
+import {goBackHandle} from '../../utils/constants';
 
 export default function Documents({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -101,114 +101,120 @@ export default function Documents({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => goBackHandle(navigation)}
-        title={true}
-        lable={'Documents'}
-        rightIcon={true}
-      />
-      <CustomText
-        fontSize={20}
-        textAlign={'center'}
-        lineHeight={30}
-        marginTop={50}>
-        Simple way to save {'\n'} and shares files.
-      </CustomText>
-      <Icon
-        name={'cloud-upload'}
-        color={colors.WHITE}
-        style={{alignSelf: 'center', marginTop: 20}}
-        size={100}
-      />
-      <TouchableOpacity
-        onPress={() => {
-          setIsRoaster(true);
-          uploadRoaster(getFile);
-        }}
-        style={[style.rowContent, {marginTop: 40}]}>
-        <View style={style.rowLeft}>
-          <CustomText fontSize={13} color={colors.BLACK}>
-            Choose File
+      {!isLoading && (
+        <View style={{flex: 1}}>
+          <CustomHeader
+            leftIcon={'chevron-left'}
+            leftIconClick={() => goBackHandle(navigation)}
+            title={true}
+            lable={'Documents'}
+            rightIcon={true}
+          />
+          <CustomText
+            fontSize={20}
+            textAlign={'center'}
+            lineHeight={30}
+            marginTop={50}>
+            Simple way to save {'\n'} and shares files.
           </CustomText>
-        </View>
-        <View style={style.roaster}>
-          <CustomText fontSize={14} color={colors.FADED}>
-            Roaster
-          </CustomText>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setIsRoaster(false);
-          imageUpload();
-        }}
-        style={[style.rowContent, {marginTop: 20}]}>
-        <View style={style.rowLeft}>
-          <CustomText fontSize={13} color={colors.BLACK}>
-            Choose File
-          </CustomText>
-        </View>
-        <View style={style.roaster}>
-          <CustomText fontSize={14} color={colors.FADED}>
-            Id Proof
-          </CustomText>
-        </View>
-      </TouchableOpacity>
-      <CustomButton
-        marginTop={70}
-        lable={'Submit'}
-        width={'80%'}
-        alignSelf={'center'}
-      />
-      {coachDocuments.length > 0 || isLoading ? (
-        <View>
-          <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
-            Documents List
-          </CustomText>
-          <View
-            style={[
-              commonStyle.row('90%', 'space-between', 'center'),
-              {marginTop: 20, flex: 1, paddingHorizontal: 10},
-            ]}>
-            <CustomText alignSelf={'center'}>Image</CustomText>
-            <CustomText alignSelf={'center'}>Document Type</CustomText>
-            <CustomText alignSelf={'center'}>Status</CustomText>
-          </View>
-          {coachDocuments.map((val, index) => {
-            return (
+          <Icon
+            name={'cloud-upload'}
+            color={colors.WHITE}
+            style={{alignSelf: 'center', marginTop: 20}}
+            size={100}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setIsRoaster(true);
+              uploadRoaster(getFile);
+            }}
+            style={[style.rowContent, {marginTop: 40}]}>
+            <View style={style.rowLeft}>
+              <CustomText fontSize={13} color={colors.BLACK}>
+                Choose File
+              </CustomText>
+            </View>
+            <View style={style.roaster}>
+              <CustomText fontSize={14} color={colors.FADED}>
+                Roaster
+              </CustomText>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setIsRoaster(false);
+              imageUpload();
+            }}
+            style={[style.rowContent, {marginTop: 20}]}>
+            <View style={style.rowLeft}>
+              <CustomText fontSize={13} color={colors.BLACK}>
+                Choose File
+              </CustomText>
+            </View>
+            <View style={style.roaster}>
+              <CustomText fontSize={14} color={colors.FADED}>
+                Id Proof
+              </CustomText>
+            </View>
+          </TouchableOpacity>
+          <CustomButton
+            marginTop={70}
+            lable={'Submit'}
+            width={'80%'}
+            alignSelf={'center'}
+          />
+          {coachDocuments.length > 0 || isLoading ? (
+            <View>
+              <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
+                Documents List
+              </CustomText>
               <View
-                key={index}
                 style={[
                   commonStyle.row('90%', 'space-between', 'center'),
-                  {marginTop: 10, flex: 1, paddingHorizontal: 10},
+                  {marginTop: 20, flex: 1, paddingHorizontal: 10},
                 ]}>
-                <CustomImage
-                  source={{uri: val.document}}
-                  style={{
-                    height: 35,
-                    width: 35,
-                    alignSelf: 'center',
-                    borderRadius: 35,
-                  }}
-                />
-                <CustomText alignSelf={'center'} fontSize={14}>
-                  {val.documentType}
-                </CustomText>
-                <CustomText
-                  color={val.status === 'Pending' ? colors.THEME_BTN : 'green'}
-                  alignSelf={'center'}
-                  fontSize={14}>
-                  {val.status}
-                </CustomText>
+                <CustomText alignSelf={'center'}>Image</CustomText>
+                <CustomText alignSelf={'center'}>Document Type</CustomText>
+                <CustomText alignSelf={'center'}>Status</CustomText>
               </View>
-            );
-          })}
+              {coachDocuments.map((val, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      commonStyle.row('90%', 'space-between', 'center'),
+                      {marginTop: 10, flex: 1, paddingHorizontal: 10},
+                    ]}>
+                    <CustomImage
+                      source={{uri: val.document}}
+                      style={{
+                        height: 35,
+                        width: 35,
+                        alignSelf: 'center',
+                        borderRadius: 35,
+                      }}
+                    />
+                    <CustomText alignSelf={'center'} fontSize={14}>
+                      {val.documentType}
+                    </CustomText>
+                    <CustomText
+                      color={
+                        val.status === 'Pending' ? colors.THEME_BTN : 'green'
+                      }
+                      alignSelf={'center'}
+                      fontSize={14}>
+                      {val.status}
+                    </CustomText>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
+              No Documnets Uploaded Yet!
+            </CustomText>
+          )}
         </View>
-      ) : (
-        <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
-          No Documnets Uploaded Yet!
-        </CustomText>
       )}
     </ContainerBgImage>
   );

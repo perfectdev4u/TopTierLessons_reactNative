@@ -30,8 +30,8 @@ export default function DrawerMenu(props) {
     {
       isActive: false,
       icon: 'file-document-outline',
-      label: 'Lessons',
-      screen: screenString.LESSONS,
+      label: 'Booking',
+      screen: screenString.BOOKING,
     },
     {
       isActive: false,

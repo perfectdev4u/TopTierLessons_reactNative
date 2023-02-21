@@ -15,7 +15,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import {VenuesList} from '../../compnents/addVenues';
-import { goBackHandle } from '../../utils/constants';
+import {goBackHandle} from '../../utils/constants';
 
 export default function Venues({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -95,63 +95,71 @@ export default function Venues({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => goBackHandle(navigation)}
-        title={true}
-        lable={'Venues'}
-        rightIcon={true}
-      />
-      <CustomButton
-        marginTop={30}
-        lable={'Add'}
-        width={'25%'}
-        height={35}
-        alignSelf={'flex-end'}
-        marginRight={'2.5%'}
-        onPress={() => getVenueList()}
-      />
-      {isVenueList?.map((val, index) => {
-        return (
-          <View
-            key={index}
-            style={[
-              commonStyle.row('95%', 'space-between', 'center'),
-              {
-                height: 70,
-                backgroundColor: '#1F1F1F',
-                marginTop: 10,
-                paddingHorizontal: 10,
-              },
-            ]}>
-            <View style={style.rowContent}>
-              <CustomImage source={Images.USERPROFILE} />
-              <View style={{marginLeft: '5%'}}>
-                <CustomText fontSize={13}>{val.name}</CustomText>
+      {!isLoading && (
+        <View style={{flex: 1}}>
+          <CustomHeader
+            leftIcon={'chevron-left'}
+            leftIconClick={() => goBackHandle(navigation)}
+            title={true}
+            lable={'Venues'}
+            rightIcon={true}
+          />
+          <CustomButton
+            marginTop={30}
+            lable={'Add'}
+            width={'25%'}
+            height={35}
+            alignSelf={'flex-end'}
+            marginRight={'2.5%'}
+            onPress={() => getVenueList()}
+          />
+          {isVenueList?.map((val, index) => {
+            return (
+              <View
+                key={index}
+                style={[
+                  commonStyle.row('95%', 'space-between', 'center'),
+                  {
+                    height: 70,
+                    backgroundColor: '#1F1F1F',
+                    marginTop: 10,
+                    paddingHorizontal: 10,
+                  },
+                ]}>
                 <View style={style.rowContent}>
-                  <Icon
-                    name={'map-marker'}
-                    color={colors.THEME_BTN}
-                    size={15}
-                  />
-                  <CustomText marginLeft={3} fontSize={13}>
-                    {val.address}
-                  </CustomText>
+                  <CustomImage source={Images.USERPROFILE} />
+                  <View style={{marginLeft: '5%'}}>
+                    <CustomText fontSize={13}>{val.name}</CustomText>
+                    <View style={style.rowContent}>
+                      <Icon
+                        name={'map-marker'}
+                        color={colors.THEME_BTN}
+                        size={15}
+                      />
+                      <CustomText marginLeft={3} fontSize={13}>
+                        {val.address}
+                      </CustomText>
+                    </View>
+                    <View style={style.rowContent}>
+                      <Icon
+                        name={'account'}
+                        color={colors.THEME_BTN}
+                        size={15}
+                      />
+                      <CustomText marginLeft={3} fontSize={13}>
+                        {val.alowGuest ? 'Yes' : 'No'}
+                      </CustomText>
+                    </View>
+                  </View>
                 </View>
-                <View style={style.rowContent}>
-                  <Icon name={'account'} color={colors.THEME_BTN} size={15} />
-                  <CustomText marginLeft={3} fontSize={13}>
-                    {val.alowGuest ? 'Yes' : 'No'}
-                  </CustomText>
-                </View>
+                <TouchableOpacity onPress={() => setVenueId(val.venueId)}>
+                  <Icon name={'delete'} color={colors.THEME_BTN} size={35} />
+                </TouchableOpacity>
               </View>
-            </View>
-            <TouchableOpacity onPress={() => setVenueId(val.venueId)}>
-              <Icon name={'delete'} color={colors.THEME_BTN} size={35} />
-            </TouchableOpacity>
-          </View>
-        );
-      })}
+            );
+          })}
+        </View>
+      )}
       <VenuesList
         modalVisible={isModalVisible}
         setModalVisible={setIsModalVisible}

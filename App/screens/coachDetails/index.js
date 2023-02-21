@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import ContainerBgImage from '../../compnents/containerBackground';
 import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Images from '../../assets/Images';
 import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import {View, TouchableOpacity} from 'react-native';
@@ -17,6 +16,7 @@ import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
 import {addUser} from '../../redux/reducers/authReducer';
+import screenString from '../../navigation/screenString';
 export default function CoachDetails({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
@@ -95,10 +95,7 @@ export default function CoachDetails({navigation}) {
             marginTop: 6,
           }}
         />
-        <CustomText
-          fontSize={16}
-          color={'#C2C2C2'}
-          marginLeft={'3%'}>
+        <CustomText fontSize={16} color={'#C2C2C2'} marginLeft={'3%'}>
           {txt}
         </CustomText>
       </View>
@@ -107,161 +104,177 @@ export default function CoachDetails({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
-        title={true}
-        lable={'Coach Detail'}
-        rightIcon={true}
-      />
-      <View
-        style={[
-          commonStyle.row('95%', 'space-between', 'center'),
-          {
-            height: 70,
-            backgroundColor: '#1F1F1F',
-            marginTop: 20,
-          },
-        ]}>
-        <View style={style.rowContent}>
-          <CustomImage
-            style={style.profile}
-            source={{uri: user?.coachDetails?.profileImage}}
+      {!isLoading && (
+        <View style={{flex: 1}}>
+          <CustomHeader
+            leftIcon={'chevron-left'}
+            leftIconClick={() => navigation.goBack()}
+            title={true}
+            lable={'Coach Detail'}
+            rightIcon={true}
           />
-          <View style={{marginLeft: '5%'}}>
-            <CustomText fontSize={13}>{user?.coachDetails?.name}</CustomText>
+          <View
+            style={[
+              commonStyle.row('95%', 'space-between', 'center'),
+              {
+                height: 70,
+                backgroundColor: '#1F1F1F',
+                marginTop: 20,
+              },
+            ]}>
             <View style={style.rowContent}>
-              <Icon
-                name={'location-outline'}
-                color={colors.THEME_BTN}
-                size={15}
+              <CustomImage
+                style={style.profile}
+                source={{uri: user?.coachDetails?.profileImage}}
               />
-              <CustomText marginLeft={3} fontSize={13}>
-                {user?.coachDetails?.address}
-              </CustomText>
-            </View>
-            <View style={style.rowContent}>
-              <Icon name={'star-outline'} color={colors.THEME_BTN} size={15} />
-              <CustomText marginLeft={3} fontSize={13}>
-                4.2/5
-              </CustomText>
-            </View>
-          </View>
-        </View>
-        <View style={style.rowRight}>
-          <CustomText fontSize={10}>{user?.coachDetails?.sportName}</CustomText>
-          <CustomText fontSize={16}>{user?.coachDetails?.price}$</CustomText>
-        </View>
-      </View>
-      <View style={style.divider} />
-      <View
-        style={[
-          commonStyle.row('95%', 'space-between', 'center'),
-          {marginTop: 20, flex: 1},
-        ]}>
-        {title.map((val, index) => {
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => setIsActive(index)}
-              style={{
-                borderBottomWidth: 2,
-                borderColor: isActive === index ? colors.THEME_BTN : '#595959',
-                width: val.width,
-                paddingBottom: 20,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <CustomText
-                color={isActive === index ? colors.THEME_BTN : '#6B6B6B'}>
-                {val.name}
-              </CustomText>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-      {isActive === 0 && <View>{bio(user?.coachDetails?.bio)}</View>}
-      {isActive === 1 && (
-        <View style={{flex: 1, width: '95%', alignSelf: 'center'}}>
-          <CustomText marginTop={20} color="#CFCFCF">
-            {user?.coachDetails?.name} is available at mention location. You can
-            navigate through map by clicking given location.
-          </CustomText>
-          <View style={style.mapContainer}>
-            <MapView
-              style={{
-                flex: 1,
-                borderRadius: 30,
-              }}
-              initialRegion={{
-                latitude: user?.coachDetails?.latitude,
-                longitude: user?.coachDetails?.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}>
-              <Marker
-                coordinate={{
-                  latitude: user?.coachDetails?.latitude,
-                  longitude: user?.coachDetails?.longitude,
-                }}></Marker>
-            </MapView>
-          </View>
-        </View>
-      )}
-      {isActive === 2 && (
-        <View>
-          {isReviews?.map((val, index) => {
-            return (
-              <View
-                key={index}
-                style={[
-                  commonStyle.row('95%', 'space-between', 'center'),
-                  {
-                    height: 70,
-                    marginTop: 20,
-                    borderBottomWidth: 0.4,
-                    borderColor: '#F3F3F3',
-                  },
-                ]}>
+              <View style={{marginLeft: '5%'}}>
+                <CustomText fontSize={13}>
+                  {user?.coachDetails?.name}
+                </CustomText>
                 <View style={style.rowContent}>
-                  <CustomImage
-                    style={style.profile}
-                    source={{uri: val.studentImage}}
+                  <Icon
+                    name={'location-outline'}
+                    color={colors.THEME_BTN}
+                    size={15}
                   />
-                  <View style={{marginLeft: '5%'}}>
-                    <CustomText fontSize={16}>{val.studentName}</CustomText>
-                    <CustomText numberOfLines={2} color="#7A7A7A" fontSize={12}>
-                      {val.review}
-                    </CustomText>
-                  </View>
+                  <CustomText marginLeft={3} fontSize={13}>
+                    {user?.coachDetails?.address}
+                  </CustomText>
                 </View>
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                  }}>
-                  {Array.from(Array(5).keys()).map((item, index) => (
-                    <Star
-                      name={index <= val.rating ? 'star' : 'star-outlined'}
-                      color={colors.THEME_BTN}
-                      size={22}
-                    />
-                  ))}
+                <View style={style.rowContent}>
+                  <Icon
+                    name={'star-outline'}
+                    color={colors.THEME_BTN}
+                    size={15}
+                  />
+                  <CustomText marginLeft={3} fontSize={13}>
+                    4.2/5
+                  </CustomText>
                 </View>
               </View>
-            );
-          })}
+            </View>
+            <View style={style.rowRight}>
+              <CustomText fontSize={10}>
+                {user?.coachDetails?.sportName}
+              </CustomText>
+              <CustomText fontSize={16}>
+                {user?.coachDetails?.price}$
+              </CustomText>
+            </View>
+          </View>
+          <View style={style.divider} />
+          <View
+            style={[
+              commonStyle.row('95%', 'space-between', 'center'),
+              {marginTop: 20, flex: 1},
+            ]}>
+            {title.map((val, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => setIsActive(index)}
+                  style={{
+                    borderBottomWidth: 2,
+                    borderColor:
+                      isActive === index ? colors.THEME_BTN : '#595959',
+                    width: val.width,
+                    paddingBottom: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <CustomText
+                    color={isActive === index ? colors.THEME_BTN : '#6B6B6B'}>
+                    {val.name}
+                  </CustomText>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          {isActive === 0 && <View>{bio(user?.coachDetails?.bio)}</View>}
+          {isActive === 1 && (
+            <View style={{flex: 1, width: '95%', alignSelf: 'center'}}>
+              <CustomText marginTop={20} color="#CFCFCF">
+                {user?.coachDetails?.name} is available at mention location. You
+                can navigate through map by clicking given location.
+              </CustomText>
+              <View style={style.mapContainer}>
+                <MapView
+                  style={{
+                    flex: 1,
+                    borderRadius: 30,
+                  }}
+                  initialRegion={{
+                    latitude: user?.coachDetails?.latitude,
+                    longitude: user?.coachDetails?.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}>
+                  <Marker
+                    coordinate={{
+                      latitude: user?.coachDetails?.latitude,
+                      longitude: user?.coachDetails?.longitude,
+                    }}></Marker>
+                </MapView>
+              </View>
+            </View>
+          )}
+          {isActive === 2 && (
+            <View>
+              {isReviews?.map((val, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      commonStyle.row('95%', 'space-between', 'center'),
+                      {
+                        height: 70,
+                        marginTop: 20,
+                        borderBottomWidth: 0.4,
+                        borderColor: '#F3F3F3',
+                      },
+                    ]}>
+                    <View style={style.rowContent}>
+                      <CustomImage
+                        style={style.profile}
+                        source={{uri: val.studentImage}}
+                      />
+                      <View style={{marginLeft: '5%'}}>
+                        <CustomText fontSize={16}>{val.studentName}</CustomText>
+                        <CustomText
+                          numberOfLines={2}
+                          color="#7A7A7A"
+                          fontSize={12}>
+                          {val.review}
+                        </CustomText>
+                      </View>
+                    </View>
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                      }}>
+                      {Array.from(Array(5).keys()).map((item, index) => (
+                        <Star
+                          name={index <= val.rating ? 'star' : 'star-outlined'}
+                          color={colors.THEME_BTN}
+                          size={22}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )}
+          <CustomButton
+            alignSelf={'center'}
+            marginTop={100}
+            lable="Book Now"
+            onPress={() => navigation.navigate(screenString.DATETIME)}
+          />
         </View>
-      )}
-      {!isLoading && (
-        <CustomButton
-          alignSelf={'center'}
-          marginTop={60}
-          lable="Book Now"
-          onPress={() => alert('in process')}
-        />
       )}
     </ContainerBgImage>
   );

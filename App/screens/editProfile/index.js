@@ -142,151 +142,158 @@ export default function EditProfile({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => goBackHandle(navigation)}
-      />
-      <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
-        Profile
-      </CustomText>
-      <View style={style.rowContents}>
-        <View />
-        <CustomImage
-          source={{
-            uri: image,
-          }}
-          style={style.profileImage}
-        />
-        <TouchableOpacity
-          onPress={() => imageUpload()}
-          style={style.iconContainer}>
-          <Icon size={20} name={'pencil'} color={colors.THEME_BTN} />
-        </TouchableOpacity>
-      </View>
-      <ProfileDetailsContainer
-        title="Display Name"
-        placeholder={'Your Name'}
-        value={name}
-        onChange={txt => setName(txt)}
-      />
-      <ProfileDetailsContainer
-        title="Phone Number"
-        placeholder={'Phone Number'}
-        value={phoneNum}
-        onChange={txt => setPhoneNum(txt)}
-      />
-      <ProfileDetailsContainer
-        title="Email"
-        placeholder={'Your Email'}
-        value={user?.user?.username}
-        editable={false}
-      />
-      <CustomText marginLeft={'2.5%'} marginTop={20} color="#878787">
-        Address
-      </CustomText>
-      <GooglePlacesAutocomplete
-        placeholder="Address"
-        onPress={(data, details = null) => {
-          setAddress({
-            name: data?.description,
-            lat: details?.geometry?.location?.lat,
-            lan: details?.geometry?.location?.lng,
-          });
-        }}
-        query={{
-          key: 'AIzaSyDx_6SY-xRPDGlQoPt8PTRbCtTHKCbiCXQ',
-          language: 'en',
-        }}
-        returnKeyType={'default'}
-        fetchDetails={true}
-        enablePoweredByContainer={false}
-        textInputProps={{
-          value: address.name,
-          placeholderTextColor: '#D4D4D4',
-          onChangeText: address => setAddress(address),
-        }}
-        styles={{
-          textInput: {
-            height: 22,
-            color: colors.WHITE,
-            fontSize: 15,
-            backgroundColor: 'black',
-            fontFamily: 'Gotham Bold',
-          },
-          container: {
-            width: '100%',
-            alignSelf: 'center',
-            marginLeft: '2.5%',
-            marginTop: 5,
-          },
-        }}
-      />
-      {user?.user?.userType === 2 && (
-        <CustomText marginLeft={'2.5%'} marginTop={15} color="#878787">
-          Sport
-        </CustomText>
-      )}
-      {user?.user?.userType === 2 && (
-        <DropDown
-          width="95%"
-          marginTop={5}
-          isDropDown={isSportsDropDown}
-          lable={sport.name}
-          setLable={setSport}
-          onPress={() => setIsSportsDropDown(!isSportsDropDown)}
-          isShown={false}
-        />
-      )}
-      {isSportsDropDown && (
-        <View
-          style={{
-            width: '90%',
-            marginTop: 10,
-            backgroundColor: colors.WHITE,
-            alignSelf: 'center',
-            padding: 10,
-          }}>
-          {sportsList?.map((val, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  setSport({name: val.sportName, id: val.sportId});
-                  setIsSportsDropDown(!isSportsDropDown);
-                }}>
-                <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
-                  {val.sportName}
-                </CustomText>
-              </TouchableOpacity>
-            );
-          })}
+      {!isLoading && (
+        <View style={{flex: 1}}>
+          <CustomHeader
+            leftIcon={'chevron-left'}
+            leftIconClick={() => goBackHandle(navigation)}
+          />
+          <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
+            Profile
+          </CustomText>
+          <View style={style.rowContents}>
+            <View />
+            <CustomImage
+              source={{
+                uri: image,
+              }}
+              style={style.profileImage}
+            />
+            <TouchableOpacity
+              onPress={() => imageUpload()}
+              style={style.iconContainer}>
+              <Icon size={20} name={'pencil'} color={colors.THEME_BTN} />
+            </TouchableOpacity>
+          </View>
+          <ProfileDetailsContainer
+            title="Display Name"
+            placeholder={'Your Name'}
+            value={name}
+            onChange={txt => setName(txt)}
+          />
+          <ProfileDetailsContainer
+            title="Phone Number"
+            placeholder={'Phone Number'}
+            value={phoneNum}
+            onChange={txt => setPhoneNum(txt)}
+          />
+          <ProfileDetailsContainer
+            title="Email"
+            placeholder={'Your Email'}
+            value={user?.user?.username}
+            editable={false}
+          />
+          <CustomText marginLeft={'2.5%'} marginTop={20} color="#878787">
+            Address
+          </CustomText>
+          <GooglePlacesAutocomplete
+            placeholder="Address"
+            onPress={(data, details = null) => {
+              setAddress({
+                name: data?.description,
+                lat: details?.geometry?.location?.lat,
+                lan: details?.geometry?.location?.lng,
+              });
+            }}
+            query={{
+              key: 'AIzaSyDx_6SY-xRPDGlQoPt8PTRbCtTHKCbiCXQ',
+              language: 'en',
+            }}
+            returnKeyType={'default'}
+            fetchDetails={true}
+            enablePoweredByContainer={false}
+            textInputProps={{
+              value: address.name,
+              placeholderTextColor: '#D4D4D4',
+              onChangeText: address => setAddress(address),
+            }}
+            styles={{
+              textInput: {
+                height: 22,
+                color: colors.WHITE,
+                fontSize: 15,
+                backgroundColor: 'black',
+                fontFamily: 'Gotham Bold',
+              },
+              container: {
+                width: '100%',
+                alignSelf: 'center',
+                marginLeft: '2.5%',
+                marginTop: 5,
+              },
+            }}
+          />
+          {user?.user?.userType === 2 && (
+            <CustomText marginLeft={'2.5%'} marginTop={15} color="#878787">
+              Sport
+            </CustomText>
+          )}
+          {user?.user?.userType === 2 && (
+            <DropDown
+              width="95%"
+              marginTop={5}
+              isDropDown={isSportsDropDown}
+              lable={sport.name}
+              setLable={setSport}
+              onPress={() => setIsSportsDropDown(!isSportsDropDown)}
+              isShown={false}
+            />
+          )}
+          {isSportsDropDown && (
+            <View
+              style={{
+                width: '90%',
+                marginTop: 10,
+                backgroundColor: colors.WHITE,
+                alignSelf: 'center',
+                padding: 10,
+              }}>
+              {sportsList?.map((val, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setSport({name: val.sportName, id: val.sportId});
+                      setIsSportsDropDown(!isSportsDropDown);
+                    }}>
+                    <CustomText
+                      color={colors.BLACK}
+                      fontSize={15}
+                      lineHeight={22}>
+                      {val.sportName}
+                    </CustomText>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+          {user?.user?.userType === 2 && (
+            <ProfileDetailsContainer
+              title="Price"
+              placeholder={'Price'}
+              value={price.toString()}
+              onChange={txt => setPrice(txt)}
+            />
+          )}
+          {user?.user?.userType === 2 && (
+            <ProfileDetailsContainer
+              title="Bio"
+              placeholder={'Bio'}
+              value={bio}
+              onChange={txt => setBio(txt)}
+              multiline={true}
+              height={150}
+            />
+          )}
+          <CustomButton
+            width="80%"
+            alignSelf={'center'}
+            marginTop={50}
+            lable="Update"
+            onPress={() => Alert.alert('inProcess')}
+          />
         </View>
       )}
-      {user?.user?.userType === 2 && (
-        <ProfileDetailsContainer
-          title="Price"
-          placeholder={'Price'}
-          value={price.toString()}
-          onChange={txt => setPrice(txt)}
-        />
-      )}
-      {user?.user?.userType === 2 && (
-        <ProfileDetailsContainer
-          title="Bio"
-          placeholder={'Bio'}
-          value={bio}
-          onChange={txt => setBio(txt)}
-          multiline={true}
-          height={150}
-        />
-      )}
-      <CustomButton
-        width="80%"
-        alignSelf={'center'}
-        marginTop={50}
-        lable="Update"
-        onPress={() => Alert.alert('inProcess')}
-      />
     </ContainerBgImage>
   );
 }
