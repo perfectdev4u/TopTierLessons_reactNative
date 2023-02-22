@@ -63,8 +63,8 @@ export default function Login({navigation}) {
     if (!email) Alert.alert('Please fill your email.');
     else if (!isValidEmail(email)) Alert.alert('Please enter valid email.');
     else if (!password) Alert.alert('Please fill your password.');
-    else if (password.length < 6)
-      Alert.alert('Password should be more than 5 character.');
+    // else if (password.length < 6)
+    //   Alert.alert('Password should be more than 5 character.');
     else handleLogin();
   };
   return (

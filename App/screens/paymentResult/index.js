@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImageBackground, SafeAreaView, View} from 'react-native';
 import Images from '../../assets/Images';
 import {CommonActions} from '@react-navigation/native';
@@ -7,8 +7,33 @@ import colors from '../../theme/colors';
 import CustomButton from '../../compnents/customButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomText from '../../compnents/customText';
+import {Loader} from '../../compnents/loader';
+import apiUrl from '../../api/apiUrl';
+import {postReq} from '../../api';
+import {useSelector} from 'react-redux';
 
-export default function OnSuccess({navigation}) {
+export default function PaymentResult({route, navigation}) {
+  console.log('payment_route==>', route);
+  const {user} = useSelector(state => state.authReducer);
+  const [isLoading, setIsLoading] = useState(false);
+  const capturePayLoad = {
+    token: '',
+    payerId: '',
+  };
+  const handlePaymentResponse = () => {
+    setIsLoading(true);
+    postReq(apiUrl.baseUrl + apiUrl.capturePayment, capturePayLoad)
+      .then(res => {
+        setIsLoading(false);
+        if (res?.data?.statusCode === 200) {
+          console.log('paymentRes==>', res?.data?.data);
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('paymentRes_err==>', err);
+      });
+  };
   const handleGoBack = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -30,7 +55,9 @@ export default function OnSuccess({navigation}) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
+          paddingBottom: 30,
         }}>
+        <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
         <View />
         <View
           style={{
@@ -67,7 +94,7 @@ export default function OnSuccess({navigation}) {
         </View>
         <CustomButton
           alignSelf={'center'}
-          width={'90%'}
+          width={'80%'}
           lable={'Go Back Home'}
           onPress={() => handleGoBack()}
         />

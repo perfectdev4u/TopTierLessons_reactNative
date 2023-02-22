@@ -6,16 +6,26 @@ import commonStyle from '../../theme/commonStyle';
 import {CommonActions} from '@react-navigation/native';
 import screenString from '../../navigation/screenString';
 import colors from '../../theme/colors';
+import {useSelector} from 'react-redux';
 
 export default function Splash({navigation}) {
+  const {user} = useSelector(state => state.authReducer);
   useEffect(() => {
     setTimeout(() => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: screenString.ONBOARDING}],
-        }),
-      );
+      if (user?.access_token) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.DRAWER}],
+          }),
+        );
+      } else
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.ONBOARDING}],
+          }),
+        );
     }, 2000);
   }, []);
 

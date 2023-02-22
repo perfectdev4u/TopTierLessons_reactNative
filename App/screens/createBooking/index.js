@@ -139,6 +139,7 @@ export default function CreateBooking({route, navigation}) {
         price={data?.bookingPrice}
         serviceCharge={data?.gatewayCharge}
         totalPrice={data?.totalPrice}
+        navigation={navigation}
       />
     </ContainerBgImage>
   );

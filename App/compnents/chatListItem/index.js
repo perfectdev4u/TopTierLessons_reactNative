@@ -5,13 +5,14 @@ import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import CustomImage from '../customImage';
 import CustomText from '../customText';
+import moment from 'moment';
 
 export default function ChatListItem({
-  profilePic,
-  name,
-  msgTime,
-  isActive,
-  msg,
+  profileImage,
+  userName,
+  updatedOn,
+  isActive = true,
+  lastMessage,
   navigation,
 }) {
   return (
@@ -28,29 +29,25 @@ export default function ChatListItem({
         },
       ]}>
       <View style={style.rowContent}>
-        <CustomImage source={profilePic} />
+        <CustomImage
+          source={{uri: profileImage}}
+          style={{height: 50, width: 50, borderRadius: 50, alignSelf: 'center'}}
+        />
         <View style={{marginLeft: 10}}>
           <View style={style.rowContent}>
-            <CustomText fontSize={13}>
-              {name}
-            </CustomText>
-            <CustomText marginLeft={'5%'} fontSize={9}>
-              {msgTime}
+            <CustomText fontSize={13}>{userName}</CustomText>
+            <CustomText color={colors.FADED} marginLeft={'5%'} fontSize={9}>
+              {moment(updatedOn).format('HH:mm:ss')}
             </CustomText>
           </View>
-          <CustomText color={colors.THEME_BTN}>
-            {msg}
-          </CustomText>
+          <CustomText color={colors.THEME_BTN}>{lastMessage}</CustomText>
         </View>
       </View>
       <View
-        style={{
-          backgroundColor: isActive ? colors.THEME_BTN : colors.WHITE,
-          height: 12,
-          width: 12,
-          borderRadius: 12,
-          marginRight: '5%',
-        }}></View>
+        style={[
+          style.activeDot,
+          {backgroundColor: isActive ? colors.THEME_BTN : colors.WHITE},
+        ]}></View>
     </TouchableOpacity>
   );
 }
@@ -69,5 +66,11 @@ const style = StyleSheet.create({
     alignItems: 'center',
     borderTopLeftRadius: 100,
     borderBottomLeftRadius: 30,
+  },
+  activeDot: {
+    height: 12,
+    width: 12,
+    borderRadius: 12,
+    marginRight: '5%',
   },
 });

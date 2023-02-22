@@ -16,9 +16,9 @@ import Icon from 'react-native-vector-icons/Feather';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import CustomInput from '../../compnents/CustomInput';
-import { goBackHandle } from '../../utils/constants';
 export default function UserChatScreen({navigation}) {
   const [bottomPadding, setBottomPadding] = useState(0);
+  const [msg, setMsg] = useState('');
   useEffect(() => {
     let keyboardWillShow;
     let keyboardWillHide;
@@ -56,7 +56,7 @@ export default function UserChatScreen({navigation}) {
           {height: 45},
         ]}>
         <View style={style.rowContent}>
-          <TouchableOpacity onPress={() => goBackHandle(navigation)}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
           <CustomImage
@@ -92,6 +92,10 @@ export default function UserChatScreen({navigation}) {
         placeholder={'Type a message'}
         placeholderTextColor={'rgba(67, 62, 62, 0.5)'}
         paddingHorizontal={10}
+        multiline={true}
+        value={msg}
+        onChangeText={txt => setMsg(txt)}
+        textColor={colors.BLACK}
         leftComponent={
           <TouchableOpacity
             style={{
@@ -106,7 +110,9 @@ export default function UserChatScreen({navigation}) {
           </TouchableOpacity>
         }
         rightComponent={
-          <Icon size={20} name={'send'} color={colors.THEME_BTN} />
+          <TouchableOpacity>
+            <Icon size={20} name={'send'} color={colors.THEME_BTN} />
+          </TouchableOpacity>
         }
       />
       <View

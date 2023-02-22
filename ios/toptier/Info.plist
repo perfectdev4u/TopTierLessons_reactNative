@@ -30,6 +30,16 @@
 				<string>fb588082386211978</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>toptier</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>toptier</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>

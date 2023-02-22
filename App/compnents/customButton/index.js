@@ -5,7 +5,7 @@ import CustomText from '../customText';
 import Icon from 'react-native-vector-icons/Fontisto';
 
 export default function CustomButton({
-  width = '90%',
+  width = '80%',
   height = 46,
   backgroundColor = colors.THEME_BTN,
   marginTop = 0,
@@ -46,10 +46,7 @@ export default function CustomButton({
           style={{marginRight: 10}}
         />
       )}
-      <CustomText
-        color={fontColor}
-        fontSize={15}
-        lineHeight={22}>
+      <CustomText color={fontColor} fontSize={15} lineHeight={22}>
         {lable}
       </CustomText>
     </TouchableOpacity>

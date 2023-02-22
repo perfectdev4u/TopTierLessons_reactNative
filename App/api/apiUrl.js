@@ -21,6 +21,8 @@ export default {
   checkAvailability: 'TimeSlots/CheckAvailability',
   createBooking: 'Booking/CreateBooking',
   createOrder: 'PayPalpayment/CreateOrder',
+  capturePayment: 'PayPalpayment/CapturePayment',
+  getChatInbox: 'Chat/GetInbox',
   uploadFile: 'User/UploadFile',
   documentUpload: 'Document/UploadDocument',
   deleteVenue: 'Venue/DeleteCoachVenue',

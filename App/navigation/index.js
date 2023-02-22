@@ -25,8 +25,9 @@ import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
 import DateTime from '../screens/DateTime';
 import CreateBooking from '../screens/createBooking';
+import Payment from '../screens/payment';
+import PaymentResult from '../screens/paymentResult';
 import ContactUs from '../screens/contactUs';
-import OnSuccess from '../screens/successPayment';
 import screenString from './screenString';
 import DrawerMenu from '../compnents/DrawerMenu';
 const Stack = createStackNavigator();
@@ -67,7 +68,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.DRAWER}>
+      initialRouteName={ScreenString.SPLASH}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -101,7 +102,11 @@ export default function MainNavigationContainer() {
         name={ScreenString.CREATEBOOKING}
         component={CreateBooking}
       />
-      <Stack.Screen name={ScreenString.PAYMENTINFO} component={OnSuccess} />
+      <Stack.Screen name={ScreenString.PAYMENT} component={Payment} />
+      <Stack.Screen
+        name={ScreenString.PAYMENTRESULT}
+        component={PaymentResult}
+      />
     </Stack.Navigator>
   );
 }

@@ -9,6 +9,7 @@ import {postReq} from '../../api';
 import apiUrl from '../../api/apiUrl';
 import {useSelector} from 'react-redux';
 import {Loader} from '../loader';
+import screenString from '../../navigation/screenString';
 
 export const PaymentInfo = ({
   modalVisible,
@@ -17,13 +18,14 @@ export const PaymentInfo = ({
   totalPrice,
   price,
   serviceCharge,
+  navigation,
 }) => {
   const {user} = useSelector(state => state.authReducer);
   const [isLoading, setIsLoading] = useState(false);
   const createOrderPayload = {
     bookingId: bookingId,
-    amount: totalPrice,
     currency: 'USD',
+    redirectUrl: 'toptier://PAYMENTRESULT',
   };
   const onPayment = () => {
     setIsLoading(true);
@@ -38,6 +40,9 @@ export const PaymentInfo = ({
           console.log('onPay=>', res?.data?.data);
           Alert.alert(res?.data?.returnMessage[0]);
           setModalVisible(false);
+          navigation.navigate(screenString.PAYMENT, {
+            paymentLink: res?.data?.data?.paymentLink,
+          });
         }
       })
       .catch(err => {

@@ -5,47 +5,44 @@ import colors from '../../theme/colors';
 import Images from '../../assets/Images';
 import style from './style';
 import ChatListItem from '../../compnents/chatListItem';
-import { goBackHandle } from '../../utils/constants';
+import {goBackHandle} from '../../utils/constants';
+import {Loader} from '../../compnents/loader';
+import apiUrl from '../../api/apiUrl';
+import {postReq} from '../../api';
+import {useSelector} from 'react-redux';
 export default function ChatScreen({navigation}) {
-  const chatlist = [
-    {
-      profilePic: Images.USERPROFILE,
-      name: 'Martin',
-      msgTime: '2 hours ago',
-      isActive: true,
-      msg: 'Hi how are you ?',
-    },
-    {
-      profilePic: Images.USERPROFILE,
-      name: 'Emma',
-      mstTime: '3 hours ago',
-      isActive: false,
-      msg: 'Hello',
-    },
-    {
-      profilePic: Images.USERPROFILE,
-      name: 'Martin',
-      mstTime: '1 hours ago',
-      isActive: true,
-      msg: 'Hi how are you ?',
-    },
-    {
-      profilePic: Images.USERPROFILE,
-      name: 'Martin',
-      mstTime: '1 hours ago',
-      isActive: true,
-      msg: 'Hi how are you ?',
-    },
-    {
-      profilePic: Images.USERPROFILE,
-      name: 'Martin',
-      mstTime: '1 hours ago',
-      isActive: false,
-      msg: 'Hi how are you ?',
-    },
-  ];
+  const {user} = useSelector(state => state.authReducer);
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatList, setChatList] = useState([]);
+  const inboxPayload = {
+    userId: user?.user?.userId,
+    page: 1,
+    pageSize: 20,
+  };
+  useEffect(() => {
+    getInbox();
+  }, [user]);
+  const getInbox = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.getChatInbox,
+      inboxPayload,
+      user?.access_token,
+    )
+      .then(res => {
+        setIsLoading(false);
+        if (res?.data?.statusCode === 200) {
+          setChatList(res?.data?.data);
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('_err==>', err);
+      });
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => goBackHandle(navigation)}
@@ -63,7 +60,7 @@ export default function ChatScreen({navigation}) {
           alignSelf: 'center',
         }}>
         <FlatList
-          data={chatlist}
+          data={chatList}
           renderItem={({item}) => (
             <ChatListItem {...item} navigation={navigation} />
           )}

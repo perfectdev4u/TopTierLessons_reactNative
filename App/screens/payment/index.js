@@ -5,23 +5,20 @@ import {WebView} from 'react-native-webview';
 import {SafeAreaView} from 'react-native';
 import colors from '../../theme/colors';
 import {goBackHandle} from '../../utils/constants';
-import { Loader } from '../../compnents/loader';
-export default function Terms_Privacy({route}) {
+import {Loader} from '../../compnents/loader';
+export default function Payment({route}) {
   const navigation = useNavigation();
+  const weblink = route?.params?.paymentLink;
   const [isLoading, setIsLoading] = useState(false);
-  const weblink =
-    route?.params === 1
-      ? 'https://toptier.beyondroot.com/terms'
-      : 'https://toptier.beyondroot.com/privacy';
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
-    <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => goBackHandle(navigation)}
         title={true}
-        lable={route?.params === 1 ? 'Terms of Services' : 'Privacy & Policy'}
+        lable={'Payment'}
       />
+      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <WebView
         source={{uri: weblink}}
         javaScriptEnabled={true}
