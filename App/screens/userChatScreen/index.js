@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   FlatList,
@@ -16,9 +16,21 @@ import Icon from 'react-native-vector-icons/Feather';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import CustomInput from '../../compnents/CustomInput';
-export default function UserChatScreen({navigation}) {
+import apiUrl from '../../api/apiUrl';
+import {postReq} from '../../api';
+import {useSelector} from 'react-redux';
+import {HubConnectionBuilder} from '@microsoft/signalr';
+export default function UserChatScreen({route, navigation}) {
+  const {user} = useSelector(state => state.authReducer);
   const [bottomPadding, setBottomPadding] = useState(0);
+  const [isMsgList, setIsMsgList] = useState([]);
+  const [connection, setConnection] = useState();
+  const latestChat = useRef(null);
+  latestChat.current = isMsgList;
   const [msg, setMsg] = useState('');
+  const msgListPayload = {
+    chatId: route?.params?.chatId,
+  };
   useEffect(() => {
     let keyboardWillShow;
     let keyboardWillHide;
@@ -36,6 +48,39 @@ export default function UserChatScreen({navigation}) {
       if (keyboardWillHide) keyboardWillHide.remove();
     };
   }, []);
+  useEffect(() => {
+    getMsgList();
+  }, [user]);
+  useEffect(() => {
+    const connect = new HubConnectionBuilder()
+      .withUrl('https://api.toptierlessons.com:4436/chatHub')
+      .withAutomaticReconnect()
+      .build();
+    setConnection(connect);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection
+        .start()
+        .then(() => {
+          connection.on('ReceiveMessage', message => {
+            if (message) {
+              const updatedChat = [...latestChat.current];
+              updatedChat.push(message);
+              setIsMsgList(updatedChat);
+            }
+          });
+          connection
+            .invoke('GetClientId', user?.user?.userId)
+            .then(function (res) {
+              console.log('ConnectionId==>', res);
+            });
+        })
+        .catch(error => console.log('connection-err --->', error));
+    }
+  }, [connection]);
+
   const chatData = [
     {
       isSender: false,
@@ -48,6 +93,19 @@ export default function UserChatScreen({navigation}) {
       time: '10:13 Am',
     },
   ];
+
+  const getMsgList = () => {
+    postReq(apiUrl.baseUrl + apiUrl.getChatById, msgListPayload)
+      .then(res => {
+        if (res?.data?.statusCode === 200) {
+          // console.log(res?.data?.data);
+          setIsMsgList(res?.data?.data);
+        }
+      })
+      .catch(err => {
+        console.log('_err==>', err);
+      });
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
       <View
@@ -60,11 +118,18 @@ export default function UserChatScreen({navigation}) {
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
           <CustomImage
-            style={{marginLeft: '10%'}}
-            source={Images.USERPROFILE}
+            style={{
+              marginLeft: '5%',
+              height: 50,
+              width: 50,
+              borderRadius: 50,
+              alignSelf: 'center',
+              //resizeMode:'contain'
+            }}
+            source={{uri: route?.params?.profileImage}}
           />
           <View style={{marginLeft: '5%'}}>
-            <CustomText>Martin</CustomText>
+            <CustomText>{route?.params?.userName}</CustomText>
             <CustomText fontSize={9}>Active now</CustomText>
           </View>
         </View>
@@ -81,9 +146,11 @@ export default function UserChatScreen({navigation}) {
           alignSelf: 'center',
         }}>
         <FlatList
-          data={chatData}
+          data={isMsgList}
           renderItem={({item}) => <UserChatItem {...item} />}
           showsVerticalScrollIndicator={false}
+          inverted
+          contentContainerStyle={{flexDirection: 'column-reverse'}}
         />
       </ImageBackground>
       <CustomInput

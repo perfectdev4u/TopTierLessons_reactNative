@@ -23,6 +23,7 @@ export default {
   createOrder: 'PayPalpayment/CreateOrder',
   capturePayment: 'PayPalpayment/CapturePayment',
   getChatInbox: 'Chat/GetInbox',
+  getChatById: 'Chat/GetChatById',
   uploadFile: 'User/UploadFile',
   documentUpload: 'Document/UploadDocument',
   deleteVenue: 'Venue/DeleteCoachVenue',

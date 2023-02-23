@@ -270,7 +270,7 @@ export default function CoachDetails({navigation}) {
           )}
           <CustomButton
             alignSelf={'center'}
-            marginTop={100}
+            marginTop={60}
             lable="Book Now"
             onPress={() => navigation.navigate(screenString.DATETIME)}
           />
