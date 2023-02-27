@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   FlatList,
@@ -22,14 +22,28 @@ import {useSelector} from 'react-redux';
 import {HubConnectionBuilder} from '@microsoft/signalr';
 export default function UserChatScreen({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
+
+  // let defaultTypes = {
+  //   message: 1,
+  //   emoji: 2,
+  //   image: 3,
+  //   video: 4,
+  //   audio: 5,
+  // };
   const [bottomPadding, setBottomPadding] = useState(0);
   const [isMsgList, setIsMsgList] = useState([]);
   const [connection, setConnection] = useState();
-  const latestChat = useRef(null);
-  latestChat.current = isMsgList;
+  const [file, setFile] = useState([]);
   const [msg, setMsg] = useState('');
   const msgListPayload = {
     chatId: route?.params?.chatId,
+  };
+  const userChatPayload = {
+    senderId: user?.user?.userId,
+    reciverId: route?.params?.reciverId,
+    type: 1,
+    file: '',
+    audioDuration: '',
   };
   useEffect(() => {
     let keyboardWillShow;
@@ -66,7 +80,8 @@ export default function UserChatScreen({route, navigation}) {
         .then(() => {
           connection.on('ReceiveMessage', message => {
             if (message) {
-              const updatedChat = [...latestChat.current];
+              console.log('ReceiveMessage==>', message);
+              const updatedChat = [...isMsgList];
               updatedChat.push(message);
               setIsMsgList(updatedChat);
             }
@@ -81,30 +96,29 @@ export default function UserChatScreen({route, navigation}) {
     }
   }, [connection]);
 
-  const chatData = [
-    {
-      isSender: false,
-      message: 'Hi',
-      time: '10:03 Am',
-    },
-    {
-      isSender: true,
-      message: 'Hi',
-      time: '10:13 Am',
-    },
-  ];
-
   const getMsgList = () => {
     postReq(apiUrl.baseUrl + apiUrl.getChatById, msgListPayload)
       .then(res => {
         if (res?.data?.statusCode === 200) {
-          // console.log(res?.data?.data);
+          //console.log(res?.data?.data);
           setIsMsgList(res?.data?.data);
         }
       })
       .catch(err => {
         console.log('_err==>', err);
       });
+  };
+
+  const senderHandle = async payload => {
+    console.log(payload);
+    await connection
+      .invoke('SendMessageSpecificClient', payload)
+      .then(response => getMsgList())
+      .catch(err => console.error('submit error==>', err.toString()));
+    setMsg('');
+  };
+  const handleMsgSend = () => {
+    senderHandle({...userChatPayload, message: msg});
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
@@ -147,7 +161,7 @@ export default function UserChatScreen({route, navigation}) {
         }}>
         <FlatList
           data={isMsgList}
-          renderItem={({item}) => <UserChatItem {...item} />}
+          renderItem={({item, index}) => <UserChatItem {...item} />}
           showsVerticalScrollIndicator={false}
           inverted
           contentContainerStyle={{flexDirection: 'column-reverse'}}
@@ -159,6 +173,7 @@ export default function UserChatScreen({route, navigation}) {
         placeholder={'Type a message'}
         placeholderTextColor={'rgba(67, 62, 62, 0.5)'}
         paddingHorizontal={10}
+        marginBottom={20}
         multiline={true}
         value={msg}
         onChangeText={txt => setMsg(txt)}
@@ -168,17 +183,19 @@ export default function UserChatScreen({route, navigation}) {
             style={{
               backgroundColor: '#FFD0B3',
               borderRadius: 2,
-              height: 25,
-              width: 25,
+              height: 30,
+              width: 30,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon size={20} name={'plus'} color={colors.THEME_BTN} />
+            <Icon size={25} name={'plus'} color={colors.THEME_BTN} />
           </TouchableOpacity>
         }
         rightComponent={
-          <TouchableOpacity>
-            <Icon size={20} name={'send'} color={colors.THEME_BTN} />
+          <TouchableOpacity
+            disabled={!msg || !file ? true : false}
+            onPress={handleMsgSend}>
+            <Icon size={25} name={'send'} color={colors.THEME_BTN} />
           </TouchableOpacity>
         }
       />

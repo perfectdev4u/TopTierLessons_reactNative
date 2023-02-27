@@ -14,11 +14,19 @@ export default function ChatListItem({
   isActive = true,
   lastMessage,
   chatId,
+  reciverId,
   navigation,
 }) {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate(screenString.USERCHATSCREEN,{chatId:chatId,profileImage:profileImage,userName:userName})}
+      onPress={() =>
+        navigation.navigate(screenString.USERCHATSCREEN, {
+          chatId: chatId,
+          profileImage: profileImage,
+          userName: userName,
+          reciverId:reciverId
+        })
+      }
       style={[
         commonStyle.row('95%', 'space-between', 'center'),
         {
@@ -34,14 +42,16 @@ export default function ChatListItem({
           source={{uri: profileImage}}
           style={{height: 50, width: 50, borderRadius: 50, alignSelf: 'center'}}
         />
-        <View style={{marginLeft: 10}}>
+        <View style={{marginLeft: 10, width: '70%'}}>
           <View style={style.rowContent}>
             <CustomText fontSize={13}>{userName}</CustomText>
             <CustomText color={colors.FADED} marginLeft={'10%'} fontSize={10}>
               {moment(updatedOn).format('HH:mm')}
             </CustomText>
           </View>
-          <CustomText numberOfLines={1} color={colors.THEME_BTN}>{lastMessage}</CustomText>
+          <CustomText numberOfLines={1} color={colors.THEME_BTN}>
+            {lastMessage}
+          </CustomText>
         </View>
       </View>
       <View
