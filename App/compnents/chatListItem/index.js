@@ -6,6 +6,7 @@ import commonStyle from '../../theme/commonStyle';
 import CustomImage from '../customImage';
 import CustomText from '../customText';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 export default function ChatListItem({
   profileImage,
@@ -15,8 +16,10 @@ export default function ChatListItem({
   lastMessage,
   chatId,
   reciverId,
+  senderId,
   navigation,
 }) {
+  const {user} = useSelector(state => state.authReducer);
   return (
     <TouchableOpacity
       onPress={() =>
@@ -24,7 +27,7 @@ export default function ChatListItem({
           chatId: chatId,
           profileImage: profileImage,
           userName: userName,
-          reciverId:reciverId
+          reciverId: user?.user?.userId === reciverId ? senderId : reciverId,
         })
       }
       style={[

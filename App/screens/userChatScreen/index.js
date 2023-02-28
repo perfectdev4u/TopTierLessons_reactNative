@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   FlatList,
@@ -20,7 +20,10 @@ import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
 import {useSelector} from 'react-redux';
 import {HubConnectionBuilder} from '@microsoft/signalr';
+import screenString from '../../navigation/screenString';
+import {CommonActions} from '@react-navigation/native';
 export default function UserChatScreen({route, navigation}) {
+  // console.log(route);
   const {user} = useSelector(state => state.authReducer);
 
   // let defaultTypes = {
@@ -35,6 +38,9 @@ export default function UserChatScreen({route, navigation}) {
   const [connection, setConnection] = useState();
   const [file, setFile] = useState([]);
   const [msg, setMsg] = useState('');
+  const [isPlusPressed, setIsPlusPressed] = useState(false);
+  const latestChat = useRef(null);
+  latestChat.current = isMsgList;
   const msgListPayload = {
     chatId: route?.params?.chatId,
   };
@@ -80,8 +86,8 @@ export default function UserChatScreen({route, navigation}) {
         .then(() => {
           connection.on('ReceiveMessage', message => {
             if (message) {
-              console.log('ReceiveMessage==>', message);
-              const updatedChat = [...isMsgList];
+              //console.log('ReceiveMessage==>', message);
+              const updatedChat = [...latestChat.current];
               updatedChat.push(message);
               setIsMsgList(updatedChat);
             }
@@ -120,6 +126,7 @@ export default function UserChatScreen({route, navigation}) {
   const handleMsgSend = () => {
     senderHandle({...userChatPayload, message: msg});
   };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
       <View
@@ -128,7 +135,15 @@ export default function UserChatScreen({route, navigation}) {
           {height: 45},
         ]}>
         <View style={style.rowContent}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: screenString.CHATSCREEN}],
+                }),
+              )
+            }>
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
           <CustomImage
@@ -161,13 +176,37 @@ export default function UserChatScreen({route, navigation}) {
         }}>
         <FlatList
           data={isMsgList}
-          renderItem={({item, index}) => <UserChatItem {...item} />}
+          renderItem={({item, index}) => <UserChatItem {...item} index={index} />}
           showsVerticalScrollIndicator={false}
           inverted
           contentContainerStyle={{flexDirection: 'column-reverse'}}
         />
+        {isPlusPressed && (
+          <View
+            style={[
+              commonStyle.row('100%', 'space-around', 'center'),
+              {
+                backgroundColor: '#1F1F1F',
+                padding: 15,
+                position: 'absolute',
+                zIndex:1,
+                bottom: 5,
+              },
+            ]}>
+            <TouchableOpacity style={{alignItems: 'center'}}>
+              <Icon name="camera" color={colors.THEME_BTN} size={30} />
+              <CustomText fontSize={10}>Camera</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity style={{alignItems: 'center'}}>
+              <Icon name="image" color={colors.THEME_BTN} size={30} />
+              <CustomText fontSize={10}>Gallery</CustomText>
+            </TouchableOpacity>
+          </View>
+        )}
       </ImageBackground>
+
       <CustomInput
+        width="95%"
         backgroundColor={'#F8EDE6'}
         borderRadius={5}
         placeholder={'Type a message'}
@@ -180,6 +219,8 @@ export default function UserChatScreen({route, navigation}) {
         textColor={colors.BLACK}
         leftComponent={
           <TouchableOpacity
+            onPressOut={() => setIsPlusPressed(false)}
+            onPress={() => setIsPlusPressed(!isPlusPressed)}
             style={{
               backgroundColor: '#FFD0B3',
               borderRadius: 2,

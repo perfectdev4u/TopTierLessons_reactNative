@@ -220,6 +220,11 @@ export default function CoachDetails({navigation}) {
           )}
           {isActive === 2 && (
             <View>
+              {isReviews.length === 0 && (
+                <CustomText marginTop={50} textAlign={'center'} fontSize={16}>
+                  No Reviews Yet!
+                </CustomText>
+              )}
               {isReviews?.map((val, index) => {
                 return (
                   <View

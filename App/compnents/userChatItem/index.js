@@ -7,7 +7,9 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomImage from '../customImage';
 import VideoPlayer from 'react-native-video-player';
-import Sound from 'react-native-sound';
+import {ShomImage} from '../showImage';
+import commonStyle from '../../theme/commonStyle';
+import SoundPlayer from 'react-native-sound-player';
 export default function UserChatItem({
   message,
   senderId,
@@ -16,8 +18,11 @@ export default function UserChatItem({
   index,
 }) {
   const {user} = useSelector(state => state.authReducer);
-  const [audio, setAudio] = useState(null);
+  const [audioIndex, setAudioIndex] = useState(null);
+  const [audioIcon, setAudioIcon] = useState(false);
   const [type, setType] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [imgUrl, setImgUrl] = useState('');
   let audioFormat = [
     'mp3',
     'wav',
@@ -37,29 +42,61 @@ export default function UserChatItem({
       setType(exten);
     }
   }, [file]);
-
   useEffect(() => {
-    Sound.setCategory('Playback', true);
+    _onFinishedPlayingSubscription = SoundPlayer.addEventListener(
+      'FinishedPlaying',
+      ({success}) => {
+        console.log('finished playing', success);
+      },
+    );
+    _onFinishedLoadingSubscription = SoundPlayer.addEventListener(
+      'FinishedLoading',
+      ({success}) => {
+        console.log('finished loading', success);
+      },
+    );
+    _onFinishedLoadingFileSubscription = SoundPlayer.addEventListener(
+      'FinishedLoadingFile',
+      ({success, name, type}) => {
+        console.log('finished loading file', success, name, type);
+      },
+    );
+    _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener(
+      'FinishedLoadingURL',
+      ({success, url}) => {
+        console.log('finished loading url', success, url);
+      },
+    );
   }, []);
-
   const audioPlay = url => {
-    setAudio(url);
-    if (audio) {
-      var voice = new Sound(url, (err, _sound) => {
-        console.log(
-          'duration in seconds: ' +
-            voice.getDuration() +
-            'number of channels: ' +
-            voice.getNumberOfChannels(),
-        );
-        if (err) {
-          console.log('sound_err=>', err);
-        } else
-          voice.play(() => {
-            voice.release();
-          });
-      });
+    setAudioIcon(true);
+    try {
+      // or play from url
+      SoundPlayer.playUrl(url);
+    } catch (e) {
+      console.log(`cannot play the sound file`, e);
     }
+  };
+  const getInfo = async () => {
+    // You need the keyword `async`
+    try {
+      const info = await SoundPlayer.getInfo(); // Also, you need to await this because it is async
+      console.log('getInfo', info); // {duration: 12.416, currentTime: 7.691}
+    } catch (e) {
+      console.log('There is no song playing', e);
+    }
+  };
+  const handlePlay = url => {
+    audioPlay(url);
+    getInfo();
+  };
+  const handleStop = () => {
+    setAudioIcon(false);
+    SoundPlayer.pause();
+  };
+  const openImage = url => {
+    setImgUrl(url);
+    setModalVisible(true);
   };
   return (
     <View
@@ -97,21 +134,32 @@ export default function UserChatItem({
                 }}
               />
             ) : audioFormat.includes(type) ? (
-              <TouchableOpacity
-                onPress={() => audioPlay(file)}
-                style={{alignItems: 'flex-start'}}>
-                <Icon name={'play'} color={colors.WHITE} size={20} />
-              </TouchableOpacity>
+              <View
+                style={[commonStyle.row('50%', 'space-between', 'flex-start')]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    audioIcon ? handleStop(index) : handlePlay(file);
+                  }}>
+                  <Icon
+                    name={audioIcon ? 'pause' : 'play'}
+                    color={colors.WHITE}
+                    size={25}
+                  />
+                </TouchableOpacity>
+                <CustomText>audio</CustomText>
+              </View>
             ) : (
-              <CustomImage
-                source={{uri: file}}
-                style={{
-                  height: 250,
-                  width: 250,
-                  //resizeMode:'contain',
-                  alignSelf: 'center',
-                }}
-              />
+              <TouchableOpacity onPress={() => openImage(file)}>
+                <CustomImage
+                  source={{uri: file}}
+                  style={{
+                    height: 250,
+                    width: 250,
+                    //resizeMode:'contain',
+                    alignSelf: 'center',
+                  }}
+                />
+              </TouchableOpacity>
             )}
           </View>
 
@@ -155,6 +203,11 @@ export default function UserChatItem({
           </CustomText>
         </View>
       )}
+      <ShomImage
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        url={imgUrl}
+      />
     </View>
   );
 }
