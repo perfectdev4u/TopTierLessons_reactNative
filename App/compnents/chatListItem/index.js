@@ -20,6 +20,8 @@ export default function ChatListItem({
   navigation,
 }) {
   const {user} = useSelector(state => state.authReducer);
+  const defaultpic =
+    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   return (
     <TouchableOpacity
       onPress={() =>
@@ -34,20 +36,22 @@ export default function ChatListItem({
         commonStyle.row('95%', 'space-between', 'center'),
         {
           height: 70,
-          marginTop: 20,
+          marginTop: 10,
           borderBottomWidth: 2,
-          paddingBottom: 20,
+          paddingBottom: 10,
           borderColor: '#595959',
         },
       ]}>
       <View style={style.rowContent}>
         <CustomImage
-          source={{uri: profileImage}}
+          source={{uri: profileImage ? profileImage : defaultpic}}
           style={{height: 50, width: 50, borderRadius: 50, alignSelf: 'center'}}
         />
         <View style={{marginLeft: 10, width: '70%'}}>
           <View style={style.rowContent}>
-            <CustomText fontSize={13}>{userName}</CustomText>
+            <CustomText numberOfLines={1} fontSize={13}>
+              {userName}
+            </CustomText>
             <CustomText color={colors.FADED} marginLeft={'10%'} fontSize={10}>
               {moment(updatedOn).format('HH:mm')}
             </CustomText>

@@ -22,6 +22,7 @@ export default {
   createBooking: 'Booking/CreateBooking',
   createOrder: 'PayPalpayment/CreateOrder',
   capturePayment: 'PayPalpayment/CapturePayment',
+  getBookingUser: 'Chat/GetBookingUser',
   getChatInbox: 'Chat/GetInbox',
   getChatById: 'Chat/GetChatById',
   uploadFile: 'User/UploadFile',

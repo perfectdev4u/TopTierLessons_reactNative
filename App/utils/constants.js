@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 import screenString from '../navigation/screenString';
 
 export const userType = 'userType';
@@ -28,11 +28,35 @@ export const isValidEmail = email => {
   return emailRegex.test(email);
 };
 
-export const goBackHandle = (navigation)=>{
+export const goBackHandle = navigation => {
   navigation.dispatch(
     CommonActions.reset({
       index: 0,
       routes: [{name: screenString.DRAWER}],
     }),
   );
-}
+};
+
+export let audioFormat = [
+  'mp3',
+  'wav',
+  'aac',
+  'flac',
+  'alac',
+  'dsd',
+  'aiff',
+  'm3u8',
+];
+export let videoFormat = ['mp4', 'mov', 'mkv', 'avi', 'avchd', 'webm', 'wmv'];
+export let imgFormat = [
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'tiff',
+  'psd',
+  'pdf',
+  'ai',
+  'indd',
+  'raw',
+];

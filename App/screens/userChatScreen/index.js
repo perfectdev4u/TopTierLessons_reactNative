@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ImageBackground,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import colors from '../../theme/colors';
 import Images from '../../assets/Images';
@@ -17,27 +18,21 @@ import style from './style';
 import CustomImage from '../../compnents/customImage';
 import CustomInput from '../../compnents/CustomInput';
 import apiUrl from '../../api/apiUrl';
-import {postReq} from '../../api';
+import {postReq, profileImageReq} from '../../api';
+import {audioFormat, videoFormat, imgFormat} from '../../utils/constants';
+import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {useSelector} from 'react-redux';
 import {HubConnectionBuilder} from '@microsoft/signalr';
 import screenString from '../../navigation/screenString';
 import {CommonActions} from '@react-navigation/native';
 export default function UserChatScreen({route, navigation}) {
-  // console.log(route);
   const {user} = useSelector(state => state.authReducer);
-
-  // let defaultTypes = {
-  //   message: 1,
-  //   emoji: 2,
-  //   image: 3,
-  //   video: 4,
-  //   audio: 5,
-  // };
   const [bottomPadding, setBottomPadding] = useState(0);
   const [isMsgList, setIsMsgList] = useState([]);
   const [connection, setConnection] = useState();
-  const [file, setFile] = useState([]);
   const [msg, setMsg] = useState('');
+  const [file, setFile] = useState([]);
+  console.log('file=>', file.length);
   const [isPlusPressed, setIsPlusPressed] = useState(false);
   const latestChat = useRef(null);
   latestChat.current = isMsgList;
@@ -78,7 +73,6 @@ export default function UserChatScreen({route, navigation}) {
       .build();
     setConnection(connect);
   }, []);
-
   useEffect(() => {
     if (connection) {
       connection
@@ -86,10 +80,12 @@ export default function UserChatScreen({route, navigation}) {
         .then(() => {
           connection.on('ReceiveMessage', message => {
             if (message) {
-              //console.log('ReceiveMessage==>', message);
-              const updatedChat = [...latestChat.current];
-              updatedChat.push(message);
-              setIsMsgList(updatedChat);
+              console.log('ReceiveMessage==>', message);
+              if (message?.chatId === route?.params?.chatId) {
+                const updatedChat = [...latestChat.current];
+                updatedChat.push(message);
+                setIsMsgList(updatedChat);
+              } else null;
             }
           });
           connection
@@ -114,9 +110,30 @@ export default function UserChatScreen({route, navigation}) {
         console.log('_err==>', err);
       });
   };
-
+  const getFile = async url => {
+    let fileUpload = new FormData();
+    fileUpload.append('file', {
+      name: url.fileName || url.name,
+      type: url.type,
+      uri: Platform.OS === 'ios' ? url.uri.replace('file://', '') : url.uri,
+    });
+    profileImageReq(
+      apiUrl.baseUrl + apiUrl.uploadFile,
+      fileUpload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        if (data?.statusCode === 200) {
+          console.log(data?.data?.url);
+          setFile([...file, data?.data?.url]);
+        } else Alert.alert('Something went wrong');
+      })
+      .catch(err => {
+        console.log('error==>', err);
+        Alert.alert('Something went wrong');
+      });
+  };
   const senderHandle = async payload => {
-    console.log(payload);
     await connection
       .invoke('SendMessageSpecificClient', payload)
       .then(response => getMsgList())
@@ -124,7 +141,56 @@ export default function UserChatScreen({route, navigation}) {
     setMsg('');
   };
   const handleMsgSend = () => {
-    senderHandle({...userChatPayload, message: msg});
+    if (connection) {
+      let toptierChatPayload = {...userChatPayload, message: msg};
+      if (file.length > 0) {
+        let handlerdm = {
+          file: file || [],
+          message: msg,
+        };
+        for (const [key, value] of Object.entries(handlerdm)) {
+          if (key === 'file') {
+            value.map(item => {
+              // promiseArr.push(apiCall(item.file));
+              console.log(item);
+              senderHandle(item);
+              let res = item.split('.');
+              let resIndex = res.length - 1;
+              let exten = res[resIndex];
+              if (imgFormat.includes(exten)) {
+                toptierChatPayload = {
+                  ...toptierChatPayload,
+                  file: item,
+                  type: 3,
+                  message: '',
+                };
+                senderHandle(toptierChatPayload);
+              } else if (audioFormat.includes(exten)) {
+                toptierChatPayload = {
+                  ...toptierChatPayload,
+                  file: item,
+                  type: 5,
+                  message: '',
+                };
+                senderHandle(toptierChatPayload);
+              } else if (videoFormat.includes(exten)) {
+                toptierChatPayload = {
+                  ...toptierChatPayload,
+                  file: item,
+                  type: 4,
+                  message: '',
+                };
+                senderHandle(toptierChatPayload);
+              }
+            });
+            setFile([]);
+          }
+          if (key === 'message') {
+            senderHandle({...userChatPayload, [key]: value});
+          }
+        }
+      } else senderHandle({...userChatPayload, message: msg});
+    }
   };
 
   return (
@@ -176,11 +242,69 @@ export default function UserChatScreen({route, navigation}) {
         }}>
         <FlatList
           data={isMsgList}
-          renderItem={({item, index}) => <UserChatItem {...item} index={index} />}
+          renderItem={({item, index}) => (
+            <UserChatItem {...item} index={index} />
+          )}
           showsVerticalScrollIndicator={false}
           inverted
           contentContainerStyle={{flexDirection: 'column-reverse'}}
         />
+        {file.length > 0 && (
+          <View
+            style={[
+              commonStyle.row('100%', 'flex-start', 'center'),
+              {
+                backgroundColor: '#0008',
+                padding: 15,
+                position: 'absolute',
+                zIndex: 1,
+                bottom: 5,
+              },
+            ]}>
+            <ScrollView
+              style={{flex: 1}}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {file.map((url, index) => {
+                console.log('url==>', url);
+                return (
+                  <View
+                    style={{
+                      backgroundColor: '#ebcc91',
+                      height: 130,
+                      width: 130,
+                      marginLeft: 5,
+                      padding: 15,
+                    }}
+                    key={index}>
+                    <TouchableOpacity
+                      style={{
+                        alignSelf: 'flex-end',
+                        position: 'absolute',
+                        zIndex: 1,
+                        // top: 2,
+                        // right: 2,
+                      }}>
+                      <Icon
+                        name={'x-circle'}
+                        size={20}
+                        color={colors.THEME_BTN}
+                      />
+                    </TouchableOpacity>
+                    <CustomImage
+                      source={{uri: url}}
+                      style={{
+                        height: 100,
+                        width: 100,
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
         {isPlusPressed && (
           <View
             style={[
@@ -189,15 +313,25 @@ export default function UserChatScreen({route, navigation}) {
                 backgroundColor: '#1F1F1F',
                 padding: 15,
                 position: 'absolute',
-                zIndex:1,
+                zIndex: 1,
                 bottom: 5,
               },
             ]}>
-            <TouchableOpacity style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsPlusPressed(false);
+                openCamera(getFile);
+              }}
+              style={{alignItems: 'center'}}>
               <Icon name="camera" color={colors.THEME_BTN} size={30} />
               <CustomText fontSize={10}>Camera</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsPlusPressed(false);
+                launchGallery(getFile);
+              }}
+              style={{alignItems: 'center'}}>
               <Icon name="image" color={colors.THEME_BTN} size={30} />
               <CustomText fontSize={10}>Gallery</CustomText>
             </TouchableOpacity>
@@ -234,7 +368,7 @@ export default function UserChatScreen({route, navigation}) {
         }
         rightComponent={
           <TouchableOpacity
-            disabled={!msg || !file ? true : false}
+            disabled={!msg && file.length === 0 ? true : false}
             onPress={handleMsgSend}>
             <Icon size={25} name={'send'} color={colors.THEME_BTN} />
           </TouchableOpacity>

@@ -10,6 +10,8 @@ import VideoPlayer from 'react-native-video-player';
 import {ShomImage} from '../showImage';
 import commonStyle from '../../theme/commonStyle';
 import SoundPlayer from 'react-native-sound-player';
+import Slider from '@react-native-community/slider';
+import { audioFormat, videoFormat } from '../../utils/constants';
 export default function UserChatItem({
   message,
   senderId,
@@ -23,17 +25,7 @@ export default function UserChatItem({
   const [type, setType] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
-  let audioFormat = [
-    'mp3',
-    'wav',
-    'aac',
-    'flac',
-    'alac',
-    'dsd',
-    'aiff',
-    'm3u8',
-  ];
-  let videoFormat = ['mp4', 'mov', 'mkv', 'avi', 'avchd', 'webm', 'wmv'];
+  
   useEffect(() => {
     if (file) {
       let url = file.split('.');
@@ -78,7 +70,6 @@ export default function UserChatItem({
     }
   };
   const getInfo = async () => {
-    // You need the keyword `async`
     try {
       const info = await SoundPlayer.getInfo(); // Also, you need to await this because it is async
       console.log('getInfo', info); // {duration: 12.416, currentTime: 7.691}
@@ -143,10 +134,16 @@ export default function UserChatItem({
                   <Icon
                     name={audioIcon ? 'pause' : 'play'}
                     color={colors.WHITE}
-                    size={25}
+                    size={35}
                   />
                 </TouchableOpacity>
-                <CustomText>audio</CustomText>
+                <Slider
+                  style={{width: 150, marginLeft: '5%'}}
+                  minimumValue={0}
+                  maximumValue={1}
+                  minimumTrackTintColor={colors.THEME_BTN}
+                  maximumTrackTintColor="#595959"
+                />
               </View>
             ) : (
               <TouchableOpacity onPress={() => openImage(file)}>
@@ -161,8 +158,12 @@ export default function UserChatItem({
                 />
               </TouchableOpacity>
             )}
+            {message && (
+              <CustomText marginTop={10} alignSelf={'flex-start'}>
+                {message}
+              </CustomText>
+            )}
           </View>
-
           <CustomText
             fontSize={10}
             color="rgba(255, 255, 255, 0.5)"
@@ -173,7 +174,7 @@ export default function UserChatItem({
           </CustomText>
         </View>
       )}
-      {message && (
+      {!file && message && (
         <View
           style={{
             marginLeft: user?.user?.userId === senderId ? 10 : 0,
