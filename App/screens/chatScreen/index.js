@@ -30,16 +30,19 @@ export default function ChatScreen({navigation}) {
   const [userList, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatList, setChatList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [dataLength, setDataLength] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const defaultpic =
     'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const inboxPayload = {
     userId: user?.user?.userId,
-    page: 1,
-    pageSize: 20,
+    page: page,
+    pageSize: pageSize,
   };
   useEffect(() => {
-    getInbox();
     getUsersList();
+    if (page) getInbox();
   }, [user]);
   const getUsersList = () => {
     setLoading(true);
@@ -65,7 +68,9 @@ export default function ChatScreen({navigation}) {
       .then(res => {
         setIsLoading(false);
         if (res?.data?.statusCode === 200) {
-          setChatList(res?.data?.data);
+          setDataLength(res?.data?.data?.length);
+          if (page === 1) setChatList(res?.data?.data);
+          else setChatList([...chatList, ...res?.data?.data]);
           //console.log(res?.data?.data);
         }
       })
@@ -93,18 +98,6 @@ export default function ChatScreen({navigation}) {
           width: '95%',
           alignSelf: 'center',
         }}>
-        {/* <CustomButton
-          width="48%"
-          height={35}
-          marginTop={20}
-          lable={
-            user?.user?.userType === 2
-              ? 'See Booked Students'
-              : 'See Booked Coaches'
-          }
-          alignSelf={'flex-end'}
-          onPress={() => setUserMenuShow(!userMenuShow)}
-        /> */}
         <TouchableOpacity
           onPress={() => setUserMenuShow(!userMenuShow)}
           style={{
@@ -130,6 +123,12 @@ export default function ChatScreen({navigation}) {
             <ChatListItem {...item} navigation={navigation} />
           )}
           showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={0.2}
+          onEndReached={({distanceFromEnd}) => {
+            console.log(distanceFromEnd);
+            if (distanceFromEnd > 0) setPage(page + 1);
+            setPageSize(pageSize + 10);
+          }}
         />
         {userMenuShow && (
           <View
@@ -173,7 +172,10 @@ export default function ChatScreen({navigation}) {
                       onPress={() => {
                         setUserMenuShow(false);
                         navigation.navigate(screenString.USERCHATSCREEN, {
-                          chatId: item.chatId,
+                          chatId:
+                            user?.user?.userId > item.userId
+                              ? `${user?.user?.userId}_${item.userId}`
+                              : `${item.userId}_${user?.user?.userId}`,
                           profileImage: item.profilePic
                             ? item.profilePic
                             : defaultpic,

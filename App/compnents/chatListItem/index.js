@@ -7,6 +7,7 @@ import CustomImage from '../customImage';
 import CustomText from '../customText';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ChatListItem({
   profileImage,
@@ -27,7 +28,7 @@ export default function ChatListItem({
       onPress={() =>
         navigation.navigate(screenString.USERCHATSCREEN, {
           chatId: chatId,
-          profileImage: profileImage,
+          profileImage: profileImage ? profileImage : defaultpic,
           userName: userName,
           reciverId: user?.user?.userId === reciverId ? senderId : reciverId,
         })
@@ -56,9 +57,13 @@ export default function ChatListItem({
               {moment(updatedOn).format('HH:mm')}
             </CustomText>
           </View>
-          <CustomText numberOfLines={1} color={colors.THEME_BTN}>
-            {lastMessage}
-          </CustomText>
+          {lastMessage ? (
+            <CustomText numberOfLines={1} color={colors.THEME_BTN}>
+              {lastMessage}
+            </CustomText>
+          ) : (
+            <Icon name={'file-image'} color={colors.THEME_BTN} size={25} />
+          )}
         </View>
       </View>
       <View

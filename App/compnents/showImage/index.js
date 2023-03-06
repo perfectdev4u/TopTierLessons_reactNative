@@ -5,6 +5,8 @@ import {
   View,
   Modal,
   Dimensions,
+  ImageBackground,
+  SafeAreaView,
 } from 'react-native';
 import colors from '../../theme/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,7 +22,7 @@ export const ShomImage = ({modalVisible, setModalVisible, url}) => {
       onRequestClose={() => {
         setModalVisible(false);
       }}>
-      <View style={styles.centeredView}>
+      <SafeAreaView style={styles.centeredView}>
         <View style={styles.cardView}>
           <TouchableOpacity
             style={{alignSelf: 'flex-end'}}
@@ -32,7 +34,7 @@ export const ShomImage = ({modalVisible, setModalVisible, url}) => {
             cropHeight={250}
             imageWidth={300}
             imageHeight={250}
-            style={{alignSelf: 'center', marginTop: 20}}>
+            style={{alignSelf: 'center', flex: 1}}>
             <CustomImage
               source={{uri: url}}
               style={{
@@ -44,7 +46,7 @@ export const ShomImage = ({modalVisible, setModalVisible, url}) => {
             />
           </ImageZoom>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   cardView: {
+    flex: 1,
     backgroundColor: '#1F1F1F',
     borderRadius: 10,
     padding: 10,

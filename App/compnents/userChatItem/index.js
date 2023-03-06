@@ -11,7 +11,7 @@ import {ShomImage} from '../showImage';
 import commonStyle from '../../theme/commonStyle';
 import SoundPlayer from 'react-native-sound-player';
 import Slider from '@react-native-community/slider';
-import { audioFormat, videoFormat } from '../../utils/constants';
+import {audioFormat, videoFormat} from '../../utils/constants';
 export default function UserChatItem({
   message,
   senderId,
@@ -25,7 +25,7 @@ export default function UserChatItem({
   const [type, setType] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
-  
+
   useEffect(() => {
     if (file) {
       let url = file.split('.');

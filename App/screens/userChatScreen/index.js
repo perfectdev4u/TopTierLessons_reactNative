@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ImageBackground,
   Keyboard,
-  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import colors from '../../theme/colors';
 import Images from '../../assets/Images';
@@ -25,6 +25,7 @@ import {useSelector} from 'react-redux';
 import {HubConnectionBuilder} from '@microsoft/signalr';
 import screenString from '../../navigation/screenString';
 import {CommonActions} from '@react-navigation/native';
+import {FilesPop_Up} from '../../compnents/filesPop_Up/ndex';
 export default function UserChatScreen({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [bottomPadding, setBottomPadding] = useState(0);
@@ -32,12 +33,17 @@ export default function UserChatScreen({route, navigation}) {
   const [connection, setConnection] = useState();
   const [msg, setMsg] = useState('');
   const [file, setFile] = useState([]);
-  console.log('file=>', file.length);
+  const [page, setPage] = useState(1);
+  const [dataLength, setDataLength] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [url, setUrl] = useState('');
   const [isPlusPressed, setIsPlusPressed] = useState(false);
   const latestChat = useRef(null);
   latestChat.current = isMsgList;
   const msgListPayload = {
     chatId: route?.params?.chatId,
+    page: page,
+    pageSize: pageSize,
   };
   const userChatPayload = {
     senderId: user?.user?.userId,
@@ -45,6 +51,17 @@ export default function UserChatScreen({route, navigation}) {
     type: 1,
     file: '',
     audioDuration: '',
+  };
+  const updateChatPayload = {
+    chatId: route?.params?.chatId,
+    senderId: user?.user?.userId,
+    reciverId: route?.params?.reciverId,
+    message: msg,
+    file: '',
+    audioDuration: '',
+    isRead: false,
+    type: 1,
+    updatedOn: new Date(),
   };
   useEffect(() => {
     let keyboardWillShow;
@@ -65,7 +82,7 @@ export default function UserChatScreen({route, navigation}) {
   }, []);
   useEffect(() => {
     getMsgList();
-  }, [user]);
+  }, [page]);
   useEffect(() => {
     const connect = new HubConnectionBuilder()
       .withUrl('https://api.toptierlessons.com:4436/chatHub')
@@ -102,8 +119,9 @@ export default function UserChatScreen({route, navigation}) {
     postReq(apiUrl.baseUrl + apiUrl.getChatById, msgListPayload)
       .then(res => {
         if (res?.data?.statusCode === 200) {
-          //console.log(res?.data?.data);
-          setIsMsgList(res?.data?.data);
+          setDataLength(res?.data?.data?.length);
+          if (page === 1) setIsMsgList(res?.data?.data);
+          else setIsMsgList([...res?.data?.data, ...isMsgList]);
         }
       })
       .catch(err => {
@@ -136,7 +154,26 @@ export default function UserChatScreen({route, navigation}) {
   const senderHandle = async payload => {
     await connection
       .invoke('SendMessageSpecificClient', payload)
-      .then(response => getMsgList())
+      .then(response => {
+        if (file.length === 0) {
+          const updatedChat = [...latestChat.current];
+          updatedChat.push(updateChatPayload);
+          console.log('updatedChat_Msg==>', updatedChat);
+          setIsMsgList(updatedChat);
+          return true;
+        } else {
+          const updatedChat = [...latestChat.current];
+          updatedChat.push({
+            ...payload,
+            chatId: route?.params?.chatId,
+            updatedOn: new Date(),
+            isRead: false,
+          });
+          console.log('updatedChat_File==>', updatedChat);
+          setIsMsgList(updatedChat);
+          return true;
+        }
+      })
       .catch(err => console.error('submit error==>', err.toString()));
     setMsg('');
   };
@@ -151,8 +188,7 @@ export default function UserChatScreen({route, navigation}) {
         for (const [key, value] of Object.entries(handlerdm)) {
           if (key === 'file') {
             value.map(item => {
-              // promiseArr.push(apiCall(item.file));
-              console.log(item);
+              //console.log(item);
               senderHandle(item);
               let res = item.split('.');
               let resIndex = res.length - 1;
@@ -202,25 +238,19 @@ export default function UserChatScreen({route, navigation}) {
         ]}>
         <View style={style.rowContent}>
           <TouchableOpacity
-            onPress={() =>
+            onPress={() => {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
                   routes: [{name: screenString.CHATSCREEN}],
                 }),
-              )
-            }>
+              );
+              connection.stop();
+            }}>
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
           <CustomImage
-            style={{
-              marginLeft: '5%',
-              height: 50,
-              width: 50,
-              borderRadius: 50,
-              alignSelf: 'center',
-              //resizeMode:'contain'
-            }}
+            style={style.profile}
             source={{uri: route?.params?.profileImage}}
           />
           <View style={{marginLeft: '5%'}}>
@@ -248,62 +278,26 @@ export default function UserChatScreen({route, navigation}) {
           showsVerticalScrollIndicator={false}
           inverted
           contentContainerStyle={{flexDirection: 'column-reverse'}}
+          onEndReachedThreshold={0.2}
+          onEndReached={({distanceFromEnd}) => {
+            console.log(distanceFromEnd);
+            if (distanceFromEnd > 0) setPage(page + 1);
+            setPageSize(pageSize + 10);
+          }}
+          ListHeaderComponent={() => (
+            <View style={{alignSelf: 'center', marginBottom: 10}}>
+              {dataLength === 0 ? (
+                <CustomText color={colors.THEME_BTN}>
+                  No Messages Left
+                </CustomText>
+              ) : (
+                <ActivityIndicator size={'small'} color={colors.WHITE} />
+              )}
+            </View>
+          )}
         />
         {file.length > 0 && (
-          <View
-            style={[
-              commonStyle.row('100%', 'flex-start', 'center'),
-              {
-                backgroundColor: '#0008',
-                padding: 15,
-                position: 'absolute',
-                zIndex: 1,
-                bottom: 5,
-              },
-            ]}>
-            <ScrollView
-              style={{flex: 1}}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {file.map((url, index) => {
-                console.log('url==>', url);
-                return (
-                  <View
-                    style={{
-                      backgroundColor: '#ebcc91',
-                      height: 130,
-                      width: 130,
-                      marginLeft: 5,
-                      padding: 15,
-                    }}
-                    key={index}>
-                    <TouchableOpacity
-                      style={{
-                        alignSelf: 'flex-end',
-                        position: 'absolute',
-                        zIndex: 1,
-                        // top: 2,
-                        // right: 2,
-                      }}>
-                      <Icon
-                        name={'x-circle'}
-                        size={20}
-                        color={colors.THEME_BTN}
-                      />
-                    </TouchableOpacity>
-                    <CustomImage
-                      source={{uri: url}}
-                      style={{
-                        height: 100,
-                        width: 100,
-                        alignSelf: 'center',
-                      }}
-                    />
-                  </View>
-                );
-              })}
-            </ScrollView>
-          </View>
+          <FilesPop_Up file={file} setFile={setFile} setUrl={setUrl} />
         )}
         {isPlusPressed && (
           <View
@@ -355,14 +349,7 @@ export default function UserChatScreen({route, navigation}) {
           <TouchableOpacity
             onPressOut={() => setIsPlusPressed(false)}
             onPress={() => setIsPlusPressed(!isPlusPressed)}
-            style={{
-              backgroundColor: '#FFD0B3',
-              borderRadius: 2,
-              height: 30,
-              width: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={style.plusIcon}>
             <Icon size={25} name={'plus'} color={colors.THEME_BTN} />
           </TouchableOpacity>
         }
