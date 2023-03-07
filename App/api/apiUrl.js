@@ -32,5 +32,6 @@ export default {
   upcomingBookings: 'Booking/GetUpComingBookings',
   updateBookingStatus: 'Booking/UpdateBookingStatus',
   getBookingDetails: 'Booking/GetBookingDetailsById',
+  addRatings: 'ReviewRating/CreateReviewRating',
   contactUs: 'ContactUs/ContactUs',
 };

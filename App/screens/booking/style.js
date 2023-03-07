@@ -7,4 +7,10 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  profile: {
+    alignSelf: 'center',
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+  },
 });

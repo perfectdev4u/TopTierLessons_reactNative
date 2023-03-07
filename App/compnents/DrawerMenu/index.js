@@ -92,6 +92,12 @@ export default function DrawerMenu(props) {
       screen: screenString.BOOKING,
     },
     {
+      isActive: false,
+      icon: 'message-star-outline',
+      label: 'Reviews and Rating',
+      screen: screenString.REVIEWS,
+    },
+    {
       isActive: true,
       icon: 'account-key-outline',
       label: 'Change Password',

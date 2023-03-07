@@ -23,6 +23,7 @@ import {BookingDetails} from '../../compnents/bookingDetails';
 import {addUser} from '../../redux/reducers/authReducer';
 import {goBackHandle} from '../../utils/constants';
 import CustomButton from '../../compnents/customButton';
+import {AddReviews} from '../../compnents/addReviews';
 
 export default function Booking({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -32,14 +33,16 @@ export default function Booking({navigation}) {
   const [isBookingsList, setIsBookingsList] = useState([]);
   const [page, setPage] = useState(1);
   const [dataLength, setDataLength] = useState(0);
-  console.log(page);
   const [pageSize, setPageSize] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isReviewPop_Up, setReviewPop_Up] = useState(false);
   const [id, setId] = useState({
     bookingId: null,
     bookingStatus: null,
     coachId: null,
   });
+  const defaultpic =
+    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const title = [
     {name: 'Previous', width: '50%'},
     {name: 'Upcoming', width: '50%'},
@@ -59,7 +62,7 @@ export default function Booking({navigation}) {
   useEffect(() => {
     if (isActive === 0) getBookingsList(apiUrl.previousBookings);
     else getBookingsList(apiUrl.upcomingBookings);
-  }, [page]);
+  }, [page, isActive]);
   useEffect(() => {
     if (id.coachId && id.bookingStatus && id.bookingId) updateBokingStatus();
     else if (id.bookingId && !id.coachId && !id.bookingStatus)
@@ -74,7 +77,7 @@ export default function Booking({navigation}) {
         setDataLength(res?.data?.data?.length);
         if (page === 1) setIsBookingsList(res?.data?.data);
         else setIsBookingsList([...isBookingsList, ...res?.data?.data]);
-        console.log('Bookings_list==>', res.data);
+        //console.log('Bookings_list==>', res.data.data);
       })
       .catch(err => {
         setIsLoading(false);
@@ -84,9 +87,7 @@ export default function Booking({navigation}) {
   const bookingsItemList = ({item, index}) => {
     return (
       <TouchableOpacity
-        onPress={() => {
-          setId({bookingId: item.bookingId});
-        }}
+        onPress={() => setId({bookingId: item.bookingId})}
         key={index}
         style={[
           commonStyle.row('95%', 'space-between', 'center'),
@@ -98,9 +99,23 @@ export default function Booking({navigation}) {
           },
         ]}>
         <View style={style.rowContent}>
-          <CustomImage source={Images.USERPROFILE} />
+          <CustomImage
+            source={{
+              uri:
+                user?.user?.userType === 2
+                  ? item.studentImage
+                    ? item.studentImage
+                    : defaultpic
+                  : item.coachImage
+                  ? item.coachImage
+                  : defaultpic,
+            }}
+            style={style.profile}
+          />
           <View style={{marginLeft: '5%'}}>
-            <CustomText fontSize={13}>{item.studentName}</CustomText>
+            <CustomText fontSize={13}>
+              {user?.user?.userType === 2 ? item.studentName : item.coachName}
+            </CustomText>
             <View style={style.rowContent}>
               <Icon name={'email-fast'} color={colors.THEME_BTN} size={15} />
               <CustomText marginLeft={3} fontSize={13}>
@@ -119,46 +134,81 @@ export default function Booking({navigation}) {
             </View>
           </View>
         </View>
+        {isActive == 0 && (
+          <View>
+            {user?.user?.userType === 2 ? null : (
+              <TouchableOpacity
+                style={{alignSelf: 'center', alignItems: 'center'}}
+                onPress={() => {
+                  setId({coachId: item.coachId});
+                  setReviewPop_Up(true);
+                }}>
+                <Icon
+                  name={'message-star-outline'}
+                  color={colors.THEME_BTN}
+                  size={25}
+                />
+                <CustomText color={colors.BORDER_COLOR}>{'Reviews'}</CustomText>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
         {isActive === 1 && (
           <View
             style={{
               width: '20%',
             }}>
-            {item.bookingStatus === 'Pending' ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  alignItems: 'center',
-                }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setId({
-                      bookingId: item.bookingId,
-                      bookingStatus: 3,
-                      coachId: item.coachId,
-                    })
-                  }>
-                  <Icon name={'check-bold'} color={'green'} size={25} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() =>
-                    setId({
-                      bookingId: item.bookingId,
-                      bookingStatus: 2,
-                      coachId: item.coachId,
-                    })
-                  }>
-                  <Icon name={'close-thick'} color={'red'} size={25} />
-                </TouchableOpacity>
+            {user?.user?.userType === 2 ? (
+              <View>
+                {item.bookingStatus === 'Pending' ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setId({
+                          bookingId: item.bookingId,
+                          bookingStatus: 3,
+                          coachId: item.coachId,
+                        })
+                      }>
+                      <Icon name={'check-bold'} color={'green'} size={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setId({
+                          bookingId: item.bookingId,
+                          bookingStatus: 2,
+                          coachId: item.coachId,
+                        });
+                      }}>
+                      <Icon name={'close-thick'} color={'red'} size={25} />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <CustomText
+                    fontSize={16}
+                    alignSelf={'center'}
+                    color={item.bookingStatus === 'Approve' ? 'green' : 'red'}>
+                    {item.bookingStatus}
+                  </CustomText>
+                )}
               </View>
             ) : (
-              <CustomText
-                fontSize={16}
-                alignSelf={'center'}
-                color={item.bookingStatus === 'Approve' ? 'green' : 'red'}>
-                {item.bookingStatus}
-              </CustomText>
+              <TouchableOpacity
+                style={{alignSelf: 'flex-end'}}
+                onPress={() => {
+                  setId({
+                    bookingId: item.bookingId,
+                    bookingStatus: 2,
+                    coachId: item.coachId,
+                  });
+                }}>
+                <Icon name={'close-thick'} color={'red'} size={25} />
+              </TouchableOpacity>
             )}
           </View>
         )}
@@ -291,6 +341,11 @@ export default function Booking({navigation}) {
       <BookingDetails
         modalVisible={isModalVisible}
         setModalVisible={setIsModalVisible}
+      />
+      <AddReviews
+        modalVisible={isReviewPop_Up}
+        setModalVisible={setReviewPop_Up}
+        reciverId={id.coachId}
       />
     </SafeAreaView>
   );

@@ -10,6 +10,8 @@ import {useSelector} from 'react-redux';
 
 export const BookingDetails = ({modalVisible, setModalVisible}) => {
   const {user} = useSelector(state => state.authReducer);
+  const defaultpic =
+    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const RowContents = ({
     iconLeft,
     titleLeft,
@@ -58,14 +60,25 @@ export const BookingDetails = ({modalVisible, setModalVisible}) => {
             </TouchableOpacity>
           </View>
           <CustomImage
-            source={{uri: user?.bookingDetails?.studentImage}}
+            source={{
+              uri:
+                user?.user?.userType === 2
+                  ? user?.bookingDetails?.studentImage
+                    ? user?.bookingDetails?.studentImage
+                    : defaultpic
+                  : user?.bookingDetails?.coachImage
+                  ? user?.bookingDetails?.coachImage
+                  : defaultpic,
+            }}
             style={styles.profile}
           />
           <CustomText
             alignSelf={'center'}
             marginTop={10}
             color={colors.THEME_BTN}>
-            {user?.bookingDetails?.studentName}
+            {user?.user?.userType === 2
+              ? user?.bookingDetails?.studentName
+              : user?.bookingDetails?.coachName}
           </CustomText>
           <RowContents
             iconLeft={'cellphone'}
@@ -95,13 +108,15 @@ export const BookingDetails = ({modalVisible, setModalVisible}) => {
               'YYYY-MM-DD',
             )}
           />
-          {user?.bookingDetails?.slotsList.length===0&&<CustomText
-            alignSelf={'center'}
-            marginTop={20}
-            marginBottom={20}
-            color={colors.THEME_BTN}>
-            {"No slots are available"}
-          </CustomText>}
+          {user?.bookingDetails?.slotsList.length === 0 && (
+            <CustomText
+              alignSelf={'center'}
+              marginTop={20}
+              marginBottom={20}
+              color={colors.THEME_BTN}>
+              {'No slots are available'}
+            </CustomText>
+          )}
         </View>
       </View>
     </Modal>
@@ -131,7 +146,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderBottomWidth: 2,
     paddingBottom: 10,
-    marginTop:10
+    marginTop: 10,
   },
   profile: {
     alignSelf: 'center',

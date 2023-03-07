@@ -43,7 +43,7 @@ export default function ChatScreen({navigation}) {
   useEffect(() => {
     getUsersList();
     if (page) getInbox();
-  }, [user]);
+  }, [user,page]);
   const getUsersList = () => {
     setLoading(true);
     postReq(apiUrl.baseUrl + apiUrl.getBookingUser, null, user?.access_token)

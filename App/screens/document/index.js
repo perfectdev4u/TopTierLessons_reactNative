@@ -8,7 +8,7 @@ import CustomImage from '../../compnents/customImage';
 import CustomText from '../../compnents/customText';
 import CustomButton from '../../compnents/customButton';
 import style from './style';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
 import {getReq, postReq, profileImageReq} from '../../api';
@@ -26,17 +26,12 @@ export default function Documents({navigation}) {
   const [coachDocuments, setCoachDocuments] = useState([]);
   const [isRoaster, setIsRoaster] = useState(false);
   const [documentList, setDocumentList] = useState([]);
-
   const documentPayload = {
     docList: [documentList],
   };
   useEffect(() => {
     getUserProfile();
   }, [user]);
-  useEffect(() => {
-    if (documentList.length > 0) uploadDocumentFile();
-  }, [documentList]);
-
   const getUserProfile = () => {
     getReq(apiUrl.baseUrl + apiUrl.getUserProfile, user?.access_token)
       .then(({data}) => {
@@ -81,6 +76,7 @@ export default function Documents({navigation}) {
         setIsLoading(false);
         if (data?.statusCode === 200) {
           console.log('Document-res', data);
+          getUserProfile();
           Alert.alert(data?.returnMessage[0]);
         } else Alert.alert('Something went wrong');
       })
@@ -98,6 +94,10 @@ export default function Documents({navigation}) {
       },
       {text: 'Album', onPress: () => launchGallery(getFile)},
     ]);
+  const handleSubmit = () => {
+    if (documentList.length === 0) Alert.alert('Please add document first');
+    else uploadDocumentFile();
+  };
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
@@ -162,6 +162,7 @@ export default function Documents({navigation}) {
             lable={'Submit'}
             width={'80%'}
             alignSelf={'center'}
+            onPress={handleSubmit}
           />
           {coachDocuments.length > 0 || isLoading ? (
             <View>

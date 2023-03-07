@@ -20,6 +20,7 @@ import Slots from '../screens/slots';
 import Documents from '../screens/document';
 import Venues from '../screens/venues';
 import Booking from '../screens/booking';
+import Reviews_Ratings from '../screens/reviewsRating';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
 import UserChatScreen from '../screens/userChatScreen';
@@ -53,6 +54,7 @@ const DrawerContainer = () => {
       <Drawer.Screen name={screenString.DOCUMENTS} component={Documents} />
       <Drawer.Screen name={screenString.VENUE} component={Venues} />
       <Drawer.Screen name={screenString.BOOKING} component={Booking} />
+      <Drawer.Screen name={screenString.REVIEWS} component={Reviews_Ratings} />
       <Drawer.Screen name={screenString.NEWPASSWORD} component={NewPassword} />
       <Drawer.Screen
         name={screenString.TERMS_PRIVACY}

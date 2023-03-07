@@ -254,7 +254,6 @@ export default function CoachDetails({navigation}) {
                       </View>
                     </View>
                     <View
-                      key={index}
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'flex-end',
@@ -262,6 +261,7 @@ export default function CoachDetails({navigation}) {
                       }}>
                       {Array.from(Array(5).keys()).map((item, index) => (
                         <Star
+                          key={index}
                           name={index <= val.rating ? 'star' : 'star-outlined'}
                           color={colors.THEME_BTN}
                           size={22}
