@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ChatListItem({
   profileImage,
-  userName,
+  name,
   updatedOn,
   isActive = true,
   lastMessage,
@@ -29,7 +29,7 @@ export default function ChatListItem({
         navigation.navigate(screenString.USERCHATSCREEN, {
           chatId: chatId,
           profileImage: profileImage ? profileImage : defaultpic,
-          userName: userName,
+          userName: name,
           reciverId: user?.user?.userId === reciverId ? senderId : reciverId,
         })
       }
@@ -51,7 +51,7 @@ export default function ChatListItem({
         <View style={{marginLeft: 10, width: '70%'}}>
           <View style={style.rowContent}>
             <CustomText numberOfLines={1} fontSize={13}>
-              {userName}
+              {name}
             </CustomText>
             <CustomText color={colors.FADED} marginLeft={'10%'} fontSize={10}>
               {moment(updatedOn).format('HH:mm')}

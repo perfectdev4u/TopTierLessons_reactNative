@@ -19,6 +19,9 @@ import {
 } from '../../compnents/imageUpload';
 import commonStyle from '../../theme/commonStyle';
 import {goBackHandle} from '../../utils/constants';
+import RNFetchBlob from 'rn-fetch-blob';
+import FileViewer from 'react-native-file-viewer';
+import {ShomImage} from '../../compnents/showImage';
 
 export default function Documents({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -26,6 +29,9 @@ export default function Documents({navigation}) {
   const [coachDocuments, setCoachDocuments] = useState([]);
   const [isRoaster, setIsRoaster] = useState(false);
   const [documentList, setDocumentList] = useState([]);
+  const [url, setUrl] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
   const documentPayload = {
     docList: [documentList],
   };
@@ -98,6 +104,29 @@ export default function Documents({navigation}) {
     if (documentList.length === 0) Alert.alert('Please add document first');
     else uploadDocumentFile();
   };
+  const downloadDocument = async file => {
+    setIsLoader(true);
+    const dirs = RNFetchBlob.fs.dirs;
+    RNFetchBlob.config({
+      path: dirs.DocumentDir + '/' + `TopTier${Math.random()}` + '.pdf',
+      fileCache: true,
+    })
+      .fetch('GET', encodeURI(file))
+      .then(res => {
+        setIsLoader(false);
+        FileViewer.open(res.data);
+      })
+      .catch(e => {
+        // setIsLoading(false)
+        console.log('Error document fetch: ', e);
+      });
+  };
+  const handleShowDocument = type => {
+    if (type.documentType === 'IdProof') {
+      setModalVisible(true);
+      setUrl(type.document);
+    } else downloadDocument(type.document);
+  };
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
@@ -165,7 +194,8 @@ export default function Documents({navigation}) {
             onPress={handleSubmit}
           />
           {coachDocuments.length > 0 || isLoading ? (
-            <View>
+            <View style={{flex: 1}}>
+              <Loader modalVisible={isLoader} setModalVisible={setIsLoader} />
               <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
                 Documents List
               </CustomText>
@@ -180,21 +210,30 @@ export default function Documents({navigation}) {
               </View>
               {coachDocuments.map((val, index) => {
                 return (
-                  <View
+                  <TouchableOpacity
+                    onPress={() => handleShowDocument(val)}
                     key={index}
                     style={[
                       commonStyle.row('90%', 'space-between', 'center'),
                       {marginTop: 10, flex: 1, paddingHorizontal: 10},
                     ]}>
-                    <CustomImage
-                      source={{uri: val.document}}
-                      style={{
-                        height: 35,
-                        width: 35,
-                        alignSelf: 'center',
-                        borderRadius: 35,
-                      }}
-                    />
+                    {val.documentType === 'IdProof' ? (
+                      <CustomImage
+                        source={{uri: val.document}}
+                        style={{
+                          height: 35,
+                          width: 35,
+                          alignSelf: 'center',
+                          borderRadius: 35,
+                        }}
+                      />
+                    ) : (
+                      <Icon
+                        name={'file-document-outline'}
+                        size={35}
+                        color={colors.THEME_BTN}
+                      />
+                    )}
                     <CustomText alignSelf={'center'} fontSize={14}>
                       {val.documentType}
                     </CustomText>
@@ -206,7 +245,7 @@ export default function Documents({navigation}) {
                       fontSize={14}>
                       {val.status}
                     </CustomText>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
             </View>
@@ -217,6 +256,11 @@ export default function Documents({navigation}) {
           )}
         </View>
       )}
+      <ShomImage
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        url={url}
+      />
     </ContainerBgImage>
   );
 }

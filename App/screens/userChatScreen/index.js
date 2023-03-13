@@ -272,29 +272,29 @@ export default function UserChatScreen({route, navigation}) {
         }}>
         <FlatList
           data={isMsgList}
-          renderItem={({item, index}) => (
-            <UserChatItem {...item} index={index} />
-          )}
           showsVerticalScrollIndicator={false}
           inverted
           contentContainerStyle={{flexDirection: 'column-reverse'}}
+          renderItem={({item, index}) => (
+            <UserChatItem {...item} index={index} />
+          )}
           onEndReachedThreshold={0.2}
           onEndReached={({distanceFromEnd}) => {
             console.log(distanceFromEnd);
             if (distanceFromEnd > 0) setPage(page + 1);
             setPageSize(pageSize + 10);
           }}
-          ListHeaderComponent={() => (
-            <View style={{alignSelf: 'center', marginBottom: 10}}>
-              {dataLength === 0 ? (
-                <CustomText color={colors.THEME_BTN}>
-                  No Messages Left
-                </CustomText>
-              ) : (
-                <ActivityIndicator size={'small'} color={colors.WHITE} />
-              )}
-            </View>
-          )}
+          // ListHeaderComponent={() => (
+          //   <View style={{alignSelf: 'center', marginBottom: 10}}>
+          //     {dataLength === 0 ? (
+          //       <CustomText color={colors.THEME_BTN}>
+          //         No Messages Left
+          //       </CustomText>
+          //     ) : (
+          //       <ActivityIndicator size={'small'} color={colors.WHITE} />
+          //     )}
+          //   </View>
+          // )}
         />
         {file.length > 0 && (
           <FilesPop_Up file={file} setFile={setFile} setUrl={setUrl} />

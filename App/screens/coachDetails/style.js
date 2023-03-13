@@ -6,6 +6,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
+    width:'70%'
   },
   rowRight: {
     backgroundColor: colors.THEME_BTN,

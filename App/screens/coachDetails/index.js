@@ -120,6 +120,7 @@ export default function CoachDetails({navigation}) {
                 height: 70,
                 backgroundColor: '#1F1F1F',
                 marginTop: 20,
+
               },
             ]}>
             <View style={style.rowContent}>
@@ -137,7 +138,7 @@ export default function CoachDetails({navigation}) {
                     color={colors.THEME_BTN}
                     size={15}
                   />
-                  <CustomText marginLeft={3} fontSize={13}>
+                  <CustomText marginLeft={3} numberOfLines={1} fontSize={13}>
                     {user?.coachDetails?.address}
                   </CustomText>
                 </View>

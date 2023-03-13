@@ -71,7 +71,7 @@ export default function ChatScreen({navigation}) {
           setDataLength(res?.data?.data?.length);
           if (page === 1) setChatList(res?.data?.data);
           else setChatList([...chatList, ...res?.data?.data]);
-          //console.log(res?.data?.data);
+         // console.log(res?.data?.data);
         }
       })
       .catch(err => {

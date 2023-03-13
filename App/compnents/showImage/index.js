@@ -4,8 +4,6 @@ import {
   StyleSheet,
   View,
   Modal,
-  Dimensions,
-  ImageBackground,
   SafeAreaView,
 } from 'react-native';
 import colors from '../../theme/colors';

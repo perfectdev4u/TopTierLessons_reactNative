@@ -306,7 +306,7 @@ export default function Booking({navigation}) {
           {!isLoading && (
             <FlatList
               data={isBookingsList}
-              renderItem={bookingsItemList}
+              renderItem={({item,index})=>bookingsItemList({item,index})}
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={0}
               onEndReached={({distanceFromEnd}) => {
