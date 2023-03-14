@@ -12,8 +12,8 @@ export default function ContainerBgImage({
   return (
     <ImageBackground
       source={Images.appBackground}
-      style={commonStyle.container(colors.BLACK)}>
-      <SafeAreaView style={[commonStyle.container()]}>
+      style={[commonStyle.container(colors.BLACK)]}>
+      <SafeAreaView style={commonStyle.container()}>
         <KeyboardAwareScrollView
           style={commonStyle.container()}
           scrollEnabled={scrollEnabled}

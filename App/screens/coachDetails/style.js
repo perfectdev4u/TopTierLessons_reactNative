@@ -6,7 +6,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    width:'70%'
+    width: '70%',
   },
   rowRight: {
     backgroundColor: colors.THEME_BTN,
@@ -32,10 +32,10 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   mapContainer: {
-    marginTop: 30,
+    marginTop: 10,
     backgroundColor: colors.BLACK,
     alignSelf: 'center',
-    height: 330,
+    height: 310,
     width: '100%',
   },
 });

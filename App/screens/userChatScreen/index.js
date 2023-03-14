@@ -34,7 +34,7 @@ export default function UserChatScreen({route, navigation}) {
   const [msg, setMsg] = useState('');
   const [file, setFile] = useState([]);
   const [page, setPage] = useState(1);
-  const [dataLength, setDataLength] = useState(1);
+  const [dataLength, setDataLength] = useState(null);
   const [pageSize, setPageSize] = useState(10);
   const [url, setUrl] = useState('');
   const [isPlusPressed, setIsPlusPressed] = useState(false);
@@ -274,7 +274,7 @@ export default function UserChatScreen({route, navigation}) {
           data={isMsgList}
           showsVerticalScrollIndicator={false}
           inverted
-          contentContainerStyle={{flexDirection: 'column-reverse'}}
+          contentContainerStyle={{flexGrow: 1, flexDirection: 'column-reverse'}}
           renderItem={({item, index}) => (
             <UserChatItem {...item} index={index} />
           )}
@@ -284,17 +284,15 @@ export default function UserChatScreen({route, navigation}) {
             if (distanceFromEnd > 0) setPage(page + 1);
             setPageSize(pageSize + 10);
           }}
-          // ListHeaderComponent={() => (
-          //   <View style={{alignSelf: 'center', marginBottom: 10}}>
-          //     {dataLength === 0 ? (
-          //       <CustomText color={colors.THEME_BTN}>
-          //         No Messages Left
-          //       </CustomText>
-          //     ) : (
-          //       <ActivityIndicator size={'small'} color={colors.WHITE} />
-          //     )}
-          //   </View>
-          // )}
+          ListHeaderComponent={() => (
+            <View style={{alignSelf: 'center', marginBottom: 10}}>
+              {dataLength === 0 ? (
+                <CustomText color={colors.THEME_BTN}>{''}</CustomText>
+              ) : (
+                <ActivityIndicator size={'small'} color={colors.WHITE} />
+              )}
+            </View>
+          )}
         />
         {file.length > 0 && (
           <FilesPop_Up file={file} setFile={setFile} setUrl={setUrl} />

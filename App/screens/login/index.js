@@ -17,6 +17,7 @@ import {isValidEmail} from '../../utils/constants';
 import {Loader} from '../../compnents/loader';
 import {addUser} from '../../redux/reducers/authReducer';
 import {CommonActions} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({navigation}) {
   const dispatch = useDispatch();
@@ -25,7 +26,9 @@ export default function Login({navigation}) {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  useEffect(() => {
+    getRememberUser();
+  }, []);
   const loginpayload = {
     email: email.trim(),
     password: password.trim(),
@@ -35,6 +38,9 @@ export default function Login({navigation}) {
     fcmToken: '',
   };
   const handleLogin = () => {
+    if (isChecked)
+      AsyncStorage.setItem('@remember_user', JSON.stringify({email, password}));
+    else AsyncStorage.removeItem('@remember_user', null);
     setIsLoading(true);
     postReq(apiUrl.baseUrl + apiUrl.logIn, loginpayload)
       .then(res => {
@@ -66,6 +72,15 @@ export default function Login({navigation}) {
     // else if (password.length < 6)
     //   Alert.alert('Password should be more than 5 character.');
     else handleLogin();
+  };
+  const getRememberUser = async () => {
+    const jsonValue = await AsyncStorage.getItem('@remember_user');
+    if (jsonValue != null) {
+      const user_Remember = JSON.parse(jsonValue);
+      setEmail(user_Remember?.email);
+      setPassword(user_Remember?.password);
+      setIsChecked(true);
+    }
   };
   return (
     <ContainerBgImage>
