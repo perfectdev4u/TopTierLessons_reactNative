@@ -7,7 +7,9 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistore} from './App/redux';
 import screenString from './App/navigation/screenString';
+import { enableFreeze } from 'react-native-screens';
 
+enableFreeze(true);
 function App() {
   useEffect(() => {
     StatusBar.setBarStyle('light-content');

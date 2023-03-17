@@ -430,7 +430,7 @@ PODS:
   - React-jsinspector (0.71.0)
   - React-logger (0.71.0):
     - glog
-  - react-native-document-picker (8.1.3):
+  - react-native-document-picker (8.1.4):
     - React-Core
   - react-native-fbsdk-next (11.1.0):
     - React-Core
@@ -451,7 +451,7 @@ PODS:
     - Google-Maps-iOS-Utils (= 4.1.0)
     - GoogleMaps (= 7.3.0)
     - React-Core
-  - react-native-image-picker (5.0.1):
+  - react-native-image-picker (5.3.1):
     - React-Core
   - react-native-maps (1.4.0):
     - React-Core
@@ -553,20 +553,20 @@ PODS:
     - React-perflogger (= 0.71.0)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.17.12):
     - React-Core
-  - RNCClipboard (1.11.1):
+  - RNCClipboard (1.11.2):
     - React-Core
   - RNDateTimePicker (6.7.5):
     - React-Core
-  - RNFBApp (16.5.1):
+  - RNFBApp (16.7.0):
     - Firebase/CoreOnly (= 10.3.0)
     - React-Core
   - RNFileViewer (2.1.5):
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNReanimated (2.14.4):
+  - RNReanimated (3.0.2):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -593,7 +593,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.19.0):
+  - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
   - RNSoundPlayer (0.13.2):
@@ -889,10 +889,10 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 060dd495f1e2af3d87216f7ca8a94c55ec885b4f
   React-jsinspector: 5061fcbec93fd672183dfb39cc2f65e55a0835db
   React-logger: a6c0b3a807a8e81f6d7fea2e72660766f55daa50
-  react-native-document-picker: 958e2bc82e128be69055be261aeac8d872c8d34c
+  react-native-document-picker: a9bd26996d1b2e4f412dd186041714c79af381d0
   react-native-fbsdk-next: c78dede90e3c50ab6936a7d56c43e1a9eb37e25a
   react-native-google-maps: f4cf51c3c6360eb4f945adc12dc89575ec3d944a
-  react-native-image-picker: 8cb4280e2c1efc3daeb2d9d597f9429a60472e40
+  react-native-image-picker: ec9b713e248760bfa0f879f0715391de4651a7cb
   react-native-maps: 7135a33610202745d08fdf151ce6b0d01952a99c
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
@@ -912,14 +912,14 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: ac80782d9d76ba2b0f709f4de0c427fe33c352dc
   ReactCommon: 20e38a9be5fe1341b5e422220877cc94034776ba
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
-  RNCClipboard: 2834e1c4af68697089cdd455ee4a4cdd198fa7dd
+  RNCAsyncStorage: 09fc8595e6d6f6d5abf16b23a56b257d9c6b7c5b
+  RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNDateTimePicker: 65e1d202799460b286ff5e741d8baf54695e8abd
-  RNFBApp: 6815ebf7845545e138e7dcd32e2b0a93012f392f
+  RNFBApp: aecfcdc0964d9bc0c5f7ba05efb50be724d8e8b3
   RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
-  RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNReanimated: f0dd6b881808e635ef0673f89642937d6c141314
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSoundPlayer: 369105c565b8fe6ea0a43fc882dc81eba444e842
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: c618b544ff8bd8865cdca602f00cbcdb92fd6d31
