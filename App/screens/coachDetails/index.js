@@ -17,7 +17,7 @@ import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
 import {addUser} from '../../redux/reducers/authReducer';
 import screenString from '../../navigation/screenString';
-export default function CoachDetails({navigation}) {
+export default function CoachDetails({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [isActive, setIsActive] = useState(0);
@@ -29,10 +29,10 @@ export default function CoachDetails({navigation}) {
     {name: 'Reviews', width: '33.3%'},
   ];
   const detailsPayload = {
-    coachId: 4,
+    coachId: route?.params?.coachId || 4,
   };
   const reviewsPayload = {
-    userId: 4,
+    userId: route?.params?.coachId || 4,
     page: 1,
     pageSize: 20,
   };
@@ -204,7 +204,7 @@ export default function CoachDetails({navigation}) {
                     style={{
                       flex: 1,
                       borderRadius: 20,
-                      marginBottom:10
+                      marginBottom: 10,
                     }}
                     initialRegion={{
                       latitude: user?.coachDetails?.latitude,

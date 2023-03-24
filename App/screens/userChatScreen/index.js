@@ -22,7 +22,6 @@ import {postReq, profileImageReq} from '../../api';
 import {audioFormat, videoFormat, imgFormat} from '../../utils/constants';
 import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {useSelector} from 'react-redux';
-import {HubConnectionBuilder} from '@microsoft/signalr';
 import screenString from '../../navigation/screenString';
 import {CommonActions} from '@react-navigation/native';
 import {FilesPop_Up} from '../../compnents/filesPop_Up/ndex';
@@ -30,7 +29,6 @@ export default function UserChatScreen({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [bottomPadding, setBottomPadding] = useState(0);
   const [isMsgList, setIsMsgList] = useState([]);
-  const [connection, setConnection] = useState();
   const [msg, setMsg] = useState('');
   const [file, setFile] = useState([]);
   const [page, setPage] = useState(1);
@@ -64,6 +62,16 @@ export default function UserChatScreen({route, navigation}) {
     updatedOn: new Date(),
   };
   useEffect(() => {
+    global.connect?.on('ReceiveMessage', message => {
+      console.log('useEffect ReceiveMessage==>', message);
+      if (message?.chatId === route?.params?.chatId) {
+        const updatedChat = [...latestChat.current];
+        updatedChat.push(message);
+        setIsMsgList(updatedChat);
+      }
+    });
+  }, []);
+  useEffect(() => {
     let keyboardWillShow;
     let keyboardWillHide;
     keyboardWillShow = Keyboard.addListener(
@@ -83,37 +91,6 @@ export default function UserChatScreen({route, navigation}) {
   useEffect(() => {
     getMsgList();
   }, [page]);
-  useEffect(() => {
-    const connect = new HubConnectionBuilder()
-      .withUrl('https://api.toptierlessons.com:4436/chatHub')
-      .withAutomaticReconnect()
-      .build();
-    setConnection(connect);
-  }, []);
-  useEffect(() => {
-    if (connection) {
-      connection
-        .start()
-        .then(() => {
-          connection.on('ReceiveMessage', message => {
-            if (message) {
-              console.log('ReceiveMessage==>', message);
-              if (message?.chatId === route?.params?.chatId) {
-                const updatedChat = [...latestChat.current];
-                updatedChat.push(message);
-                setIsMsgList(updatedChat);
-              } else null;
-            }
-          });
-          connection
-            .invoke('GetClientId', user?.user?.userId)
-            .then(function (res) {
-              console.log('ConnectionId==>', res);
-            });
-        })
-        .catch(error => console.log('connection-err --->', error));
-    }
-  }, [connection]);
 
   const getMsgList = () => {
     postReq(apiUrl.baseUrl + apiUrl.getChatById, msgListPayload)
@@ -152,7 +129,7 @@ export default function UserChatScreen({route, navigation}) {
       });
   };
   const senderHandle = async payload => {
-    await connection
+    await global.connect
       .invoke('SendMessageSpecificClient', payload)
       .then(response => {
         if (file.length === 0) {
@@ -178,7 +155,7 @@ export default function UserChatScreen({route, navigation}) {
     setMsg('');
   };
   const handleMsgSend = () => {
-    if (connection) {
+    if (global.connect) {
       let toptierChatPayload = {...userChatPayload, message: msg};
       if (file.length > 0) {
         let handlerdm = {
@@ -234,7 +211,7 @@ export default function UserChatScreen({route, navigation}) {
       <View
         style={[
           commonStyle.row('95%', 'space-between', 'center'),
-          {height: 45},
+          {height: 45, marginTop: 10},
         ]}>
         <View style={style.rowContent}>
           <TouchableOpacity
@@ -245,18 +222,19 @@ export default function UserChatScreen({route, navigation}) {
                   routes: [{name: screenString.CHATSCREEN}],
                 }),
               );
-              connection.stop();
             }}>
             <Icon size={30} name={'chevron-left'} color={colors.WHITE} />
           </TouchableOpacity>
-          <CustomImage
-            style={style.profile}
-            source={{uri: route?.params?.profileImage}}
-          />
-          <View style={{marginLeft: '5%'}}>
-            <CustomText>{route?.params?.userName}</CustomText>
-            <CustomText fontSize={9}>Active now</CustomText>
-          </View>
+          <TouchableOpacity style={style.rowContent}>
+            <CustomImage
+              style={style.profile}
+              source={{uri: route?.params?.profileImage}}
+            />
+            <View style={{marginLeft: '5%'}}>
+              <CustomText>{route?.params?.userName}</CustomText>
+              <CustomText fontSize={9}>Active now</CustomText>
+            </View>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => alert('in process')}>
           <Icon size={30} name={'more-horizontal'} color={colors.WHITE} />
@@ -338,7 +316,7 @@ export default function UserChatScreen({route, navigation}) {
         placeholder={'Type a message'}
         placeholderTextColor={'rgba(67, 62, 62, 0.5)'}
         paddingHorizontal={10}
-        marginBottom={20}
+        height={50}
         multiline={true}
         value={msg}
         onChangeText={txt => setMsg(txt)}

@@ -19,14 +19,15 @@ import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
 import {useSelector} from 'react-redux';
 import CustomText from '../../compnents/customText';
-import CustomButton from '../../compnents/customButton';
 import CustomImage from '../../compnents/customImage';
 import screenString from '../../navigation/screenString';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {HubConnectionBuilder} from '@microsoft/signalr';
 export default function ChatScreen({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [userMenuShow, setUserMenuShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [connection, setConnection] = useState();
   const [userList, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatList, setChatList] = useState([]);
@@ -41,9 +42,34 @@ export default function ChatScreen({navigation}) {
     pageSize: pageSize,
   };
   useEffect(() => {
+    global.connect = new HubConnectionBuilder()
+      .withUrl(apiUrl.baseUrl + apiUrl.chatHub)
+      .withAutomaticReconnect()
+      .build();
+    setConnection(global.connect);
+  }, []);
+  useEffect(() => {
+    if (connection) {
+      connection.start().then(() => {
+        connection.on('ReceiveMessage', message => {
+          if (message) {
+            console.log('ReceiveMessage==>', message);
+            getInbox();
+          }
+        });
+        connection
+          .invoke('GetClientId', user?.user?.userId)
+          .then(res => {
+            console.log('ConnectionId==>', res);
+          })
+          .catch(error => console.log('connection-err --->', error));
+      });
+    }
+  }, [connection]);
+  useEffect(() => {
     getUsersList();
     if (page) getInbox();
-  }, [user,page]);
+  }, [user, page]);
   const getUsersList = () => {
     setLoading(true);
     postReq(apiUrl.baseUrl + apiUrl.getBookingUser, null, user?.access_token)
@@ -71,7 +97,7 @@ export default function ChatScreen({navigation}) {
           setDataLength(res?.data?.data?.length);
           if (page === 1) setChatList(res?.data?.data);
           else setChatList([...chatList, ...res?.data?.data]);
-         // console.log(res?.data?.data);
+          // console.log(res?.data?.data);
         }
       })
       .catch(err => {
