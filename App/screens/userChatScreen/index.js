@@ -63,7 +63,7 @@ export default function UserChatScreen({route, navigation}) {
   };
   useEffect(() => {
     global.connect?.on('ReceiveMessage', message => {
-      console.log('useEffect ReceiveMessage==>', message);
+      //console.log('useEffect ReceiveMessage==>', message);
       if (message?.chatId === route?.params?.chatId) {
         const updatedChat = [...latestChat.current];
         updatedChat.push(message);

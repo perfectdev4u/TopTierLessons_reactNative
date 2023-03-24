@@ -42,8 +42,12 @@ export default function ChatScreen({navigation}) {
     pageSize: pageSize,
   };
   useEffect(() => {
+    getUsersList();
+    if (page) getInbox();
+  }, [user, page]);
+  useEffect(() => {
     global.connect = new HubConnectionBuilder()
-      .withUrl(apiUrl.baseUrl + apiUrl.chatHub)
+      .withUrl('https://api.toptierlessons.com:4436/api/v1.0/chatHub')
       .withAutomaticReconnect()
       .build();
     setConnection(global.connect);
@@ -66,10 +70,6 @@ export default function ChatScreen({navigation}) {
       });
     }
   }, [connection]);
-  useEffect(() => {
-    getUsersList();
-    if (page) getInbox();
-  }, [user, page]);
   const getUsersList = () => {
     setLoading(true);
     postReq(apiUrl.baseUrl + apiUrl.getBookingUser, null, user?.access_token)
