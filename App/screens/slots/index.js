@@ -75,6 +75,7 @@ export default function Slots({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
+        // console.log("All Slots==>",res?.data?.data);
         setSlotList(res?.data?.data);
       })
       .catch(err => {
@@ -132,7 +133,7 @@ export default function Slots({navigation}) {
       .then(res => {
         if (res?.data?.statusCode === 200) {
           setIsLoading(false);
-          console.log('slot_Delete==>', res?.data);
+          //console.log('slot_Delete==>', res?.data);
           getAllTimeSlots();
           Alert.alert(res?.data?.returnMessage[0]);
         }
@@ -161,6 +162,7 @@ export default function Slots({navigation}) {
           );
           setSlotDate(moment(res?.data?.data?.slotDate).format('YYYY-MM-DD'));
         }
+        setWeekDays(res?.data?.data?.weekDays);
       })
       .catch(err => {
         setIsLoading(false);
@@ -283,7 +285,7 @@ export default function Slots({navigation}) {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      {val?.weekDays.map((day, index) => {
+                      {val?.weekDays?.map((day, index) => {
                         return (
                           <View key={index}>
                             {index <= 2 && (

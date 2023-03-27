@@ -105,19 +105,22 @@ export default function Documents({navigation}) {
     else uploadDocumentFile();
   };
   const downloadDocument = async file => {
-    setIsLoader(true);
+    let Type = file.split('.');
+    let urlIndex = Type.length - 1;
+    let exten = Type[urlIndex];
+    //setIsLoading(true);
     const dirs = RNFetchBlob.fs.dirs;
     RNFetchBlob.config({
-      path: dirs.DocumentDir + '/' + `TopTier${Math.random()}` + '.pdf',
+      path: dirs.DocumentDir + '/' + `TopTier${Math.random()}` + `.${exten}`,
       fileCache: true,
     })
       .fetch('GET', encodeURI(file))
       .then(res => {
-        setIsLoader(false);
+        // setIsLoader(false);
         FileViewer.open(res.data);
       })
       .catch(e => {
-        // setIsLoading(false)
+        //setIsLoading(false)
         console.log('Error document fetch: ', e);
       });
   };

@@ -67,8 +67,8 @@ export default memo(function DropDown({
             <TouchableOpacity
               key={index}
               onPress={() => {
-                onSelect();
                 setLable(val);
+                onSelect();
               }}>
               <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
                 {val}

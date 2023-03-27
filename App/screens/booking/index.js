@@ -21,7 +21,7 @@ import CustomImage from '../../compnents/customImage';
 import style from './style';
 import {BookingDetails} from '../../compnents/bookingDetails';
 import {addUser} from '../../redux/reducers/authReducer';
-import {goBackHandle} from '../../utils/constants';
+import {defaultpic, goBackHandle} from '../../utils/constants';
 import CustomButton from '../../compnents/customButton';
 import {AddReviews} from '../../compnents/addReviews';
 
@@ -33,7 +33,6 @@ export default function Booking({navigation}) {
   const [isBookingsList, setIsBookingsList] = useState([]);
   const [page, setPage] = useState(1);
   const [dataLength, setDataLength] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewPop_Up, setReviewPop_Up] = useState(false);
   const [id, setId] = useState({
@@ -41,15 +40,13 @@ export default function Booking({navigation}) {
     bookingStatus: null,
     coachId: null,
   });
-  const defaultpic =
-    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const title = [
     {name: 'Previous', width: '50%'},
     {name: 'Upcoming', width: '50%'},
   ];
   const bookingsPayload = {
     page: page,
-    pageSize: pageSize,
+    pageSize: 10,
   };
   const updatePayload = {
     bookingId: id.bookingId,
@@ -256,7 +253,6 @@ export default function Booking({navigation}) {
   };
   const onEndReachHandle = () => {
     setPage(page + 1);
-    setPageSize(pageSize + 10);
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.BLACK}}>
@@ -284,7 +280,6 @@ export default function Booking({navigation}) {
                   onPress={() => {
                     setIsActive(index);
                     setPage(1);
-                    setPageSize(10);
                   }}
                   style={{
                     borderBottomWidth: 2,
@@ -306,14 +301,13 @@ export default function Booking({navigation}) {
           {!isLoading && (
             <FlatList
               data={isBookingsList}
-              renderItem={({item,index})=>bookingsItemList({item,index})}
+              renderItem={({item, index}) => bookingsItemList({item, index})}
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={0}
               onEndReached={({distanceFromEnd}) => {
                 console.log(distanceFromEnd);
                 //onEndReachHandle();
                 // setPage(page + 1);
-                // setPageSize(pageSize + 10);
                 //   if (isActive === 0) getBookingsList(apiUrl.previousBookings);
                 //   else getBookingsList(apiUrl.upcomingBookings);
               }}
@@ -334,6 +328,16 @@ export default function Booking({navigation}) {
                   )}
                 </View>
               )}
+              ListEmptyComponent={() =>
+                !isLoading && (
+                  <CustomText
+                    marginTop={50}
+                    alignSelf={'center'}
+                    color={colors.THEME_BTN}>
+                    No Booking yet!
+                  </CustomText>
+                )
+              }
             />
           )}
         </View>

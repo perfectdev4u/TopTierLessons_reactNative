@@ -15,51 +15,56 @@ import {Alert, Platform, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import commonStyle from '../../theme/commonStyle';
 import CustomImage from '../../compnents/customImage';
-import Images from '../../assets/Images';
 import style from './style';
 import {useSelector, useDispatch} from 'react-redux';
 import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {Loader} from '../../compnents/loader';
 import {CommonActions} from '@react-navigation/native';
+import {defaultpic} from '../../utils/constants';
+import {addUser} from '../../redux/reducers/authReducer';
+
+let defaultFormData = [
+  {
+    name: null,
+    address: '',
+    dateOfBirth: '',
+    sportsName: 'Select Sport',
+    sportId: null,
+    skill: 'Skill Level',
+    skillLevel: 2,
+    latitude: 0,
+    longitude: 0,
+  },
+];
+
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const defaultFormData = [
-    {
-      name: null,
-      address: '',
-      dateOfBirth: '',
-      skill: 'Skill Level',
-      skillLevel: null,
-      userType: user?.userType,
-      latitude: 0,
-      longitude: 0,
-    },
-  ];
-
   const [formData, setFormData] = useState(defaultFormData);
   const [image, setImage] = useState(null);
-  //const [sport, setSport] = useState({name: 'Sport', id: null});
-  //const [sportsList, setSportsList] = useState([]);
+  //const [sport, setSport] = useState({name: '', id: null});
+  const [sportsList, setSportsList] = useState([]);
+  const [isSportsDropDown, setIsSportsDropDown] = useState(false);
   const [isSkillDropDown, setIsSkillDropDown] = useState(false);
   const SkillType = ['Begginer', 'Intermidate', 'Expert'];
-  // useEffect(() => {
-  //   getAllSports();
-  // }, []);
-  // const sportsPayload = {
-  //   page: 1,
-  //   pageSize: 20,
-  // };
-  // const getAllSports = () => {
-  //   postReq(apiUrl.baseUrl + apiUrl.getAllSports, sportsPayload)
-  //     .then(res => {
-  //       setSportsList(res?.data?.data);
-  //     })
-  //     .catch(err => console.log('err==>', err));
-  // };
+  useEffect(() => {
+    getAllSports();
+  }, []);
+  const sportsPayload = {
+    page: 1,
+    pageSize: 20,
+  };
+  const getAllSports = () => {
+    postReq(apiUrl.baseUrl + apiUrl.getAllSports, sportsPayload)
+      .then(res => {
+        setSportsList(res?.data?.data);
+      })
+      .catch(err => console.log('err==>', err));
+  };
 
   const updateProfilePayload = {
-    users: [...formData],
+    users: [...formData, {userType: user?.user?.userType, profileImage: image}],
   };
   const uploadImage = async image => {
     setIsLoading(true);
@@ -78,7 +83,7 @@ export default function UserProfileSetUp({navigation}) {
         setIsLoading(false);
         if (data?.statusCode === 200) {
           Alert.alert('Profile pic uploaded successfully');
-          setFormData({...formData, profileImage: data?.data?.url});
+          //setFormData([formData, {profileImage: data?.data?.url}]);
           setImage(data?.data?.url);
         } else Alert.alert('Something went wrong');
       })
@@ -108,9 +113,10 @@ export default function UserProfileSetUp({navigation}) {
       name: '',
       address: '',
       age: '',
-      //sportsName: 'Sports',
-      //sportsId: '',
-      skillLevel: 'Skill Level',
+      sportsName: 'Select Sport',
+      sportId: null,
+      skill: 'Skill Level',
+      skillLevel: 2,
     };
     setFormData([...formData, obj]);
   };
@@ -123,18 +129,18 @@ export default function UserProfileSetUp({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200) console.log(res);
+        if (res?.status === 200) console.log(res?.data?.data);
         // dispatch(
         //   addUser({
         //     user: res?.data?.data,
         //   }),
         // );
-        // navigation.dispatch(
-        //   CommonActions.reset({
-        //     index: 0,
-        //     routes: [{name: screenString.DRAWER}],
-        //   }),
-        // );
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.DRAWER}],
+          }),
+        );
       })
       .catch(err => {
         setIsLoading(false);
@@ -146,7 +152,7 @@ export default function UserProfileSetUp({navigation}) {
     e.preventDefault();
     if (
       formData[0].address === '' ||
-      formData[0].dateOfBirth === '' ||
+      formData[0].sportsName === '' ||
       formData[0].skill === ''
     ) {
       Alert.alert('please fill all fields');
@@ -161,28 +167,22 @@ export default function UserProfileSetUp({navigation}) {
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
       />
-      <CustomText
-        fontSize={32}
-        lineHeight={38}
-        alignSelf={'center'}>
+      <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
         Set Up Profile
       </CustomText>
       {user?.user?.userType === 3 && (
         <View style={style.imageContaioner}>
-          {image === null ? (
-            <CustomImage source={Images.USER} />
-          ) : (
-            <CustomImage
-              source={{uri: image}}
-              style={{
-                height: 106,
-                width: 106,
-                resizeMode: 'cover',
-                borderRadius: 100,
-                alignSelf: 'center',
-              }}
-            />
-          )}
+          <CustomImage
+            source={{uri: image ? image : defaultpic}}
+            style={{
+              height: 106,
+              width: 106,
+              resizeMode: 'cover',
+              borderRadius: 100,
+              alignSelf: 'center',
+            }}
+          />
+
           <TouchableOpacity
             onPress={() => imageUpload()}
             style={style.iconContainer}>
@@ -203,7 +203,21 @@ export default function UserProfileSetUp({navigation}) {
                 onChangeText={name => onChangeHandler('name', name, i)}
               />
             )}
-
+            {user?.user?.userType === 4 && (
+              <TextInputMask
+                type={'datetime'}
+                placeholder={'D.O.B (YYYY/MM/DD)'}
+                placeholderTextColor={'#D4D4D4'}
+                options={{
+                  format: 'YYYY-MM-DD',
+                }}
+                value={item.dateOfBirth}
+                onChangeText={dateOfBirth => {
+                  onChangeHandler('dateOfBirth', dateOfBirth, i);
+                }}
+                style={style.dobInput}
+              />
+            )}
             <GooglePlacesAutocomplete
               placeholder="Address"
               onPress={(data, details = null) => {
@@ -244,27 +258,17 @@ export default function UserProfileSetUp({navigation}) {
                 },
               }}
             />
-            <TextInputMask
-              type={'datetime'}
-              placeholder={'D.O.B (YYYY/MM/DD)'}
-              placeholderTextColor={'#D4D4D4'}
-              options={{
-                format: 'YYYY-MM-DD',
-              }}
-              value={item.dateOfBirth}
-              onChangeText={dateOfBirth => {
-                onChangeHandler('dateOfBirth', dateOfBirth, i);
-              }}
-              style={style.dobInput}
-            />
 
-            {/* <DropDown
+            <DropDown
               marginTop={20}
               isDropDown={isSportsDropDown}
               lable={item.sportsName}
-              setLable={val => onChangeHandler(val, i)}
+              setLable={sportsName =>
+                onChangeHandler('sportsName', sportsName, i)
+              }
               onPress={() => setIsSportsDropDown(!isSportsDropDown)}
               isShown={false}
+              onSelect
             />
             {isSportsDropDown && (
               <View
@@ -280,8 +284,10 @@ export default function UserProfileSetUp({navigation}) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        onChangeHandler(val.sportName, i);
+                        //setSport({name: val.sportName, id: val.sportId});
                         setIsSportsDropDown(!isSportsDropDown);
+                        onChangeHandler('sportsName', val.sportName, i);
+                        onChangeHandler('sportId', val.sportId, i);
                       }}>
                       <CustomText
                         color={colors.BLACK}
@@ -293,7 +299,7 @@ export default function UserProfileSetUp({navigation}) {
                   );
                 })}
               </View>
-            )} */}
+            )}
 
             <DropDown
               marginTop={20}
@@ -302,7 +308,10 @@ export default function UserProfileSetUp({navigation}) {
               setLable={skill => onChangeHandler('skill', skill, i)}
               onPress={() => setIsSkillDropDown(!isSkillDropDown)}
               isShown={isSkillDropDown}
-              onSelect={() => setIsSkillDropDown(!isSkillDropDown)}
+              onSelect={() => {
+                //onChangeHandler('skillLevel', skillLevel, i);
+                setIsSkillDropDown(!isSkillDropDown);
+              }}
               data={SkillType}
             />
           </View>

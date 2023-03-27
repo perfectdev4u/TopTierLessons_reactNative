@@ -8,6 +8,7 @@ import CustomText from '../customText';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { defaultpic } from '../../utils/constants';
 
 export default function ChatListItem({
   profileImage,
@@ -21,8 +22,6 @@ export default function ChatListItem({
   navigation,
 }) {
   const {user} = useSelector(state => state.authReducer);
-  const defaultpic =
-    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   return (
     <TouchableOpacity
       onPress={() =>

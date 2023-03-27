@@ -60,3 +60,5 @@ export let imgFormat = [
   'indd',
   'raw',
 ];
+export const defaultpic =
+  'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';

@@ -22,12 +22,11 @@ export default function Reviews_Ratings({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [reviewsList, setReviewsList] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [dataLength, setDataLength] = useState(0);
   const reviewsPayload = {
     userId: user?.user?.userId,
     page: page,
-    pageSize: pageSize,
+    pageSize: 10,
   };
   useEffect(() => {
     getReviews();
@@ -89,7 +88,6 @@ export default function Reviews_Ratings({navigation}) {
           onEndReached={({distanceFromEnd}) => {
             console.log(distanceFromEnd);
             if (distanceFromEnd > 0) setPage(page + 1);
-            setPageSize(pageSize + 10);
           }}
           //   ListFooterComponent={() => (
           //     <View style={{alignSelf: 'center', marginBottom: 10}}>

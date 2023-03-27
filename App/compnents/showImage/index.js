@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F1F1F',
     borderRadius: 10,
     padding: 10,
-    width: '90%',
+    width: '95%',
     paddingBottom: 50,
     alignSelf: 'center',
   },

@@ -13,7 +13,7 @@ import colors from '../../theme/colors';
 import Images from '../../assets/Images';
 import style from './style';
 import ChatListItem from '../../compnents/chatListItem';
-import {goBackHandle} from '../../utils/constants';
+import {defaultpic, goBackHandle} from '../../utils/constants';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
 import {postReq} from '../../api';
@@ -25,21 +25,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HubConnectionBuilder} from '@microsoft/signalr';
 export default function ChatScreen({navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  const [connection, setConnection] = useState();
   const [userMenuShow, setUserMenuShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [connection, setConnection] = useState();
   const [userList, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatList, setChatList] = useState([]);
   const [page, setPage] = useState(1);
   const [dataLength, setDataLength] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const defaultpic =
-    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const inboxPayload = {
     userId: user?.user?.userId,
     page: page,
-    pageSize: pageSize,
+    pageSize: 10,
   };
   useEffect(() => {
     getUsersList();
@@ -47,7 +44,7 @@ export default function ChatScreen({navigation}) {
   }, [user, page]);
   useEffect(() => {
     global.connect = new HubConnectionBuilder()
-      .withUrl('https://api.toptierlessons.com:4436/api/v1.0/chatHub')
+      .withUrl('https://api.toptierlessons.com:4436/chatHub')
       .withAutomaticReconnect()
       .build();
     setConnection(global.connect);
@@ -63,8 +60,8 @@ export default function ChatScreen({navigation}) {
         });
         connection
           .invoke('GetClientId', user?.user?.userId)
-          .then(res => {
-            console.log('ConnectionId==>', res);
+          .then(response => {
+            console.log('ConnectionId==>', response);
           })
           .catch(error => console.log('connection-err --->', error));
       });
@@ -153,8 +150,17 @@ export default function ChatScreen({navigation}) {
           onEndReached={({distanceFromEnd}) => {
             console.log(distanceFromEnd);
             if (distanceFromEnd > 0) setPage(page + 1);
-            setPageSize(pageSize + 10);
           }}
+          ListEmptyComponent={() =>
+            !isLoading && (
+              <CustomText
+                marginTop={50}
+                alignSelf={'center'}
+                color={colors.THEME_BTN}>
+                No Chat yet!
+              </CustomText>
+            )
+          }
         />
         {userMenuShow && (
           <View

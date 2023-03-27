@@ -32,7 +32,7 @@ export default StyleSheet.create({
     borderColor: colors.BORDER_COLOR,
     width: '90%',
     alignSelf: 'center',
-    height: 40,
+    height: 45,
     fontSize: 14,
     color: colors.WHITE,
     lineHeight: 22,

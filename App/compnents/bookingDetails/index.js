@@ -7,11 +7,10 @@ import CustomImage from '../customImage';
 import moment from 'moment';
 import commonStyle from '../../theme/commonStyle';
 import {useSelector} from 'react-redux';
+import { defaultpic } from '../../utils/constants';
 
 export const BookingDetails = ({modalVisible, setModalVisible}) => {
   const {user} = useSelector(state => state.authReducer);
-  const defaultpic =
-    'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
   const RowContents = ({
     iconLeft,
     titleLeft,

@@ -33,7 +33,6 @@ export default function UserChatScreen({route, navigation}) {
   const [file, setFile] = useState([]);
   const [page, setPage] = useState(1);
   const [dataLength, setDataLength] = useState(null);
-  const [pageSize, setPageSize] = useState(10);
   const [url, setUrl] = useState('');
   const [isPlusPressed, setIsPlusPressed] = useState(false);
   const latestChat = useRef(null);
@@ -41,7 +40,7 @@ export default function UserChatScreen({route, navigation}) {
   const msgListPayload = {
     chatId: route?.params?.chatId,
     page: page,
-    pageSize: pageSize,
+    pageSize: 10,
   };
   const userChatPayload = {
     senderId: user?.user?.userId,
@@ -260,7 +259,6 @@ export default function UserChatScreen({route, navigation}) {
           onEndReached={({distanceFromEnd}) => {
             console.log(distanceFromEnd);
             if (distanceFromEnd > 0) setPage(page + 1);
-            setPageSize(pageSize + 10);
           }}
           ListHeaderComponent={() => (
             <View style={{alignSelf: 'center', marginBottom: 10}}>

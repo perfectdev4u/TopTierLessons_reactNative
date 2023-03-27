@@ -41,7 +41,15 @@ export const AddSlot = ({
   const [showEndTime, setShowEndTime] = useState(false);
   const [showSlotDate, setShowSlotDate] = useState(false);
   useEffect(() => {
-    setWeek_Days(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    setWeek_Days([
+      {day: 'Mon'},
+      {day: 'Tue'},
+      {day: 'Wed'},
+      {day: 'Thu'},
+      {day: 'Fri'},
+      {day: 'Sat'},
+      {day: 'Sun'},
+    ]);
   }, []);
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -79,24 +87,23 @@ export const AddSlot = ({
     else if (day === 'Sun') return '7';
   };
   const handleAddDay = val => {
-    let newIndex = [...val];
-    let index = weekDays.findIndex(item => item === val);
+    setWeekDays([...val, val]);
+    let index = weekDays?.findIndex(item => item === val);
     if (index === -1) {
-      setWeekDays([...weekDays, newIndex]);
+      setWeekDays([...weekDays, val]);
     } else {
       let copy = [...weekDays];
       copy.splice(index, 1);
       setWeekDays(copy);
     }
   };
-  console.log(weekDays);
 
-  const setActiveDay = (index, list, setList) => {
-    let copy = [...list];
+  const setActiveDay = (index, days, setDays) => {
+    let copy = [...days];
     copy[index]['isSelected'] = copy[index]['isSelected']
       ? !copy[index]['isSelected']
       : true;
-    setList(copy);
+    setDays(copy);
   };
   return (
     <Modal
@@ -223,8 +230,8 @@ export const AddSlot = ({
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        // handleAddDay(val);
-                        //setActiveDay(index, week_Days, setWeek_Days);
+                        handleAddDay(getDayNum(val.day));
+                        setActiveDay(index, week_Days, setWeek_Days);
                       }}
                       style={{
                         flexDirection: 'row',
@@ -237,7 +244,7 @@ export const AddSlot = ({
                         }
                         marginLeft={5}
                         fontSize={14}>
-                        {val}
+                        {val.day}
                       </CustomText>
                       <Icon
                         name={'radiobox-marked'}

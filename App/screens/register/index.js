@@ -26,6 +26,9 @@ export default function Register({navigation}) {
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
   const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    userAccount(account);
+  }, [account]);
   const registerPayload = {
     email: email.trim(),
     name: name.trim(),
@@ -67,7 +70,8 @@ export default function Register({navigation}) {
     else if (!email) alert('Please fill your email.');
     else if (!isValidEmail(email)) alert('Please enter valid email.');
     else if (!phonenumber) alert('Please fill your phonenumber.');
-    else if (phonenumber.length != 10) alert('Please enter valid 10 digits phonenumber.');
+    else if (phonenumber.length != 10)
+      alert('Please enter valid 10 digits phonenumber.');
     else if (!password) alert('Please fill your password.');
     else if (password.length < 6)
       alert('Password should be more than 5 character.');
@@ -129,7 +133,6 @@ export default function Register({navigation}) {
           isShown={isDropDown}
           onSelect={() => {
             setIsDropDown(!isDropDown);
-            userAccount(account);
           }}
           data={accountType}
         />
