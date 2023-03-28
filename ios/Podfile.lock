@@ -430,6 +430,8 @@ PODS:
   - React-jsinspector (0.71.0)
   - React-logger (0.71.0):
     - glog
+  - react-native-date-picker (4.2.10):
+    - React-Core
   - react-native-document-picker (8.1.4):
     - React-Core
   - react-native-fbsdk-next (11.1.0):
@@ -654,6 +656,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
@@ -766,6 +769,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-date-picker:
+    :path: "../node_modules/react-native-date-picker"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-fbsdk-next:
@@ -889,6 +894,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 060dd495f1e2af3d87216f7ca8a94c55ec885b4f
   React-jsinspector: 5061fcbec93fd672183dfb39cc2f65e55a0835db
   React-logger: a6c0b3a807a8e81f6d7fea2e72660766f55daa50
+  react-native-date-picker: 89c419d88fa8e3c5f2d3cbae0bb7f7454ae8ea55
   react-native-document-picker: a9bd26996d1b2e4f412dd186041714c79af381d0
   react-native-fbsdk-next: c78dede90e3c50ab6936a7d56c43e1a9eb37e25a
   react-native-google-maps: f4cf51c3c6360eb4f945adc12dc89575ec3d944a
@@ -927,4 +933,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9e65a2214e2da8424b3f2e6ae62ba61c5ef76064
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

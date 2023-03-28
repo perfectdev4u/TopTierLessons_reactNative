@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {Loader} from '../../compnents/loader';
 import style from './style';
-import {goBackHandle} from '../../utils/constants';
+import {defaultpic, goBackHandle} from '../../utils/constants';
 
 export default function EditProfile({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -155,7 +155,7 @@ export default function EditProfile({navigation}) {
             <View />
             <CustomImage
               source={{
-                uri: image,
+                uri: image || defaultpic,
               }}
               style={style.profileImage}
             />

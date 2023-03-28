@@ -15,6 +15,7 @@ import style from './style';
 import {getReq} from '../../api';
 import apiUrl from '../../api/apiUrl';
 import {addUser} from '../../redux/reducers/authReducer';
+import {defaultpic} from '../../utils/constants';
 
 export default function DrawerMenu(props) {
   const {user} = useSelector(state => state.authReducer);
@@ -167,7 +168,7 @@ export default function DrawerMenu(props) {
           />
           <View style={style.imageContaioner}>
             <CustomImage
-              source={{uri: user?.userImage}}
+              source={{uri: user?.userImage || defaultpic}}
               style={{
                 height: 50,
                 width: 50,

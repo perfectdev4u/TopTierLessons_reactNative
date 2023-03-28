@@ -22,8 +22,8 @@ import style from './style';
 import {BookingDetails} from '../../compnents/bookingDetails';
 import {addUser} from '../../redux/reducers/authReducer';
 import {defaultpic, goBackHandle} from '../../utils/constants';
-import CustomButton from '../../compnents/customButton';
 import {AddReviews} from '../../compnents/addReviews';
+import CustomButton from '../../compnents/customButton';
 
 export default function Booking({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -32,7 +32,7 @@ export default function Booking({navigation}) {
   const [isActive, setIsActive] = useState(0);
   const [isBookingsList, setIsBookingsList] = useState([]);
   const [page, setPage] = useState(1);
-  const [dataLength, setDataLength] = useState(0);
+  const [dataLength, setDataLength] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewPop_Up, setReviewPop_Up] = useState(false);
   const [id, setId] = useState({
@@ -315,7 +315,7 @@ export default function Booking({navigation}) {
                 <View style={{marginTop: 20}}>
                   {dataLength === 0 ? (
                     <CustomText alignSelf={'center'} color={colors.THEME_BTN}>
-                      {'No More Data!'}
+                      {'No Data Found!'}
                     </CustomText>
                   ) : (
                     <CustomButton
@@ -328,16 +328,16 @@ export default function Booking({navigation}) {
                   )}
                 </View>
               )}
-              ListEmptyComponent={() =>
-                !isLoading && (
-                  <CustomText
-                    marginTop={50}
-                    alignSelf={'center'}
-                    color={colors.THEME_BTN}>
-                    No Booking yet!
-                  </CustomText>
-                )
-              }
+              // ListEmptyComponent={() =>
+              //   !isLoading ? (
+              //     <CustomText
+              //       marginTop={50}
+              //       alignSelf={'center'}
+              //       color={colors.THEME_BTN}>
+              //       No Booking yet!
+              //     </CustomText>
+              //   ) : null
+              // }
             />
           )}
         </View>
@@ -346,11 +346,13 @@ export default function Booking({navigation}) {
         modalVisible={isModalVisible}
         setModalVisible={setIsModalVisible}
       />
-      <AddReviews
-        modalVisible={isReviewPop_Up}
-        setModalVisible={setReviewPop_Up}
-        reciverId={id.coachId}
-      />
+      {isBookingsList.length != 0 && (
+        <AddReviews
+          modalVisible={isReviewPop_Up}
+          setModalVisible={setReviewPop_Up}
+          reciverId={id.coachId}
+        />
+      )}
     </SafeAreaView>
   );
 }

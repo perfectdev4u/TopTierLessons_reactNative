@@ -4,6 +4,7 @@ export default {
   geAllSkills: 'Admin/GetAllSkills',
   logIn: 'Auth/SignIn',
   register: 'Auth/Register',
+  VerifyEmailAddress:'Auth/VerifyEmailAddress',
   forgotPassword: 'Auth/ForgotPassword',
   changePassword: 'Auth/ChangePassword',
   resetPassword: 'Auth/ResetPassword',

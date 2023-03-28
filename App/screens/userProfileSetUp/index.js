@@ -22,32 +22,35 @@ import {Loader} from '../../compnents/loader';
 import {CommonActions} from '@react-navigation/native';
 import {defaultpic} from '../../utils/constants';
 import {addUser} from '../../redux/reducers/authReducer';
-
-let defaultFormData = [
-  {
-    name: null,
-    address: '',
-    dateOfBirth: '',
-    sportsName: 'Select Sport',
-    sportId: null,
-    skill: 'Skill Level',
-    skillLevel: 2,
-    latitude: 0,
-    longitude: 0,
-  },
-];
+import moment from 'moment';
+import DatePicker from 'react-native-date-picker';
 
 export default function UserProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(defaultFormData);
   const [image, setImage] = useState(null);
-  //const [sport, setSport] = useState({name: '', id: null});
   const [sportsList, setSportsList] = useState([]);
-  const [isSportsDropDown, setIsSportsDropDown] = useState(false);
-  const [isSkillDropDown, setIsSkillDropDown] = useState(false);
   const SkillType = ['Begginer', 'Intermidate', 'Expert'];
+  let defaultFormData = [
+    {
+      name: null,
+      address: '',
+      dateOfBirth: new Date(),
+      sportsName: 'Select Sport',
+      sportId: null,
+      skill: 'Skill Level',
+      skillLevel: 2,
+      latitude: 0,
+      longitude: 0,
+      userType: user?.user?.userType,
+      profileImage: image,
+      open: false,
+      isSportsDropDown: false,
+      isSkillDropDown: false,
+    },
+  ];
+  const [formData, setFormData] = useState(defaultFormData);
   useEffect(() => {
     getAllSports();
   }, []);
@@ -64,7 +67,7 @@ export default function UserProfileSetUp({navigation}) {
   };
 
   const updateProfilePayload = {
-    users: [...formData, {userType: user?.user?.userType, profileImage: image}],
+    users: formData,
   };
   const uploadImage = async image => {
     setIsLoading(true);
@@ -102,6 +105,7 @@ export default function UserProfileSetUp({navigation}) {
       },
       {text: 'Album', onPress: () => launchGallery(uploadImage)},
     ]);
+
   const onChangeHandler = (label, value, index) => {
     let newFormValues = [...formData];
     newFormValues[index][label] = value;
@@ -112,11 +116,18 @@ export default function UserProfileSetUp({navigation}) {
     let obj = {
       name: '',
       address: '',
-      age: '',
+      dateOfBirth: new Date(),
       sportsName: 'Select Sport',
       sportId: null,
       skill: 'Skill Level',
       skillLevel: 2,
+      latitude: 0,
+      longitude: 0,
+      userType: user?.user?.userType,
+      profileImage: image,
+      open: false,
+      isSportsDropDown: false,
+      isSkillDropDown: false,
     };
     setFormData([...formData, obj]);
   };
@@ -192,6 +203,7 @@ export default function UserProfileSetUp({navigation}) {
       )}
 
       {formData.map((item, i) => {
+        console.log(new Date());
         return (
           <View style={{flex: 1}} key={i}>
             {user?.user?.userType === 4 && (
@@ -204,29 +216,62 @@ export default function UserProfileSetUp({navigation}) {
               />
             )}
             {user?.user?.userType === 4 && (
-              <TextInputMask
-                type={'datetime'}
-                placeholder={'D.O.B (YYYY/MM/DD)'}
-                placeholderTextColor={'#D4D4D4'}
-                options={{
-                  format: 'YYYY-MM-DD',
-                }}
-                value={item.dateOfBirth}
-                onChangeText={dateOfBirth => {
-                  onChangeHandler('dateOfBirth', dateOfBirth, i);
-                }}
-                style={style.dobInput}
-              />
+              <View>
+                <CustomInput
+                  editable={false}
+                  marginTop={20}
+                  borderWidth={1}
+                  value={
+                    item.dateOfBirth === new Date()
+                      ? 'Select (D.O.B (YYYY-MM-DD))'
+                      : `${moment(item.dateOfBirth).format(
+                          'YYYY-MM-DD',
+                        )} - (D.O.B)`
+                  }
+                  // onChangeText={dateOfBirth =>
+                  //   onChangeHandler('dateOfBirth', dateOfBirth, i)
+                  // }
+                  rightComponent={
+                    <TouchableOpacity
+                      onPress={() => onChangeHandler('open', !item.open, i)}
+                      style={{marginRight: 10}}>
+                      <Icon
+                        name="calendar-month-outline"
+                        color={colors.BORDER_COLOR}
+                        size={25}
+                      />
+                    </TouchableOpacity>
+                  }
+                />
+                <DatePicker
+                  modal
+                  mode="date"
+                  open={item.open}
+                  date={item.dateOfBirth}
+                  onConfirm={dateOfBirth => {
+                    onChangeHandler('open', !item.open, i);
+                    onChangeHandler('dateOfBirth', dateOfBirth, i);
+                  }}
+                  onCancel={() => {
+                    onChangeHandler('open', !item.open, i);
+                  }}
+                />
+              </View>
             )}
             <GooglePlacesAutocomplete
               placeholder="Address"
-              onPress={(data, details = null) => {
+              onPress={(data, details) => {
                 onChangeHandler('address', data?.description, i);
-                // setFormData({
-                //   ...formData,
-                //   latitude: details?.geometry?.location?.lat,
-                //   longitude: details?.geometry?.location?.lan,
-                // });
+                onChangeHandler(
+                  'latitude',
+                  details?.geometry?.location?.lat,
+                  i,
+                );
+                onChangeHandler(
+                  'longitude',
+                  details?.geometry?.location?.lng,
+                  i,
+                );
               }}
               query={{
                 key: 'AIzaSyDx_6SY-xRPDGlQoPt8PTRbCtTHKCbiCXQ',
@@ -258,19 +303,20 @@ export default function UserProfileSetUp({navigation}) {
                 },
               }}
             />
-
             <DropDown
               marginTop={20}
-              isDropDown={isSportsDropDown}
+              isDropDown={item.isSportsDropDown}
               lable={item.sportsName}
               setLable={sportsName =>
                 onChangeHandler('sportsName', sportsName, i)
               }
-              onPress={() => setIsSportsDropDown(!isSportsDropDown)}
+              onPress={() =>
+                onChangeHandler('isSportsDropDown', !item.isSportsDropDown, i)
+              }
               isShown={false}
               onSelect
             />
-            {isSportsDropDown && (
+            {item.isSportsDropDown && (
               <View
                 style={{
                   width: '90%',
@@ -285,7 +331,11 @@ export default function UserProfileSetUp({navigation}) {
                       key={index}
                       onPress={() => {
                         //setSport({name: val.sportName, id: val.sportId});
-                        setIsSportsDropDown(!isSportsDropDown);
+                        onChangeHandler(
+                          'isSportsDropDown',
+                          !item.isSportsDropDown,
+                          i,
+                        );
                         onChangeHandler('sportsName', val.sportName, i);
                         onChangeHandler('sportId', val.sportId, i);
                       }}>
@@ -300,17 +350,18 @@ export default function UserProfileSetUp({navigation}) {
                 })}
               </View>
             )}
-
             <DropDown
               marginTop={20}
-              isDropDown={isSkillDropDown}
+              isDropDown={item.isSkillDropDown}
               lable={item.skill}
               setLable={skill => onChangeHandler('skill', skill, i)}
-              onPress={() => setIsSkillDropDown(!isSkillDropDown)}
-              isShown={isSkillDropDown}
+              onPress={() =>
+                onChangeHandler('isSkillDropDown', !item.isSkillDropDown, i)
+              }
+              isShown={item.isSkillDropDown}
               onSelect={() => {
                 //onChangeHandler('skillLevel', skillLevel, i);
-                setIsSkillDropDown(!isSkillDropDown);
+                onChangeHandler('isSkillDropDown', !item.isSkillDropDown, i);
               }}
               data={SkillType}
             />

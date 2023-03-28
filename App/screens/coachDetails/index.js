@@ -4,7 +4,7 @@ import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/Ionicons';
 import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, SafeAreaView} from 'react-native';
 import CustomImage from '../../compnents/customImage';
 import CustomText from '../../compnents/customText';
 import style from './style';
@@ -102,7 +102,7 @@ export default function CoachDetails({route, navigation}) {
     );
   };
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: 'black',
@@ -288,6 +288,6 @@ export default function CoachDetails({route, navigation}) {
         lable="Book Now"
         onPress={() => navigation.navigate(screenString.DATETIME)}
       />
-    </View>
+    </SafeAreaView>
   );
 }

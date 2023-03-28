@@ -13,12 +13,16 @@ import {isValidEmail} from '../../utils/constants';
 import {postReq} from '../../api';
 import apiUrl from '../../api/apiUrl';
 import {Loader} from '../../compnents/loader';
+import Icon from 'react-native-vector-icons/Octicons';
+import colors from '../../theme/colors';
+import {OtpVerify} from '../../compnents/otpPop_Up';
 
 export default function Register({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
@@ -26,9 +30,16 @@ export default function Register({navigation}) {
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
   const [isLoading, setIsLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [popUp, setPopUp] = useState(false);
   useEffect(() => {
     userAccount(account);
   }, [account]);
+  useEffect(() => {
+    if (user.userType === 2) {
+      if (isValidEmail(email)) handleEmailVerification();
+    }
+  }, [email]);
   const registerPayload = {
     email: email.trim(),
     name: name.trim(),
@@ -37,8 +48,25 @@ export default function Register({navigation}) {
     userType: user?.userType,
     fcmToken: '',
   };
+  const verificationPayload = {
+    email: email.trim(),
+    otp: otp,
+  };
+  const handleEmailVerification = () => {
+    postReq(
+      apiUrl.baseUrl + apiUrl.VerifyEmailAddress,
+      verificationPayload,
+      null,
+    )
+      .then(res => {
+        if (res?.data?.statusCode === 200) {
+          setPopUp(true);
+          console.log('isVerified==>', res?.data?.data);
+        }
+      })
+      .catch(err => console.log('isVerified-Err', err));
+  };
   const userAccount = type => {
-    console.log('type=>', type);
     if (type === 'My Self') dispatch(addUser({...user, userType: 3}));
     else if (type === 'My Children') dispatch(addUser({...user, userType: 4}));
     else null;
@@ -75,7 +103,10 @@ export default function Register({navigation}) {
     else if (!password) alert('Please fill your password.');
     else if (password.length < 6)
       alert('Password should be more than 5 character.');
-    else handleSignUp();
+    else if (user.userType === 2) {
+      if (isVerified !== true)
+        alert('Please Verify your email before sign up.');
+    } else handleSignUp();
   };
   return (
     <ContainerBgImage>
@@ -95,11 +126,21 @@ export default function Register({navigation}) {
         onChangeText={txt => setName(txt)}
       />
       <CustomInput
+        editable={isVerified ? false : true}
         marginTop={30}
         borderBottomWidth={1}
         placeholder={'Your Email'}
         value={email}
         onChangeText={txt => setEmail(txt)}
+        rightComponent={
+          user?.userType === 2 && (
+            <Icon
+              name={isVerified ? 'verified' : 'unverified'}
+              size={22}
+              color={isVerified ? 'green' : colors.BORDER_COLOR}
+            />
+          )
+        }
       />
       <CustomInput
         marginTop={30}
@@ -173,6 +214,14 @@ export default function Register({navigation}) {
           Log In
         </CustomText>
       </View>
+      <OtpVerify
+        modalVisible={popUp}
+        setModalVisible={setPopUp}
+        email={email}
+        otp={otp}
+        setOtp={setOtp}
+        setIsVerified={setIsVerified}
+      />
     </ContainerBgImage>
   );
 }

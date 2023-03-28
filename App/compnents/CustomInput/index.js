@@ -11,7 +11,7 @@ export default function CustomInput({
   leftComponent,
   rightComponent,
   placeholder = '',
-  placeholderTextColor="#D4D4D4",
+  placeholderTextColor = '#D4D4D4',
   value = '',
   textColor = colors.WHITE,
   marginTop = 0,
@@ -20,11 +20,11 @@ export default function CustomInput({
   borderWidth = 0,
   borderBottomWidth,
   paddingHorizontal = 0,
-  padding=8,
+  padding = 8,
   onChangeText,
   editable = true,
   multiline = false,
-  onPressIn
+  onPressIn,
 }) {
   return (
     <View
@@ -52,7 +52,7 @@ export default function CustomInput({
           justifyContent: 'center',
         }}>
         <TextInput
-        onPressIn={onPressIn&&onPressIn}
+          onPressIn={onPressIn && onPressIn}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           secureTextEntry={secureTextEntry}

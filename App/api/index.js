@@ -19,7 +19,7 @@ export const postReq = (url, data = null, accessToken = null) => {
         resolve(response);
       })
       .catch(function (error) {
-        reject(error.response.data);
+        reject(error.response);
       });
   });
 };
