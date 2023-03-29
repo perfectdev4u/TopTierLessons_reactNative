@@ -26,17 +26,17 @@ export default function Onboarding({navigation}) {
       source={Images.appBackground}
       style={commonStyle.centeredContent(colors.BLACK)}>
       <CustomText fontSize={24} lineHeight={38}>
-        TOP TIER COACHES FOR
+        I AM LOOKING FOR
       </CustomText>
-      <CustomText
+      {/* <CustomText
         marginTop={5}
         fontSize={24}
         lineHeight={38}>
         TOP TIER ATHLETES
-      </CustomText>
+      </CustomText> */}
       <CustomButton
         marginTop={46}
-        lable="Find Lessons"
+        lable="Lessons"
         onPress={() => {
           handleNavigation(screenString.LOGIN);
           dispatch(addUser({...user, userType: 3}));
@@ -44,7 +44,7 @@ export default function Onboarding({navigation}) {
       />
       <CustomButton
         marginTop={20}
-        lable="I'm student athlete"
+        lable="Coach Opportunities"
         onPress={() => {
           handleNavigation(screenString.LOGIN);
           dispatch(addUser({...user, userType: 2}));

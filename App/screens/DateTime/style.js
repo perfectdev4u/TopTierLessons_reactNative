@@ -9,6 +9,6 @@ export default StyleSheet.create({
         backgroundColor: '#D9D9D9',
         justifyContent: "center",
         alignItems: "center",
-        height:300
+        height:350
       },
 });

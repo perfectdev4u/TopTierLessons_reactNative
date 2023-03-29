@@ -100,6 +100,16 @@ export default function Reviews_Ratings({navigation}) {
           //       )}
           //     </View>
           //   )}
+          ListEmptyComponent={() =>
+            !isLoading && (
+              <CustomText
+                marginTop={50}
+                alignSelf={'center'}
+                color={colors.THEME_BTN}>
+                No Reviews yet!
+              </CustomText>
+            )
+          }
         />
       </ImageBackground>
     </SafeAreaView>

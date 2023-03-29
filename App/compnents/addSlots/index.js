@@ -267,7 +267,10 @@ export const AddSlot = ({
             lable={'Submit'}
             width={'80%'}
             alignSelf={'center'}
-            onPress={() => handleSubmitSlot()}
+            onPress={() => {
+              handleClosePopup();
+              handleSubmitSlot();
+            }}
           />
         </View>
       </View>

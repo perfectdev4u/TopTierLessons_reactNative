@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../theme/colors';
-import {View,Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import CustomText from '../../compnents/customText';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
@@ -44,12 +44,13 @@ export default function DateTime({navigation}) {
         .then(res => {
           setIsLoading(false);
           if (res?.data?.statusCode === 200) {
-            setSlots(res?.data.data);
+            console.log('Slotsss==>', res?.data.data);
+            setSlots(res?.data?.data);
           }
         })
         .catch(err => {
           setIsLoading(false);
-          console.log('_err==>', err);
+          console.log('Slot_err==>', err);
         });
     }
   };
@@ -102,22 +103,23 @@ export default function DateTime({navigation}) {
             }
           />
         </View>
+
         {!isLoading && (
           <View style={{marginTop: 30}}>
-            {slots != null ? (
-              <SlotsList
-                Arr={slots}
-                slotsBook={slotsBook}
-                setSlotsBook={setSlotsBook}
-                date={date}
-              />
-            ) : (
+            {slots === null ? (
               <CustomText
                 fontSize={20}
                 color={colors.THEME_BTN}
                 alignSelf={'center'}>
                 No Time Slots Found!
               </CustomText>
+            ) : (
+              <SlotsList
+                Arr={slots}
+                slotsBook={slotsBook}
+                setSlotsBook={setSlotsBook}
+                date={date}
+              />
             )}
           </View>
         )}

@@ -4,8 +4,9 @@ import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import CustomButton from '../../compnents/customButton';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import DropDown from '../../compnents/dropDown';
+import Check from 'react-native-vector-icons/MaterialCommunityIcons';
 import screenString from '../../navigation/screenString';
 import {useSelector, useDispatch} from 'react-redux';
 import {addUser} from '../../redux/reducers/authReducer';
@@ -27,6 +28,7 @@ export default function Register({navigation}) {
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isDropDown, setIsDropDown] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
   const [isLoading, setIsLoading] = useState(false);
@@ -178,6 +180,29 @@ export default function Register({navigation}) {
           data={accountType}
         />
       )}
+      {/* <View style={styles.terms_services}>
+        <TouchableOpacity onPress={() => setToggleCheckBox(!toggleCheckBox)}>
+          <Check
+            name={toggleCheckBox ? 'checkbox-marked' : 'checkbox-blank'}
+            color={toggleCheckBox ? colors.THEME_BTN : colors.FADED}
+            size={25}
+          />
+        </TouchableOpacity>
+        <CustomText marginLeft={10} fontSize={18} textAlign={'left'}>
+          I agree to the
+          {
+            <CustomText fontSize={18} color={colors.THEME_BTN}>
+              {''} Terms of Service
+            </CustomText>
+          }
+          {<CustomText fontSize={18}>{''} &</CustomText>}
+          {
+            <CustomText fontSize={18} color={colors.THEME_BTN}>
+              {''} Privacy Policy
+            </CustomText>
+          }
+        </CustomText>
+      </View> */}
       <CustomButton
         alignSelf={'center'}
         marginTop={40}
@@ -190,17 +215,48 @@ export default function Register({navigation}) {
         fontSize={15}
         lineHeight={20}
         color={'#E4E4E4'}>
-        By signing up you agree to our Terms of
+        By signing up you agree to our
       </CustomText>
       <CustomText
+        onPress={() =>
+          navigation.navigate(screenString.TERMS_PRIVACY, {type: 1})
+        }
+        isPressable={true}
         marginTop={5}
         alignSelf={'center'}
         fontSize={15}
         lineHeight={20}
-        color={'#E4E4E4'}>
+        color={colors.THEME_BTN}>
         {' '}
-        Use and Privacy Policy
+        Terms of Service
+        {
+          <CustomText
+            marginTop={5}
+            alignSelf={'center'}
+            fontSize={15}
+            lineHeight={20}
+            color={'#E4E4E4'}>
+            {' '}
+            &
+          </CustomText>
+        }
+        {
+          <CustomText
+            isPressable={true}
+            onPress={() =>
+              navigation.navigate(screenString.TERMS_PRIVACY, {type: 2})
+            }
+            marginTop={5}
+            alignSelf={'center'}
+            fontSize={15}
+            lineHeight={20}
+            color={colors.THEME_BTN}>
+            {' '}
+            Privacy Policy
+          </CustomText>
+        }
       </CustomText>
+
       <View style={styles.botomRow}>
         <CustomText color="#96969B" fontSize={13} lineHeight={16}>
           If you allready have an account?
@@ -227,6 +283,12 @@ export default function Register({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  terms_services: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 30,
+    width: '90%',
+  },
   botomRow: {
     flexDirection: 'row',
     justifyContent: 'center',

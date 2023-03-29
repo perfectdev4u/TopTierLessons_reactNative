@@ -20,6 +20,7 @@ import Slots from '../screens/slots';
 import Documents from '../screens/document';
 import Venues from '../screens/venues';
 import Booking from '../screens/booking';
+import Children from '../screens/children';
 import Reviews_Ratings from '../screens/reviewsRating';
 import Terms_Privacy from '../screens/terms_Privacy';
 import ChatScreen from '../screens/chatScreen';
@@ -54,12 +55,9 @@ const DrawerContainer = () => {
       <Drawer.Screen name={screenString.DOCUMENTS} component={Documents} />
       <Drawer.Screen name={screenString.VENUE} component={Venues} />
       <Drawer.Screen name={screenString.BOOKING} component={Booking} />
+      <Drawer.Screen name={screenString.CHILDREN} component={Children} />
       <Drawer.Screen name={screenString.REVIEWS} component={Reviews_Ratings} />
       <Drawer.Screen name={screenString.NEWPASSWORD} component={NewPassword} />
-      <Drawer.Screen
-        name={screenString.TERMS_PRIVACY}
-        component={Terms_Privacy}
-      />
       <Drawer.Screen name={screenString.CONTACTUS} component={ContactUs} />
     </Drawer.Navigator>
   );
@@ -70,7 +68,7 @@ export default function MainNavigationContainer() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName={ScreenString.USERPROFILESETUP}>
+      initialRouteName={ScreenString.SPLASH}>
       <Stack.Screen name={ScreenString.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenString.ONBOARDING} component={Onboarding} />
       <Stack.Screen name={ScreenString.LOGIN} component={Login} />
@@ -84,6 +82,10 @@ export default function MainNavigationContainer() {
         component={ResetPassword}
       />
       <Stack.Screen name={ScreenString.REGISTER} component={Register} />
+      <Stack.Screen
+        name={screenString.TERMS_PRIVACY}
+        component={Terms_Privacy}
+      />
       <Stack.Screen
         name={ScreenString.USERPROFILESETUP}
         component={UserProfileSetUp}

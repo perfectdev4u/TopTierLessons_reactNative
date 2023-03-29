@@ -22,6 +22,7 @@ import {Loader} from '../../compnents/loader';
 import Tags from 'react-native-tags';
 import {CommonActions} from '@react-navigation/native';
 import {addUser} from '../../redux/reducers/authReducer';
+import {defaultpic} from '../../utils/constants';
 
 export default function CoachProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -216,20 +217,16 @@ export default function CoachProfileSetUp({navigation}) {
           Set Up Profile
         </CustomText>
         <View style={style.imageContaioner}>
-          {image === null ? (
-            <CustomImage source={Images.USER} />
-          ) : (
-            <CustomImage
-              source={{uri: image}}
-              style={{
-                height: 106,
-                width: 106,
-                resizeMode: 'cover',
-                borderRadius: 100,
-                alignSelf: 'center',
-              }}
-            />
-          )}
+          <CustomImage
+            source={{uri: image || defaultpic}}
+            style={{
+              height: 106,
+              width: 106,
+              resizeMode: 'cover',
+              borderRadius: 100,
+              alignSelf: 'center',
+            }}
+          />
           <TouchableOpacity
             onPress={() => imageUpload()}
             style={style.iconContainer}>
@@ -341,7 +338,7 @@ export default function CoachProfileSetUp({navigation}) {
             {sliderValue}
           </CustomText>
         </View>
-        <DropDown
+        {/* <DropDown
           width="100%"
           marginTop={10}
           isDropDown={isVenueDropDown}
@@ -398,7 +395,7 @@ export default function CoachProfileSetUp({navigation}) {
               </View>
             ))}
           </View>
-        )}
+        )} */}
         <CustomInput
           width="100%"
           marginTop={20}
@@ -408,7 +405,7 @@ export default function CoachProfileSetUp({navigation}) {
           value={price}
           onChangeText={txt => setPrice(txt)}
         />
-        <Tags
+        {/* <Tags
           textInputProps={{
             placeholder: 'Accomplishment',
             color: 'white',
@@ -450,7 +447,7 @@ export default function CoachProfileSetUp({navigation}) {
               <CustomText>{tag}</CustomText>
             </TouchableOpacity>
           )}
-        />
+        /> */}
         <DropDown
           width="100%"
           marginTop={20}

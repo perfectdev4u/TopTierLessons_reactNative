@@ -28,25 +28,17 @@ export default function DrawerMenu(props) {
       label: 'Notifications',
       screen: screenString.NOTIFICATIONS,
     },
+    user?.user?.userType === 4 && {
+      isActive: false,
+      icon: 'human-male-child',
+      label: 'Children',
+      screen: screenString.CHILDREN,
+    },
     {
       isActive: false,
       icon: 'file-document-outline',
       label: 'Booking',
       screen: screenString.BOOKING,
-    },
-    {
-      isActive: false,
-      icon: 'alert-circle-outline',
-      label: 'Terms of Services',
-      screen: screenString.TERMS_PRIVACY,
-      type: 1,
-    },
-    {
-      isActive: false,
-      icon: 'file-document-outline',
-      label: 'Privacy Policy',
-      screen: screenString.TERMS_PRIVACY,
-      type: 2,
     },
     {
       isActive: true,
@@ -107,27 +99,13 @@ export default function DrawerMenu(props) {
     {
       isActive: false,
       icon: 'alert-circle-outline',
-      label: 'Terms of Services',
-      screen: screenString.TERMS_PRIVACY,
-      type: 1,
-    },
-    {
-      isActive: false,
-      icon: 'file-document-outline',
-      label: 'Privacy Policy',
-      screen: screenString.TERMS_PRIVACY,
-      type: 2,
-    },
-    {
-      isActive: false,
-      icon: 'alert-circle-outline',
       label: 'Contact Us',
       screen: screenString.CONTACTUS,
     },
   ];
   const [activeRoute, setActiveRoute] = useState(screenString.RESETPASSWORD);
-  const handleNavigation = (screen, params, method) =>
-    screen && navigation[method || 'navigate'](screen, params);
+  const handleNavigation = (screen, method) =>
+    screen && navigation[method || 'navigate'](screen);
   useEffect(() => {
     const {state} = props;
     const {routes, index} = state;
@@ -194,7 +172,7 @@ export default function DrawerMenu(props) {
                   {...item}
                   isActive={activeRoute === item.screen}
                   key={index}
-                  onPress={() => handleNavigation(item.screen, item.type)}
+                  onPress={() => handleNavigation(item.screen)}
                 />
               ))
             : userMenuItems?.map((item, index) => (
@@ -202,7 +180,7 @@ export default function DrawerMenu(props) {
                   {...item}
                   isActive={activeRoute === item.screen}
                   key={index}
-                  onPress={() => handleNavigation(item.screen, item.type)}
+                  onPress={() => handleNavigation(item.screen)}
                 />
               ))}
         </View>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, ScrollView, TouchableOpacity, View} from 'react-native';
 import colors from '../../theme/colors';
 import CustomText from '../customText';
 
@@ -79,7 +79,7 @@ export const SlotsList = ({Arr, slotsBook, setSlotsBook, date}) => {
       style={{marginTop: 10}}
       horizontal={true}
       showsHorizontalScrollIndicator={false}>
-      {Arr.map((val, index) => (
+      {Arr?.map((val, index) => (
         <SlotView
           val={val}
           slotsBook={slotsBook}

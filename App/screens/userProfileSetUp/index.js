@@ -203,7 +203,6 @@ export default function UserProfileSetUp({navigation}) {
       )}
 
       {formData.map((item, i) => {
-        console.log(new Date());
         return (
           <View style={{flex: 1}} key={i}>
             {user?.user?.userType === 4 && (
