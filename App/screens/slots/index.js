@@ -95,9 +95,19 @@ export default function Slots({navigation}) {
   const isValidSlot = () => {
     if (!startTime) return Alert.alert('Please select start time.');
     else if (!endTime) return Alert.alert('Please select end time.');
-    else if (group === 'Age Group')
-      return Alert.alert('Please select Age group.');
+    else if (weekDays.length === 0)
+      return Alert.alert('Please select Date / Time.');
+    // else if (group === 'Age Group')
+    //   return Alert.alert('Please select Age group.');
     else return true;
+  };
+  const handleClosePopup = () => {
+    setIsModalVisible(false);
+    setStartTime('');
+    setEndTime('');
+    // setGroup('Age Group');
+    setSlotDate('');
+    setWeekDays([]);
   };
   const handleAddSlot = () => {
     if (isValidSlot()) {
@@ -111,7 +121,7 @@ export default function Slots({navigation}) {
           if (res?.data?.statusCode === 200) {
             Alert.alert(res?.data?.returnMessage[0]);
             setIsLoading(false);
-            setIsModalVisible(false);
+            handleClosePopup();
             getAllTimeSlots();
             console.log('Addslot==>', res?.data);
           }
@@ -181,7 +191,7 @@ export default function Slots({navigation}) {
           if (res?.data?.statusCode === 200) {
             Alert.alert(res?.data?.returnMessage[0]);
             setIsLoading(false);
-            setIsModalVisible(false);
+            handleClosePopup();
             getAllTimeSlots();
             console.log('UpdateSlot==>', res?.data);
           }
@@ -339,6 +349,7 @@ export default function Slots({navigation}) {
         setSlotDate={setSlotDate}
         weekDays={weekDays}
         setWeekDays={setWeekDays}
+        handleClosePopup={handleClosePopup}
         handleSubmitSlot={type === 'edit' ? handleUpdateSlot : handleAddSlot}
       />
     </ContainerBgImage>

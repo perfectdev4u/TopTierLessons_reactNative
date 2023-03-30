@@ -80,13 +80,15 @@ export const SlotsList = ({Arr, slotsBook, setSlotsBook, date}) => {
       horizontal={true}
       showsHorizontalScrollIndicator={false}>
       {Arr?.map((val, index) => (
-        <SlotView
-          val={val}
-          slotsBook={slotsBook}
-          addedSlots={addedSlots}
-          index={index}
-          date={date}
-        />
+        <View key={index}>
+          <SlotView
+            val={val}
+            slotsBook={slotsBook}
+            addedSlots={addedSlots}
+            index={index}
+            date={date}
+          />
+        </View>
       ))}
     </ScrollView>
   );

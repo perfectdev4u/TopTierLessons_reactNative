@@ -29,6 +29,7 @@ export const AddSlot = ({
   setSlotDate,
   weekDays,
   setWeekDays,
+  handleClosePopup,
   handleSubmitSlot,
 }) => {
   const [isDropdownShow, setIsDropDownShow] = useState(false);
@@ -68,14 +69,6 @@ export const AddSlot = ({
     setShowEndTime(false);
     setEndTime(moment(currentTime).format('HH:mm:ss'));
     setEnd_Time(currentTime);
-  };
-  const handleClosePopup = () => {
-    setModalVisible(false);
-    setStartTime('');
-    setEndTime('');
-    setGroup('Age Group');
-    setSlotDate('');
-    //setWeekDays([]);
   };
   const getDayNum = day => {
     if (day === 'Mon') return '1';
@@ -178,7 +171,7 @@ export const AddSlot = ({
               onChange={onchangeEndTime}
             />
           )}
-          <DropDown
+          {/* <DropDown
             width={'90%'}
             paddingHorizontal={15}
             marginTop={20}
@@ -189,7 +182,7 @@ export const AddSlot = ({
             isShown={isDropdownShow}
             onSelect={() => setIsDropDownShow(!isDropdownShow)}
             data={ageGroop}
-          />
+          /> */}
 
           {isRecuring ? (
             <View>
@@ -267,10 +260,7 @@ export const AddSlot = ({
             lable={'Submit'}
             width={'80%'}
             alignSelf={'center'}
-            onPress={() => {
-              handleClosePopup();
-              handleSubmitSlot();
-            }}
+            onPress={() => handleSubmitSlot()}
           />
         </View>
       </View>

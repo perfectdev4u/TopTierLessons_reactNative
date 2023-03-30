@@ -24,17 +24,12 @@ export const AddChild = ({
   skill,
   setSkill,
   handleBttn,
+  handleClosePopup,
 }) => {
   const [open, setOpen] = useState(false);
   const [isSkillDropDown, setIsSkillDropDown] = useState(false);
   const SkillType = ['Begginer', 'Intermidate', 'Expert'];
-  const handleClosePopup = () => {
-    setModalVisible(false);
-    setName('');
-    setAddress('');
-    setDateOfBirth(new Date());
-    setSkill('Select Skill');
-  };
+
   return (
     // <Modal
     //   animationType="fade"
@@ -151,10 +146,7 @@ export const AddChild = ({
           lable={bttnTitle}
           width={'80%'}
           alignSelf={'center'}
-          onPress={() => {
-            handleClosePopup();
-            handleBttn();
-          }}
+          onPress={() => handleBttn()}
         />
       </View>
     </SafeAreaView>

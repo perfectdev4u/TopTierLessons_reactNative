@@ -23,6 +23,8 @@ import Tags from 'react-native-tags';
 import {CommonActions} from '@react-navigation/native';
 import {addUser} from '../../redux/reducers/authReducer';
 import {defaultpic} from '../../utils/constants';
+import commonStyle from '../../theme/commonStyle';
+import {CoachDocuments} from '../../compnents/coachDocuments';
 
 export default function CoachProfileSetUp({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -39,6 +41,8 @@ export default function CoachProfileSetUp({navigation}) {
   const [venueId, setVenueId] = useState([]);
   const [venueList, setVenueList] = useState([]);
   const [isVenueDropDown, setIsVenueDropDown] = useState(false);
+  const [roaster, setRoaster] = useState(null);
+  const [idProof, setIdProof] = useState(null);
   const [price, setPrice] = useState();
   const [skill, setSkill] = useState([]);
   const [skillId, setSkillId] = useState([]);
@@ -313,31 +317,29 @@ export default function CoachProfileSetUp({navigation}) {
           {' '}
           Radius
         </CustomText>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+        <View style={commonStyle.row('100%', 'space-between', 'center')}>
           <MultiSlider
             values={[sliderValue]}
             sliderLength={300}
             onValuesChange={SliderValuesChange}
             min={10}
-            max={100}
+            max={90}
             step={1}
             snapped={true}
             enabledTwo={true}
             containerStyle={{marginLeft: 16}}
           />
-          <CustomText
-            fontSize={18}
-            lineHeight={20}
-            color={colors.WHITE}
-            textAlign={'center'}>
+          <CustomText fontSize={15} textAlign={'center'}>
             {sliderValue}
           </CustomText>
         </View>
+        <CoachDocuments
+          idProof={idProof}
+          setIdProof={setIdProof}
+          roaster={roaster}
+          setRoaster={setRoaster}
+          setIsLoading={setIsLoading}
+        />
         {/* <DropDown
           width="100%"
           marginTop={10}

@@ -196,7 +196,7 @@ export default function Documents({navigation}) {
             alignSelf={'center'}
             onPress={handleSubmit}
           />
-          {coachDocuments.length > 0 || isLoading ? (
+          {isLoading ? (
             <View style={{flex: 1}}>
               <Loader modalVisible={isLoader} setModalVisible={setIsLoader} />
               <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>

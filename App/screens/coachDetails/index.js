@@ -36,10 +36,19 @@ export default function CoachDetails({route, navigation}) {
     page: 1,
     pageSize: 20,
   };
+  const venuesPayload = {
+    lat: user?.coachDetails?.latitude,
+    long: user?.coachDetails?.longitude,
+    radius: user?.coachDetails?.radius,
+    sportId: user?.coachDetails?.sportId,
+  };
   useEffect(() => {
     if (isActive === 2) getAllReviews();
     else getCoachDetails();
   }, [isActive]);
+  useEffect(() => {
+    getVenueList();
+  }, []);
   const getCoachDetails = () => {
     setIsLoading(true);
     postReq(
@@ -75,6 +84,19 @@ export default function CoachDetails({route, navigation}) {
         setIsLoading(false);
         console.log('getAllReviews_err==>', err);
       });
+  };
+  const getVenueList = () => {
+    postReq(
+      apiUrl.baseUrl + apiUrl.getNearVenue,
+      venuesPayload,
+      user?.access_token,
+    )
+      .then(({data}) => {
+        if (data?.statusCode === 200) {
+          dispatch(addUser({...user, coachVenue: data.data}));
+        }
+      })
+      .catch(err => console.log('err==>', err));
   };
   const bio = txt => {
     return (

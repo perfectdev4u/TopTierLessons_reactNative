@@ -85,6 +85,13 @@ export default function Children({navigation}) {
         console.log(err);
       });
   };
+  const handleClosePopup = () => {
+    setIsModalVisible(false);
+    setName('');
+    setAddress('');
+    setDateOfBirth(new Date());
+    setSkill('Select Skill');
+  };
   const deleteChild = () => {
     setIsLoading(true);
     postReq(
@@ -114,7 +121,7 @@ export default function Children({navigation}) {
       .then(res => {
         if (res?.data?.statusCode === 200) {
           setIsLoading(false);
-          console.log('getChildInfo==>', res?.data);
+          // console.log('getChildInfo==>', res?.data);
           setIsModalVisible(true);
           setName(res?.data?.data?.childName);
           setAddress({
@@ -157,7 +164,7 @@ export default function Children({navigation}) {
           if (res?.data?.statusCode === 200) {
             Alert.alert('Child added successfully');
             setIsLoading(false);
-            setIsModalVisible(false);
+            handleClosePopup();
             getUserProfile();
             console.log('Add_child==>', res?.data);
           }
@@ -181,7 +188,7 @@ export default function Children({navigation}) {
           if (res?.data?.statusCode === 200) {
             Alert.alert(res?.data?.returnMessage[0]);
             setIsLoading(false);
-            setIsModalVisible(false);
+            handleClosePopup();
             getUserProfile();
             console.log('UpdateChild==>', res?.data);
           }
@@ -313,6 +320,7 @@ export default function Children({navigation}) {
             setDateOfBirth={setDateOfBirth}
             skill={skill}
             setSkill={setSkill}
+            handleClosePopup={handleClosePopup}
             handleBttn={type === 'edit' ? handleUpdateChild : handleAddChild}
           />
         </View>

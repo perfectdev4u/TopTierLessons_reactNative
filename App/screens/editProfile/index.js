@@ -25,6 +25,7 @@ export default function EditProfile({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
   const [address, setAddress] = useState({name: '', lat: null, lan: null});
   const [sport, setSport] = useState({name: 'Select Sport', id: null});
@@ -49,6 +50,7 @@ export default function EditProfile({navigation}) {
         console.log('user-->', data.data);
         setImage(data?.data?.profileImage);
         setName(data?.data?.name);
+        setEmail(data?.data?.email);
         setPhoneNum(data?.data?.phoneNumber);
         setAddress({
           name: data?.data?.address,
@@ -56,7 +58,7 @@ export default function EditProfile({navigation}) {
           lan: data?.data?.longitude,
         });
         setSport({name: data?.data?.sportName, id: data?.data?.sportId});
-        setPrice(data?.data?.price);
+        setPrice(data?.data?.price||price);
         setBio(data?.data?.bio);
       })
       .catch(err => {
@@ -113,6 +115,7 @@ export default function EditProfile({navigation}) {
     editable = true,
     multiline = false,
     height = 22,
+    keyboardType="default"
   }) => {
     return (
       <View
@@ -132,6 +135,7 @@ export default function EditProfile({navigation}) {
           padding={0}
           placeholder={placeholder}
           value={value}
+          keyboardType={keyboardType}
           editable={editable}
           onChangeText={onChange}
           multiline={multiline}
@@ -175,12 +179,13 @@ export default function EditProfile({navigation}) {
             title="Phone Number"
             placeholder={'Phone Number'}
             value={phoneNum}
+            keyboardType={'numeric'}
             onChange={txt => setPhoneNum(txt)}
           />
           <ProfileDetailsContainer
             title="Email"
             placeholder={'Your Email'}
-            value={user?.user?.username}
+            value={user?.user?.username || email}
             editable={false}
           />
           <CustomText marginLeft={'2.5%'} marginTop={20} color="#878787">
@@ -271,6 +276,7 @@ export default function EditProfile({navigation}) {
             <ProfileDetailsContainer
               title="Price"
               placeholder={'Price'}
+              keyboardType={'numeric'}
               value={price.toString()}
               onChange={txt => setPrice(txt)}
             />

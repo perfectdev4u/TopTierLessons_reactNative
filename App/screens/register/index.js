@@ -105,9 +105,10 @@ export default function Register({navigation}) {
     else if (!password) alert('Please fill your password.');
     else if (password.length < 6)
       alert('Password should be more than 5 character.');
-    else if (user.userType === 2) {
+    else if (user?.userType === 2) {
       if (isVerified !== true)
         alert('Please Verify your email before sign up.');
+      else handleSignUp();
     } else handleSignUp();
   };
   return (

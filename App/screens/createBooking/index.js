@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import CustomHeader from '../../compnents/customHeader';
 import colors from '../../theme/colors';
-import {View, Alert, ScrollView} from 'react-native';
+import {View, Alert, ScrollView, TouchableOpacity} from 'react-native';
 import CustomText from '../../compnents/customText';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
@@ -10,6 +10,7 @@ import ContainerBgImage from '../../compnents/containerBackground';
 import {useSelector} from 'react-redux';
 import CustomButton from '../../compnents/customButton';
 import DropDown from '../../compnents/dropDown';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import style from './style';
 import moment from 'moment';
 import {PaymentInfo} from '../../compnents/paymentInfo';
@@ -18,8 +19,9 @@ export default function CreateBooking({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const [isLoading, setIsLoading] = useState(false);
   const [slotsList, setSlotList] = useState([]);
+  const [venueList, setVenueList] = useState(user?.coachVenue);
   const [venue, setVenue] = useState('Select Venue');
-  const [venueId, setVenueId] = useState('');
+  const [venueId, setVenueId] = useState(null);
   const [isVenueDropDown, setIsVenueDropDown] = useState(false);
   const [lessonTime, setLessonTime] = useState('How Long Lesson Do you Want');
   const [lessonTimeDropDown, setLessonTimeDropDown] = useState(false);
@@ -30,7 +32,7 @@ export default function CreateBooking({route, navigation}) {
     lessonsDuration: lessonTime === '30 Minutes' ? 1 : 2,
     addFriend: 0,
     coachId: 4,
-    venueId: 3,
+    venueId: venueId,
     childId: 0,
   };
   useEffect(() => {
@@ -43,6 +45,25 @@ export default function CreateBooking({route, navigation}) {
     });
     setSlotList(newData);
   };
+  // const handleAddId = val => {
+  //   let newObj = {...val.venueId, venueId: val.venueId};
+  //   let index = venueId.findIndex(item => item.venueId === val.venueId);
+  //   if (index === -1) {
+  //     setVenueId([...venueId, newObj]);
+  //   } else {
+  //     let copy = [...venueId];
+  //     copy.splice(index, 1);
+  //     setVenueId(copy);
+  //   }
+  // };
+
+  // const setActiveValue = (index, list, setList) => {
+  //   let copy = [...list];
+  //   copy[index]['isSelected'] = copy[index]['isSelected']
+  //     ? !copy[index]['isSelected']
+  //     : true;
+  //   setList(copy);
+  // };
   const onConfirm = () => {
     setIsLoading(true);
     postReq(
@@ -104,16 +125,67 @@ export default function CreateBooking({route, navigation}) {
       </ScrollView>
 
       <DropDown
-        width={'90%'}
-        marginTop={60}
+        width="90%"
+        marginTop={30}
         isDropDown={isVenueDropDown}
         lable={venue}
         setLable={setVenue}
         onPress={() => setIsVenueDropDown(!isVenueDropDown)}
-        isShown={isVenueDropDown}
-        data={[]}
-        onSelect={() => setIsVenueDropDown(!isVenueDropDown)}
+        isShown={false}
       />
+      {isVenueDropDown && (
+        <View
+          style={{
+            width: '90%',
+            marginTop: 10,
+            backgroundColor: colors.WHITE,
+            alignSelf: 'center',
+            padding: 10,
+          }}>
+          {venueList.length === 0 && (
+            <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
+              {'No venues found'}
+            </CustomText>
+          )}
+
+          {venueList?.map((val, index) => (
+            <View key={index}>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setVenue(val.name);
+                  setVenueId(val.venueId);
+                  setIsVenueDropDown(false);
+                }}>
+                <Icon
+                  name={
+                    venueId === val.venueId
+                      ? 'checkbox-marked-outline'
+                      : 'checkbox-blank-outline'
+                  }
+                  color={
+                    venueId === val.venueId ? colors.THEME_BTN : colors.BLACK
+                  }
+                  size={18}
+                />
+                <CustomText
+                  color={
+                    venueId === val.venueId ? colors.THEME_BTN : colors.BLACK
+                  }
+                  fontSize={15}
+                  marginLeft={'5%'}
+                  lineHeight={22}>
+                  {val.name}
+                </CustomText>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      )}
       <DropDown
         width={'90%'}
         marginTop={30}

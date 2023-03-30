@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../theme/colors';
-import {View, Alert} from 'react-native';
+import {View, Alert, ActivityIndicator} from 'react-native';
 import CustomText from '../../compnents/customText';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
@@ -66,7 +66,6 @@ export default function DateTime({navigation}) {
   };
   return (
     <ContainerBgImage>
-      <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
       <CustomHeader
         leftIcon={'chevron-left'}
         leftIconClick={() => navigation.goBack()}
@@ -103,7 +102,13 @@ export default function DateTime({navigation}) {
             }
           />
         </View>
-
+        {isLoading && (
+          <ActivityIndicator
+            style={{marginTop: 30}}
+            size={'small'}
+            color={colors.THEME_BTN}
+          />
+        )}
         {!isLoading && (
           <View style={{marginTop: 30}}>
             {slots === null ? (
@@ -124,14 +129,12 @@ export default function DateTime({navigation}) {
           </View>
         )}
       </View>
-      {!isLoading && (
         <CustomButton
           marginTop={100}
           alignSelf={'center'}
           lable={'Next'}
           onPress={() => onNext()}
         />
-      )}
     </ContainerBgImage>
   );
 }
