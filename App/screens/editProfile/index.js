@@ -23,6 +23,7 @@ export default function EditProfile({navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [image, setImage] = useState(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +37,27 @@ export default function EditProfile({navigation}) {
   const sports_skill_Payload = {
     page: 1,
     pageSize: 10,
+  };
+  const updateProfilePayload = {
+    users: [
+      {
+        address: address.name,
+        bio: bio,
+        userType: user?.user?.userType,
+        sportId: sport.id,
+        profileImage: image,
+        latitude: address.lat,
+        longitude: address.lan,
+        price: price,
+        //radius: sliderValue,
+        // accomplishments: tags,
+        isTaughtKids: true,
+        // pastExperience: experience,
+        //strengths: ['string'],
+        // sKills: skillId,
+      },
+    ],
+    //venueList: venueId,
   };
   useEffect(() => {
     getUserProfile();
@@ -53,12 +75,15 @@ export default function EditProfile({navigation}) {
         setEmail(data?.data?.email);
         setPhoneNum(data?.data?.phoneNumber);
         setAddress({
-          name: data?.data?.address,
+          name: data?.data?.address || data?.data?.children[0]?.address,
           lat: data?.data?.latitude,
           lan: data?.data?.longitude,
         });
-        setSport({name: data?.data?.sportName, id: data?.data?.sportId});
-        setPrice(data?.data?.price||price);
+        setSport({
+          name: data?.data?.sportName || sport.name,
+          id: data?.data?.sportId,
+        });
+        setPrice(data?.data?.price || price);
         setBio(data?.data?.bio);
       })
       .catch(err => {
@@ -115,7 +140,7 @@ export default function EditProfile({navigation}) {
     editable = true,
     multiline = false,
     height = 22,
-    keyboardType="default"
+    keyboardType = 'default',
   }) => {
     return (
       <View
@@ -143,6 +168,41 @@ export default function EditProfile({navigation}) {
       </View>
     );
   };
+  const handleConfirm = () => {
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.updateProfile,
+      updateProfilePayload,
+      user?.access_token,
+    )
+      .then(res => {
+        setIsLoading(false);
+        if (res?.status === 200) console.log(res);
+        // dispatch(
+        //   addUser({
+        //     user: res?.data?.data,
+        //   }),
+        // );
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: screenString.DRAWER}],
+          }),
+        );
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('Update_User_Err==>', err);
+        Alert.alert(err?.returnMessage[0]);
+      });
+  };
+  const isValidConfirm = () => {
+    if (!address) Alert.alert('Please fill your address.');
+    else if (!sport.id) Alert.alert('Please select sports.');
+    else if (!price) Alert.alert('Please enter your fee');
+    else if (!bio) Alert.alert('Please fill bio about yourself');
+    else handleConfirm();
+  };
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
@@ -157,25 +217,33 @@ export default function EditProfile({navigation}) {
           </CustomText>
           <View style={style.rowContents}>
             <View />
-            <CustomImage
-              source={{
-                uri: image || defaultpic,
-              }}
-              style={style.profileImage}
-            />
             <TouchableOpacity
-              onPress={() => imageUpload()}
-              style={style.iconContainer}>
-              <Icon size={20} name={'pencil'} color={colors.THEME_BTN} />
+              disabled={edit ? false : true}
+              onPress={() => imageUpload()}>
+              <CustomImage
+                source={{
+                  uri: image || defaultpic,
+                }}
+                style={style.profileImage}
+              />
             </TouchableOpacity>
+            {!edit ? (
+              <TouchableOpacity
+                onPress={() => setEdit(true)}
+                style={style.iconContainer}>
+                <Icon size={20} name={'pencil'} color={colors.THEME_BTN} />
+              </TouchableOpacity>
+            ):<View/>}
           </View>
           <ProfileDetailsContainer
+            editable={edit ? true : false}
             title="Display Name"
             placeholder={'Your Name'}
             value={name}
             onChange={txt => setName(txt)}
           />
           <ProfileDetailsContainer
+            editable={edit ? true : false}
             title="Phone Number"
             placeholder={'Phone Number'}
             value={phoneNum}
@@ -208,6 +276,7 @@ export default function EditProfile({navigation}) {
             fetchDetails={true}
             enablePoweredByContainer={false}
             textInputProps={{
+              editable: edit ? true : false,
               value: address.name,
               placeholderTextColor: '#D4D4D4',
               onChangeText: address => setAddress(address),
@@ -274,6 +343,7 @@ export default function EditProfile({navigation}) {
           )}
           {user?.user?.userType === 2 && (
             <ProfileDetailsContainer
+              editable={edit ? true : false}
               title="Price"
               placeholder={'Price'}
               keyboardType={'numeric'}
@@ -283,6 +353,7 @@ export default function EditProfile({navigation}) {
           )}
           {user?.user?.userType === 2 && (
             <ProfileDetailsContainer
+              editable={edit ? true : false}
               title="Bio"
               placeholder={'Bio'}
               value={bio}
@@ -291,13 +362,15 @@ export default function EditProfile({navigation}) {
               height={150}
             />
           )}
-          <CustomButton
-            width="80%"
-            alignSelf={'center'}
-            marginTop={50}
-            lable="Update"
-            onPress={() => Alert.alert('inProcess')}
-          />
+          {edit && (
+            <CustomButton
+              width="80%"
+              alignSelf={'center'}
+              marginTop={50}
+              lable="Update"
+              onPress={() => isValidConfirm()}
+            />
+          )}
         </View>
       )}
     </ContainerBgImage>

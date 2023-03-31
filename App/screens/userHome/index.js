@@ -8,10 +8,11 @@ import Images from '../../assets/Images';
 import FeaturedCoach from './featuredCoachPannel';
 import NearbyCoaches from './NearbyCoachesPannel';
 import {useSelector, useDispatch} from 'react-redux';
+import {Alert} from 'react-native';
 
 export default function UserHome({navigation}) {
   const {user} = useSelector(state => state.authReducer);
- // console.log(user);
+  // console.log(user);
   const [searchTxt, setSearchTxt] = useState('');
   const featuredCoach = [
     {
@@ -85,6 +86,11 @@ export default function UserHome({navigation}) {
       price: '105$',
     },
   ];
+  const handleOnpress = () => {
+    user?.user?.userType === 2
+      ? Alert.alert('In Process...')
+      : navigation.navigate(screenString.COACHDETAILS);
+  };
   return (
     <ContainerBgImage>
       <CustomHeader
@@ -104,14 +110,8 @@ export default function UserHome({navigation}) {
         onChangeText={txt => setSearchTxt(txt)}
         rightComponent={<Icon name={'search'} color={'#A5A5A5'} size={18} />}
       />
-      <FeaturedCoach
-        data={featuredCoach}
-        onPress={() => navigation.navigate(screenString.COACHDETAILS)}
-      />
-      <NearbyCoaches
-        data={nearbyCoaches}
-        onPress={() => navigation.navigate(screenString.COACHDETAILS)}
-      />
+      <FeaturedCoach data={featuredCoach} onPress={() => handleOnpress()} />
+      <NearbyCoaches data={nearbyCoaches} onPress={() => handleOnpress()} />
     </ContainerBgImage>
   );
 }

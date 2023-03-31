@@ -44,7 +44,7 @@ export default function DateTime({navigation}) {
         .then(res => {
           setIsLoading(false);
           if (res?.data?.statusCode === 200) {
-            console.log('Slotsss==>', res?.data.data);
+            //console.log('Slotsss==>', res?.data.data);
             setSlots(res?.data?.data);
           }
         })

@@ -104,7 +104,7 @@ export default function Venues({navigation}) {
             lable={'Venues'}
             rightIcon={true}
           />
-          <CustomButton
+          {/* <CustomButton
             marginTop={30}
             lable={'Add'}
             width={'25%'}
@@ -112,7 +112,7 @@ export default function Venues({navigation}) {
             alignSelf={'flex-end'}
             marginRight={'2.5%'}
             onPress={() => getVenueList()}
-          />
+          /> */}
           {isVenueList?.map((val, index) => {
             return (
               <View
@@ -152,9 +152,9 @@ export default function Venues({navigation}) {
                     </View>
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => setVenueId(val.venueId)}>
+                {/* <TouchableOpacity onPress={() => setVenueId(val.venueId)}>
                   <Icon name={'delete'} color={colors.THEME_BTN} size={35} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             );
           })}

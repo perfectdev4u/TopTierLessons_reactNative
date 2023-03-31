@@ -142,12 +142,11 @@ export default function CreateBooking({route, navigation}) {
             alignSelf: 'center',
             padding: 10,
           }}>
-          {venueList.length === 0 && (
+          {venueList === undefined && (
             <CustomText color={colors.BLACK} fontSize={15} lineHeight={22}>
               {'No venues found'}
             </CustomText>
           )}
-
           {venueList?.map((val, index) => (
             <View key={index}>
               <TouchableOpacity
