@@ -17,6 +17,7 @@ import {PaymentInfo} from '../../compnents/paymentInfo';
 let data;
 export default function CreateBooking({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
+  console.log(user?.coachVenue);
   const [isLoading, setIsLoading] = useState(false);
   const [slotsList, setSlotList] = useState([]);
   const [venueList, setVenueList] = useState(user?.coachVenue);

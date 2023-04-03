@@ -21,18 +21,12 @@ export default function DrawerMenu(props) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const userMenuItems = [
+  const [userMenuItems, setUserMenuItems] = useState([
     {
       isActive: false,
       icon: 'bell-ring-outline',
       label: 'Notifications',
       screen: screenString.NOTIFICATIONS,
-    },
-    user?.user?.userType === 4 && {
-      isActive: false,
-      icon: 'human-male-child',
-      label: 'Children',
-      screen: screenString.CHILDREN,
     },
     {
       isActive: false,
@@ -52,7 +46,7 @@ export default function DrawerMenu(props) {
       label: 'Contact Us',
       screen: screenString.CONTACTUS,
     },
-  ];
+  ]);
   const coachMenuItems = [
     {
       isActive: false,
@@ -112,6 +106,36 @@ export default function DrawerMenu(props) {
     const fousedRoute = routes[index].name;
     setActiveRoute(fousedRoute);
   }, [props]);
+  useEffect(() => {
+    if (user?.user?.userType === 4) {
+      setUserMenuItems([
+        ...userMenuItems,
+        {
+          isActive: false,
+          icon: 'human-male-child',
+          label: 'Children',
+          screen: screenString.CHILDREN,
+        },
+      ]);
+      let index = userMenuItems?.findIndex(item => item === item.label);
+      if (index === -1) {
+        setUserMenuItems([
+          ...userMenuItems,
+          {
+            isActive: false,
+            icon: 'human-male-child',
+            label: 'Children',
+            screen: screenString.CHILDREN,
+          },
+        ]);
+      } else {
+        let copy = [...userMenuItems];
+        copy.splice(index, 1);
+        setUserMenuItems(copy);
+      }
+    }
+  }, [user?.user?.userType]);
+
   useEffect(() => {
     getUserProfile();
   }, [user?.access_token]);

@@ -211,7 +211,6 @@ export default function Children({navigation}) {
             backgroundColor: '#1F1F1F',
             marginTop: 20,
             flex: 1,
-            paddingHorizontal: 5,
           },
         ]}>
         <View style={[style.colomContent]}>

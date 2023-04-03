@@ -12,11 +12,12 @@ export default StyleSheet.create({
   rowRight: {
     backgroundColor: colors.THEME_BTN,
     height: '100%',
+    //width:'100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderTopLeftRadius: 100,
     borderBottomLeftRadius: 30,
-    flex:1
+    flex:1,
   },
 });

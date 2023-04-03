@@ -130,7 +130,7 @@ export default function DateTime({navigation}) {
         )}
       </View>
         <CustomButton
-          marginTop={100}
+          marginTop={90}
           alignSelf={'center'}
           lable={'Next'}
           onPress={() => onNext()}

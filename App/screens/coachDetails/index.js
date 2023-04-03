@@ -47,7 +47,7 @@ export default function CoachDetails({route, navigation}) {
     else getCoachDetails();
   }, [isActive]);
   useEffect(() => {
-    getVenueList();
+    //getVenueList();
   }, []);
   const getCoachDetails = () => {
     setIsLoading(true);
@@ -308,7 +308,10 @@ export default function CoachDetails({route, navigation}) {
       <CustomButton
         alignSelf={'center'}
         lable="Book Now"
-        onPress={() => navigation.navigate(screenString.DATETIME)}
+        onPress={() => {
+          getVenueList();
+          navigation.navigate(screenString.DATETIME);
+        }}
       />
     </SafeAreaView>
   );
