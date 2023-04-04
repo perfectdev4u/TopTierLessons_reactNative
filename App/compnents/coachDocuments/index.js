@@ -73,7 +73,7 @@ export const CoachDocuments = ({
         } else Alert.alert('Something went wrong');
       })
       .catch(err => {
-        console.log('error==>', err);
+        console.log('Document-error==>', err);
         Alert.alert('Something went wrong');
       });
   };
@@ -189,24 +189,24 @@ export const CoachDocuments = ({
           </TouchableOpacity>
         </View>
       </View>
-      {roaster ||
-        (idProof && (
-          <View
-            style={[
-              commonStyle.row('100%', 'space-around', 'center'),
-              {
-                marginTop: 10,
-              },
-            ]}>
-            {roaster ? (
-              <Icon
-                name={'file-document-outline'}
-                size={35}
-                color={colors.THEME_BTN}
-              />
-            ) : (
-              <View></View>
-            )}
+      {roaster && idProof ? (
+        <View
+          style={[
+            commonStyle.row('100%', 'space-around', 'center'),
+            {
+              marginTop: 10,
+            },
+          ]}>
+          {roaster ? (
+            <Icon
+              name={'file-document-outline'}
+              size={35}
+              color={colors.THEME_BTN}
+            />
+          ) : (
+            <View></View>
+          )}
+          {idProof ? (
             <CustomImage
               source={{uri: idProof}}
               style={{
@@ -216,8 +216,11 @@ export const CoachDocuments = ({
                 borderRadius: 35,
               }}
             />
-          </View>
-        ))}
+          ) : (
+            <View></View>
+          )}
+        </View>
+      ) : null}
     </View>
   );
 };

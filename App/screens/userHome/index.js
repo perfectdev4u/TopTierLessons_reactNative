@@ -102,7 +102,7 @@ export default function UserHome({navigation}) {
       />
       <CustomInput
         width="95%"
-        marginTop={20}
+        marginTop={10}
         paddingHorizontal={10}
         backgroundColor={'#202020'}
         placeholder={'Search'}

@@ -7,7 +7,7 @@ import screenString from '../../navigation/screenString';
 import {useNavigation} from '@react-navigation/native';
 export default function CustomHeader({
   width = '95%',
-  height = 40,
+  height = 60,
   title = false,
   lable,
   rightIcon = false,

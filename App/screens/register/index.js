@@ -4,9 +4,8 @@ import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import CustomButton from '../../compnents/customButton';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import DropDown from '../../compnents/dropDown';
-import Check from 'react-native-vector-icons/MaterialCommunityIcons';
 import screenString from '../../navigation/screenString';
 import {useSelector, useDispatch} from 'react-redux';
 import {addUser} from '../../redux/reducers/authReducer';
@@ -17,6 +16,7 @@ import {Loader} from '../../compnents/loader';
 import Icon from 'react-native-vector-icons/Octicons';
 import colors from '../../theme/colors';
 import {OtpVerify} from '../../compnents/otpPop_Up';
+import commonStyle from '../../theme/commonStyle';
 
 export default function Register({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -28,7 +28,6 @@ export default function Register({navigation}) {
   const [password, setPassword] = useState('');
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isDropDown, setIsDropDown] = useState(false);
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [account, setAccount] = useState('I am creating this account');
   const accountType = ['My Self', 'My Children'];
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +65,11 @@ export default function Register({navigation}) {
           console.log('isVerified==>', res?.data?.data);
         }
       })
-      .catch(err => console.log('isVerified-Err', err));
+      .catch(err => {
+        console.log('isVerified-Err', err);
+        Alert.alert(err?.returnMessage[0]);
+        setOtp('');
+      });
   };
   const userAccount = type => {
     if (type === 'My Self') dispatch(addUser({...user, userType: 3}));
@@ -92,22 +95,22 @@ export default function Register({navigation}) {
       .catch(err => {
         setIsLoading(false);
         console.log('err==>', err);
-        alert(err?.returnMessage[0]);
+        Alert.alert(err?.errors?.email);
       });
   };
   const isValidSignUp = () => {
-    if (!name) alert('Please fill your full name.');
-    else if (!email) alert('Please fill your email.');
-    else if (!isValidEmail(email)) alert('Please enter valid email.');
-    else if (!phonenumber) alert('Please fill your phonenumber.');
+    if (!name) Alert.alert('Please fill your full name.');
+    else if (!email) Alert.alert('Please fill your email.');
+    else if (!isValidEmail(email)) Alert.alert('Please enter valid email.');
+    else if (!phonenumber) Alert.alert('Please fill your phonenumber.');
     else if (phonenumber.length != 10)
-      alert('Please enter valid 10 digits phonenumber.');
-    else if (!password) alert('Please fill your password.');
+      Alert.alert('Please enter valid 10 digits phonenumber.');
+    else if (!password) Alert.alert('Please fill your password.');
     else if (password.length < 6)
-      alert('Password should be more than 5 character.');
+      Alert.alert('Password should be more than 5 character.');
     else if (user?.userType === 2) {
       if (isVerified !== true)
-        alert('Please Verify your email before sign up.');
+        Alert.alert('Please Verify your email before sign up.');
       else handleSignUp();
     } else handleSignUp();
   };
@@ -181,29 +184,6 @@ export default function Register({navigation}) {
           data={accountType}
         />
       )}
-      {/* <View style={styles.terms_services}>
-        <TouchableOpacity onPress={() => setToggleCheckBox(!toggleCheckBox)}>
-          <Check
-            name={toggleCheckBox ? 'checkbox-marked' : 'checkbox-blank'}
-            color={toggleCheckBox ? colors.THEME_BTN : colors.FADED}
-            size={25}
-          />
-        </TouchableOpacity>
-        <CustomText marginLeft={10} fontSize={18} textAlign={'left'}>
-          I agree to the
-          {
-            <CustomText fontSize={18} color={colors.THEME_BTN}>
-              {''} Terms of Service
-            </CustomText>
-          }
-          {<CustomText fontSize={18}>{''} &</CustomText>}
-          {
-            <CustomText fontSize={18} color={colors.THEME_BTN}>
-              {''} Privacy Policy
-            </CustomText>
-          }
-        </CustomText>
-      </View> */}
       <CustomButton
         alignSelf={'center'}
         marginTop={40}
@@ -218,46 +198,35 @@ export default function Register({navigation}) {
         color={'#E4E4E4'}>
         By signing up you agree to our
       </CustomText>
-      <CustomText
-        onPress={() =>
-          navigation.navigate(screenString.TERMS_PRIVACY, {type: 1})
-        }
-        isPressable={true}
-        marginTop={5}
-        alignSelf={'center'}
-        fontSize={15}
-        lineHeight={20}
-        color={colors.THEME_BTN}>
-        {' '}
-        Terms of Service
-        {
-          <CustomText
-            marginTop={5}
-            alignSelf={'center'}
-            fontSize={15}
-            lineHeight={20}
-            color={'#E4E4E4'}>
-            {' '}
-            &
-          </CustomText>
-        }
-        {
-          <CustomText
-            isPressable={true}
-            onPress={() =>
-              navigation.navigate(screenString.TERMS_PRIVACY, {type: 2})
-            }
-            marginTop={5}
-            alignSelf={'center'}
-            fontSize={15}
-            lineHeight={20}
-            color={colors.THEME_BTN}>
-            {' '}
-            Privacy Policy
-          </CustomText>
-        }
-      </CustomText>
-
+      <View
+        style={[commonStyle.row('95%', 'center', 'center'), {marginTop: 5}]}>
+        <CustomText
+          onPress={() =>
+            navigation.navigate(screenString.TERMS_PRIVACY, {type: 1})
+          }
+          isPressable={true}
+          fontSize={15}
+          lineHeight={20}
+          color={colors.THEME_BTN}>
+          {' '}
+          Terms of Service
+        </CustomText>
+        <CustomText fontSize={15} lineHeight={20} color={'#E4E4E4'}>
+          {' '}
+          &
+        </CustomText>
+        <CustomText
+          isPressable={true}
+          onPress={() =>
+            navigation.navigate(screenString.TERMS_PRIVACY, {type: 2})
+          }
+          fontSize={15}
+          lineHeight={20}
+          color={colors.THEME_BTN}>
+          {' '}
+          Privacy Policy
+        </CustomText>
+      </View>
       <View style={styles.botomRow}>
         <CustomText color="#96969B" fontSize={13} lineHeight={16}>
           If you allready have an account?
@@ -275,6 +244,7 @@ export default function Register({navigation}) {
         modalVisible={popUp}
         setModalVisible={setPopUp}
         email={email}
+        setEmail={setEmail}
         otp={otp}
         setOtp={setOtp}
         setIsVerified={setIsVerified}
@@ -284,12 +254,6 @@ export default function Register({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  terms_services: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 30,
-    width: '90%',
-  },
   botomRow: {
     flexDirection: 'row',
     justifyContent: 'center',

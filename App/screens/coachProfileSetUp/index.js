@@ -317,19 +317,19 @@ export default function CoachProfileSetUp({navigation}) {
           {' '}
           Radius
         </CustomText>
-        <View style={commonStyle.row('100%', 'space-between', 'center')}>
+        <View style={[commonStyle.row('100%', 'space-between', 'center')]}>
           <MultiSlider
             values={[sliderValue]}
-            sliderLength={300}
+            sliderLength={270}
             onValuesChange={SliderValuesChange}
             min={10}
             max={90}
             step={1}
             snapped={true}
             enabledTwo={true}
-            containerStyle={{marginLeft: 16}}
+            containerStyle={{height: 30}}
           />
-          <CustomText fontSize={15} textAlign={'center'}>
+          <CustomText fontSize={15} textAlign={'right'}>
             {sliderValue}
           </CustomText>
         </View>

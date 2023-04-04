@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, TouchableOpacity, View} from 'react-native';
 import colors from '../../theme/colors';
 import CustomText from '../customText';
+import moment from 'moment';
 
 const SlotView = ({val, addedSlots, slotsBook, index, date}) => {
   const [isActive, setIsActive] = useState(false);
@@ -34,7 +35,7 @@ const SlotView = ({val, addedSlots, slotsBook, index, date}) => {
         lineHeight={18}
         color={colors.WHITE}
         textAlign={'left'}>
-        {val.entry}
+        {moment(val.entry, ['h:mm:ss']).format('hh:mm A')}
       </CustomText>
       <CustomText
         fontSize={12}
@@ -51,7 +52,7 @@ const SlotView = ({val, addedSlots, slotsBook, index, date}) => {
         lineHeight={18}
         color={colors.WHITE}
         textAlign={'left'}>
-        {val.exit}
+        {moment(val.exit, ['h:mm:ss']).format('hh:mm A')}
       </CustomText>
     </TouchableOpacity>
   );

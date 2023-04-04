@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CustomHeader from '../../compnents/customHeader';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../../theme/colors';
-import {View, Alert, ActivityIndicator} from 'react-native';
+import {View, Alert, ActivityIndicator, ScrollView} from 'react-native';
 import CustomText from '../../compnents/customText';
 import {Loader} from '../../compnents/loader';
 import apiUrl from '../../api/apiUrl';
@@ -15,6 +15,7 @@ import {SlotsList} from '../../compnents/availableSlots';
 import CustomButton from '../../compnents/customButton';
 import DropDown from '../../compnents/dropDown';
 import screenString from '../../navigation/screenString';
+import moment from 'moment';
 
 export default function DateTime({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -28,31 +29,27 @@ export default function DateTime({navigation}) {
   const availabilityPayload = {
     coachId: 4,
     date: date,
-    isRecurring: isRecurring === 'Reccuring' ? true : false,
+    // isRecurring: isRecurring === 'Reccuring' ? true : false,
   };
   const availabilityHandle = date => {
     setDate(date);
-    if (isRecurring === 'Select Slots Type')
-      Alert.alert('you have to select slot type');
-    else {
-      setIsLoading(true);
-      postReq(
-        apiUrl.baseUrl + apiUrl.checkAvailability,
-        availabilityPayload,
-        user?.access_token,
-      )
-        .then(res => {
-          setIsLoading(false);
-          if (res?.data?.statusCode === 200) {
-            //console.log('Slotsss==>', res?.data.data);
-            setSlots(res?.data?.data);
-          }
-        })
-        .catch(err => {
-          setIsLoading(false);
-          console.log('Slot_err==>', err);
-        });
-    }
+    setIsLoading(true);
+    postReq(
+      apiUrl.baseUrl + apiUrl.checkAvailability,
+      availabilityPayload,
+      user?.access_token,
+    )
+      .then(res => {
+        setIsLoading(false);
+        if (res?.data?.statusCode === 200) {
+          //console.log('Slotsss==>', res?.data.data);
+          setSlots(res?.data?.data);
+        }
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log('Slot_err==>', err);
+      });
   };
   const onNext = () => {
     if (slotsBook.length == 0) {
@@ -77,7 +74,7 @@ export default function DateTime({navigation}) {
         <CustomText marginTop={20} fontSize={20} lineHeight={25}>
           Availability
         </CustomText>
-        <DropDown
+        {/* <DropDown
           width={'100%'}
           marginTop={20}
           isDropDown={isTypeDropdown}
@@ -87,12 +84,13 @@ export default function DateTime({navigation}) {
           isShown={isTypeDropdown}
           data={type}
           onSelect={() => setIsTypeDropdown(!isTypeDropdown)}
-        />
+        /> */}
         <View style={style.calenderContainer}>
           <CalendarPicker
             selectedStartDate={date}
             selectedDayColor={colors.THEME_BTN}
             selectedDayTextColor={colors.WHITE}
+            minDate={new Date()}
             onDateChange={date => availabilityHandle(date)}
             previousComponent={
               <Icon name="chevron-left" size={30} color={colors.THEME_BTN} />
@@ -128,13 +126,44 @@ export default function DateTime({navigation}) {
             )}
           </View>
         )}
+        {slotsBook.length != 0 && (
+          <ScrollView
+            style={style.rowScroll}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}>
+            {slotsBook?.map((val, index) => {
+              return (
+                <View key={index} style={style.dateTime}>
+                  <CustomText alignSelf={'flex-start'}>
+                    Date :-{' '}
+                    {
+                      <CustomText color={colors.THEME_BTN}>
+                        {' '}
+                        {moment(val.date).format('DD-MM-YYYY')}
+                      </CustomText>
+                    }
+                  </CustomText>
+                  <CustomText alignSelf={'flex-start'} marginTop={2}>
+                    Time :-{' '}
+                    {
+                      <CustomText color={colors.THEME_BTN}>
+                        {' '}
+                        {moment(val.entry, ['h:mm:ss']).format('hh:mm A')}
+                      </CustomText>
+                    }
+                  </CustomText>
+                </View>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
-        <CustomButton
-          marginTop={90}
-          alignSelf={'center'}
-          lable={'Next'}
-          onPress={() => onNext()}
-        />
+      <CustomButton
+        marginTop={50}
+        alignSelf={'center'}
+        lable={'Next'}
+        onPress={() => onNext()}
+      />
     </ContainerBgImage>
   );
 }

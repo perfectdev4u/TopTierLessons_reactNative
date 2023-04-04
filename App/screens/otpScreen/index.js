@@ -98,9 +98,10 @@ export default function OtpScreen({route, navigation}) {
             fontSize: 18,
             color: colors.WHITE,
             fontFamily: 'Gotham Bold',
+            textAlign:"center"
           }}
           inputContainerStyles={{
-            height: 40,
+            height: 45,
             borderWidth: 2,
             borderColor: colors.BORDER_COLOR,
             width: 40,

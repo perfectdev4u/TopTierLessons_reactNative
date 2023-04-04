@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Modal} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Modal, Alert} from 'react-native';
 import CustomText from '../../compnents/customText';
 import CustomButton from '../../compnents/customButton';
 import colors from '../../theme/colors';
@@ -16,6 +16,7 @@ export const OtpVerify = ({
   otp,
   setOtp,
   setIsVerified,
+  setEmail,
 }) => {
   const [loading, setLoading] = useState(false);
   const verificationPayload = {
@@ -40,6 +41,8 @@ export const OtpVerify = ({
       .catch(err => {
         setLoading(false);
         console.log('isVerified-Otp-Err', err);
+        Alert.alert(err?.returnMessage[0]);
+        setOtp('')
       });
   };
   return (
@@ -55,7 +58,12 @@ export const OtpVerify = ({
         <View style={styles.card}>
           <View style={styles.header}>
             <CustomText>{'Enter Otp'}</CustomText>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              onPress={() => {
+                setEmail('');
+                setIsVerified(false);
+                setModalVisible(false);
+              }}>
               <Icon name={'close'} color={colors.THEME_BTN} size={25} />
             </TouchableOpacity>
           </View>
@@ -72,9 +80,10 @@ export const OtpVerify = ({
               fontSize: 18,
               color: colors.WHITE,
               fontFamily: 'Gotham Bold',
+              textAlign: 'center',
             }}
             inputContainerStyles={{
-              height: 40,
+              height: 45,
               borderWidth: 2,
               borderColor: colors.BORDER_COLOR,
               width: 40,

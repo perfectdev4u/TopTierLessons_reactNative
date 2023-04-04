@@ -15,7 +15,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import style from './style';
 import CustomImage from '../../compnents/customImage';
 import {VenuesList} from '../../compnents/addVenues';
-import {goBackHandle} from '../../utils/constants';
+import {defaultpic, goBackHandle} from '../../utils/constants';
 
 export default function Venues({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -127,7 +127,9 @@ export default function Venues({navigation}) {
                   },
                 ]}>
                 <View style={style.rowContent}>
-                  <CustomImage source={Images.USERPROFILE} />
+                  <CustomImage
+                    source={Images.USERPROFILE || {uri: defaultpic}}
+                  />
                   <View style={{marginLeft: '5%'}}>
                     <CustomText fontSize={13}>{val.name}</CustomText>
                     <View style={style.rowContent}>

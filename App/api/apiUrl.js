@@ -32,6 +32,7 @@ export default {
   uploadFile: 'User/UploadFile',
   documentUpload: 'Document/UploadDocument',
   deleteVenue: 'Venue/DeleteCoachVenue',
+  venueById: 'Venue/GetVenueById',
   previousBookings: 'Booking/GetBookingHistory',
   upcomingBookings: 'Booking/GetUpComingBookings',
   updateBookingStatus: 'Booking/UpdateBookingStatus',

@@ -18,6 +18,7 @@ import {openCamera, launchGallery} from '../../compnents/imageUpload';
 import {Loader} from '../../compnents/loader';
 import style from './style';
 import {defaultpic, goBackHandle} from '../../utils/constants';
+import {CommonActions} from '@react-navigation/native';
 
 export default function EditProfile({navigation}) {
   const {user} = useSelector(state => state.authReducer);
@@ -88,7 +89,7 @@ export default function EditProfile({navigation}) {
       })
       .catch(err => {
         setIsLoading(false);
-        console.log(err);
+        console.log('err==>', err);
       });
   };
   const getAllSports = () => {
@@ -177,18 +178,16 @@ export default function EditProfile({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200) console.log(res);
-        // dispatch(
-        //   addUser({
-        //     user: res?.data?.data,
-        //   }),
-        // );
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: screenString.DRAWER}],
-          }),
-        );
+        if (res?.status === 200) {
+          //console.log(res);
+          Alert.alert(res?.data?.returnMessage[0]);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: screenString.DRAWER}],
+            }),
+          );
+        }
       })
       .catch(err => {
         setIsLoading(false);
@@ -198,9 +197,12 @@ export default function EditProfile({navigation}) {
   };
   const isValidConfirm = () => {
     if (!address) Alert.alert('Please fill your address.');
-    else if (!sport.id) Alert.alert('Please select sports.');
-    else if (!price) Alert.alert('Please enter your fee');
-    else if (!bio) Alert.alert('Please fill bio about yourself');
+    else if (user?.user?.userType !== 4 && !sport.id)
+      Alert.alert('Please select sports.');
+    else if (user?.user?.userType === 2 && !price)
+      Alert.alert('Please enter your fee');
+    else if (user?.user?.userType === 2 && !bio)
+      Alert.alert('Please fill bio about yourself');
     else handleConfirm();
   };
   return (
@@ -233,7 +235,9 @@ export default function EditProfile({navigation}) {
                 style={style.iconContainer}>
                 <Icon size={20} name={'pencil'} color={colors.THEME_BTN} />
               </TouchableOpacity>
-            ):<View/>}
+            ) : (
+              <View />
+            )}
           </View>
           <ProfileDetailsContainer
             editable={edit ? true : false}
@@ -283,7 +287,7 @@ export default function EditProfile({navigation}) {
             }}
             styles={{
               textInput: {
-                height: 22,
+                height: 25,
                 color: colors.WHITE,
                 fontSize: 15,
                 backgroundColor: 'black',
@@ -297,12 +301,12 @@ export default function EditProfile({navigation}) {
               },
             }}
           />
-          {user?.user?.userType === 2 && (
+          {user?.user?.userType !== 4 ? (
             <CustomText marginLeft={'2.5%'} marginTop={15} color="#878787">
               Sport
             </CustomText>
-          )}
-          {user?.user?.userType === 2 && (
+          ) : null}
+          {user?.user?.userType !== 4 ? (
             <DropDown
               width="95%"
               marginTop={5}
@@ -312,7 +316,7 @@ export default function EditProfile({navigation}) {
               onPress={() => setIsSportsDropDown(!isSportsDropDown)}
               isShown={false}
             />
-          )}
+          ) : null}
           {isSportsDropDown && (
             <View
               style={{
@@ -359,7 +363,7 @@ export default function EditProfile({navigation}) {
               value={bio}
               onChange={txt => setBio(txt)}
               multiline={true}
-              height={150}
+              // height={150}
             />
           )}
           {edit && (

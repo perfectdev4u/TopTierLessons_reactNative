@@ -10,7 +10,7 @@ export const postReq = (url, data = null, accessToken = null) => {
       url,
       data,
       headers: {
-        accept: 'application/json',
+        Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json-patch+json',
       },
@@ -31,7 +31,7 @@ export const profileImageReq = (url, data = null, accessToken = null) => {
       url,
       data,
       headers: {
-        accept: 'application/json',
+        Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
         'content-type': 'multipart/form-data',
       },
@@ -51,7 +51,7 @@ export const getReq = (url, accessToken = null) => {
       method: 'GET',
       url,
       headers: {
-        accept: 'application/json',
+        Accept: 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
     })
