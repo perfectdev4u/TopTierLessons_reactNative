@@ -147,7 +147,7 @@ export default function CreateBooking({route, navigation}) {
       </ScrollView>
       <View
         style={[
-          commonStyle.row('95%', 'space-between', 'center'),
+          commonStyle.row('90%', 'space-between', 'center'),
           {
             marginTop: 20,
           },
@@ -170,7 +170,7 @@ export default function CreateBooking({route, navigation}) {
               <CustomText
                 color={isActive === index ? colors.THEME_BTN : colors.WHITE}
                 marginLeft={3}
-                fontSize={13}
+                fontSize={12}
                 textAlign={'center'}>
                 {val}
               </CustomText>
@@ -182,7 +182,7 @@ export default function CreateBooking({route, navigation}) {
       {isActive === 0 ? (
         <View>
           <DropDown
-            width="95%"
+            width="90%"
             marginTop={30}
             isDropDown={isVenueDropDown}
             lable={venue}
@@ -250,6 +250,7 @@ export default function CreateBooking({route, navigation}) {
       ) : (
         <GooglePlacesAutocomplete
           placeholder="Address"
+          listViewDisplayed={false}
           onPress={(data, details = null) => {
             setAddress({
               name: data?.description,
@@ -282,7 +283,7 @@ export default function CreateBooking({route, navigation}) {
               backgroundColor: 'black',
             },
             container: {
-              width: '95%',
+              width: '90%',
               alignSelf: 'center',
             },
           }}
@@ -290,7 +291,7 @@ export default function CreateBooking({route, navigation}) {
       )}
       {isFriend && (
         <DropDown
-          width={'95%'}
+          width={'90%'}
           marginTop={30}
           isDropDown={lessonTimeDropDown}
           lable={friendCount}
@@ -302,7 +303,7 @@ export default function CreateBooking({route, navigation}) {
         />
       )}
       <DropDown
-        width={'95%'}
+        width={'90%'}
         marginTop={30}
         isDropDown={lessonTimeDropDown}
         lable={lessonTime}

@@ -32,6 +32,7 @@ import PaymentResult from '../screens/paymentResult';
 import ContactUs from '../screens/contactUs';
 import screenString from './screenString';
 import DrawerMenu from '../compnents/DrawerMenu';
+import NoInternet from '../screens/noInternet';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const DrawerContainer = () => {
@@ -111,6 +112,7 @@ export default function MainNavigationContainer() {
         name={ScreenString.PAYMENTRESULT}
         component={PaymentResult}
       />
+      <Stack.Screen name={ScreenString.NO_INTERNET} component={NoInternet} />
     </Stack.Navigator>
   );
 }

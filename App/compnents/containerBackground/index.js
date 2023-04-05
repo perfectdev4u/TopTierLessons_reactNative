@@ -17,6 +17,7 @@ export default function ContainerBgImage({
         <KeyboardAwareScrollView
           style={commonStyle.container()}
           scrollEnabled={scrollEnabled}
+          keyboardShouldPersistTaps='always'
           showsVerticalScrollIndicator={false}>
           {ChildComponent}
         </KeyboardAwareScrollView>

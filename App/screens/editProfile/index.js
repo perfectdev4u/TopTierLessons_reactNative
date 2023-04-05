@@ -265,6 +265,7 @@ export default function EditProfile({navigation}) {
           </CustomText>
           <GooglePlacesAutocomplete
             placeholder="Address"
+            listViewDisplayed={false}
             onPress={(data, details = null) => {
               setAddress({
                 name: data?.description,

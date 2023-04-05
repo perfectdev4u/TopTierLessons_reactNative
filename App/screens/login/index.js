@@ -45,19 +45,34 @@ export default function Login({navigation}) {
     postReq(apiUrl.baseUrl + apiUrl.logIn, loginpayload)
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200)
+        if (res?.status === 200) {
           dispatch(
             addUser({
               access_token: res?.data?.data?.access_token,
               user: res?.data?.data,
             }),
           );
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: screenString.DRAWER}],
-          }),
-        );
+          if (res?.data?.data.userType === 2) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: screenString.DRAWER,
+                    params: {screen: screenString.BOOKING},
+                  },
+                ],
+              }),
+            );
+          } else {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: screenString.DRAWER}],
+              }),
+            );
+          }
+        }
       })
       .catch(err => {
         setIsLoading(false);

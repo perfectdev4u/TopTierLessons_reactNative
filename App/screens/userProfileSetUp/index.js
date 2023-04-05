@@ -25,7 +25,7 @@ import {addUser} from '../../redux/reducers/authReducer';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 
-export default function UserProfileSetUp({navigation}) {
+export default function UserProfileSetUp({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +52,6 @@ export default function UserProfileSetUp({navigation}) {
     },
   ];
   const [formData, setFormData] = useState(defaultFormData);
-  console.log(formData);
   useEffect(() => {
     getAllSports();
   }, []);
@@ -67,7 +66,6 @@ export default function UserProfileSetUp({navigation}) {
       })
       .catch(err => console.log('err==>', err));
   };
-
   const updateProfilePayload = {
     users: formData,
   };
@@ -98,7 +96,6 @@ export default function UserProfileSetUp({navigation}) {
         Alert.alert('Something went wrong');
       });
   };
-
   const imageUpload = () =>
     Alert.alert('Select Image From', '', [
       {
@@ -107,21 +104,11 @@ export default function UserProfileSetUp({navigation}) {
       },
       {text: 'Album', onPress: () => launchGallery(uploadImage)},
     ]);
-
   const onChangeHandler = (label, value, index) => {
     let newFormValues = [...formData];
     newFormValues[index][label] = value;
     setFormData(newFormValues);
   };
-  // const addAddress = () => {
-  //   let Obj = {
-  //     address: address.name,
-  //     latitude: address.lat,
-  //     longitude: address.lan,
-  //     dateOfBirth: new Date(),
-  //   };
-  //   setFormData([...formData, Obj]);
-  // };
   const addChild = () => {
     let obj = {
       name: '',
@@ -154,18 +141,21 @@ export default function UserProfileSetUp({navigation}) {
     )
       .then(res => {
         setIsLoading(false);
-        if (res?.status === 200) console.log(res?.data?.data);
-        // dispatch(
-        //   addUser({
-        //     user: res?.data?.data,
-        //   }),
-        // );
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: screenString.DRAWER}],
-          }),
-        );
+        if (res?.status === 200) {
+          //console.log(res?.data?.data);
+          dispatch(
+            addUser({
+              ...user,
+              user_address: address.name[0],
+            }),
+          );
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: screenString.DRAWER}],
+            }),
+          );
+        }
       })
       .catch(err => {
         setIsLoading(false);
@@ -188,11 +178,17 @@ export default function UserProfileSetUp({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
-      />
-      <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
+      {route?.path !== undefined && (
+        <CustomHeader
+          leftIcon={'chevron-left'}
+          leftIconClick={() => navigation.goBack()}
+        />
+      )}
+      <CustomText
+        marginTop={30}
+        fontSize={32}
+        lineHeight={38}
+        alignSelf={'center'}>
         Set Up Profile
       </CustomText>
       {user?.user?.userType === 3 && (
@@ -237,6 +233,7 @@ export default function UserProfileSetUp({navigation}) {
               {i === 0 ? (
                 <GooglePlacesAutocomplete
                   placeholder="Address"
+                  listViewDisplayed={false}
                   onPress={(data, details) => {
                     setAddress({
                       name: data?.description,

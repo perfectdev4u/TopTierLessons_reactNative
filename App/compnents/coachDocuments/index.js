@@ -19,16 +19,16 @@ export const CoachDocuments = ({
 }) => {
   const {user} = useSelector(state => state.authReducer);
   const [isRoaster, setIsRoaster] = useState(false);
-  const [documentList, setDocumentList] = useState(null);
+  const [documentList, setDocumentList] = useState([]);
   const types = ['Roaster', 'Not a Roaster'];
   const [isActive, setIsActive] = useState(0);
   const documentPayload = {
     docList: [documentList],
   };
   useEffect(() => {
-    if (documentList) uploadDocumentFile();
+    if (documentList.length >= 1) uploadDocumentFile();
   }, [documentList]);
-  //console.log(documentPayload);
+  // console.log(documentPayload);
   const getFile = async image => {
     setIsLoading(true);
     let fileUpload = new FormData();
@@ -189,7 +189,7 @@ export const CoachDocuments = ({
           </TouchableOpacity>
         </View>
       </View>
-      {roaster && idProof ? (
+      {documentList.length != 0 ? (
         <View
           style={[
             commonStyle.row('100%', 'space-around', 'center'),
@@ -206,19 +206,15 @@ export const CoachDocuments = ({
           ) : (
             <View></View>
           )}
-          {idProof ? (
-            <CustomImage
-              source={{uri: idProof}}
-              style={{
-                height: 35,
-                width: 35,
-                alignSelf: 'center',
-                borderRadius: 35,
-              }}
-            />
-          ) : (
-            <View></View>
-          )}
+          <CustomImage
+            source={{uri: idProof}}
+            style={{
+              height: 35,
+              width: 35,
+              alignSelf: 'flex-end',
+              borderRadius: 35,
+            }}
+          />
         </View>
       ) : null}
     </View>

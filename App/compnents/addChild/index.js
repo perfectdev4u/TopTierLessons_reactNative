@@ -77,6 +77,7 @@ export const AddChild = ({
         />
         <GooglePlacesAutocomplete
           placeholder="Address"
+          listViewDisplayed={false}
           onPress={(data, details = null) => {
             setAddress({
               name: data?.description,

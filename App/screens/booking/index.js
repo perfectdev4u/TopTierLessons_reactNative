@@ -35,6 +35,7 @@ export default function Booking({navigation}) {
   const [dataLength, setDataLength] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReviewPop_Up, setReviewPop_Up] = useState(false);
+  const [isNet, setIsNet] = useState(false);
   const [id, setId] = useState({
     bookingId: null,
     bookingStatus: null,
@@ -65,7 +66,6 @@ export default function Booking({navigation}) {
     else if (id.bookingId && !id.coachId && !id.bookingStatus)
       getBookingDetails();
   }, [id.coachId, id.bookingStatus, id.bookingId]);
-
   const getBookingsList = type => {
     setIsLoading(true);
     postReq(apiUrl.baseUrl + type, bookingsPayload, user?.access_token)

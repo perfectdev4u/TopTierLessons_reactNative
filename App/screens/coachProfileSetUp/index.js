@@ -26,7 +26,7 @@ import {defaultpic} from '../../utils/constants';
 import commonStyle from '../../theme/commonStyle';
 import {CoachDocuments} from '../../compnents/coachDocuments';
 
-export default function CoachProfileSetUp({navigation}) {
+export default function CoachProfileSetUp({route, navigation}) {
   const {user} = useSelector(state => state.authReducer);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -55,10 +55,10 @@ export default function CoachProfileSetUp({navigation}) {
     getAllSports();
     getAllSkills();
   }, []);
-  useEffect(() => {
-    if (address.lat && sport.id && sliderValue) getVenueList();
-    setVenue([]);
-  }, [address.lat, sport.id, sliderValue]);
+  // useEffect(() => {
+  //   if (address.lat && sport.id && sliderValue) getVenueList();
+  //   setVenue([]);
+  // }, [address.lat, sport.id, sliderValue]);
   const sports_skill_Payload = {
     page: 1,
     pageSize: 10,
@@ -94,20 +94,21 @@ export default function CoachProfileSetUp({navigation}) {
     postReq(apiUrl.baseUrl + apiUrl.getAllSports, sports_skill_Payload)
       .then(res => {
         setSportsList(res?.data?.data);
+        //console.log('sportsList==>', res?.data?.data);
       })
-      .catch(err => console.log('err==>', err));
+      .catch(err => console.log('sportsList-err==>', err));
   };
-  const getVenueList = () => {
-    postReq(
-      apiUrl.baseUrl + apiUrl.getNearVenue,
-      venuesPayload,
-      user?.access_token,
-    )
-      .then(res => {
-        setVenueList(res?.data?.data);
-      })
-      .catch(err => console.log('err==>', err));
-  };
+  // const getVenueList = () => {
+  //   postReq(
+  //     apiUrl.baseUrl + apiUrl.getNearVenue,
+  //     venuesPayload,
+  //     user?.access_token,
+  //   )
+  //     .then(res => {
+  //       setVenueList(res?.data?.data);
+  //     })
+  //     .catch(err => console.log('err==>', err));
+  // };
   const getAllSkills = () => {
     postReq(apiUrl.baseUrl + apiUrl.geAllSkills, sports_skill_Payload)
       .then(res => {
@@ -180,15 +181,21 @@ export default function CoachProfileSetUp({navigation}) {
       .then(res => {
         setIsLoading(false);
         if (res?.status === 200) console.log(res);
-        // dispatch(
-        //   addUser({
-        //     user: res?.data?.data,
-        //   }),
-        // );
+        dispatch(
+          addUser({
+            ...user,
+            coach_address: address.name,
+          }),
+        );
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{name: screenString.DRAWER}],
+            routes: [
+              {
+                name: screenString.DRAWER,
+                params: {screen: screenString.BOOKING},
+              },
+            ],
           }),
         );
       })
@@ -201,7 +208,7 @@ export default function CoachProfileSetUp({navigation}) {
   const isValidConfirm = () => {
     if (!address) Alert.alert('Please fill your address.');
     else if (!sport.id) Alert.alert('Please select sports.');
-    else if (!venue) Alert.alert('Please select venue.');
+    //else if (!venue) Alert.alert('Please select venue.');
     else if (!price) Alert.alert('Please enter your fee');
     else if (!tags) Alert.alert('Please enter accomplishment');
     else if (!skill) Alert.alert('Please enter your skills');
@@ -212,12 +219,18 @@ export default function CoachProfileSetUp({navigation}) {
   return (
     <ContainerBgImage>
       <Loader modalVisible={isLoading} setModalVisible={setIsLoading} />
-      <CustomHeader
-        leftIcon={'chevron-left'}
-        leftIconClick={() => navigation.goBack()}
-      />
+      {route?.path !== undefined && (
+        <CustomHeader
+          leftIcon={'chevron-left'}
+          leftIconClick={() => navigation.goBack()}
+        />
+      )}
       <View style={{flex: 1, paddingHorizontal: 20}}>
-        <CustomText fontSize={32} lineHeight={38} alignSelf={'center'}>
+        <CustomText
+          marginTop={30}
+          fontSize={32}
+          lineHeight={38}
+          alignSelf={'center'}>
           Set Up Profile
         </CustomText>
         <View style={style.imageContaioner}>
@@ -239,6 +252,7 @@ export default function CoachProfileSetUp({navigation}) {
         </View>
         <GooglePlacesAutocomplete
           placeholder="Address"
+          listViewDisplayed={false}
           onPress={(data, details = null) => {
             setAddress({
               name: data?.description,
