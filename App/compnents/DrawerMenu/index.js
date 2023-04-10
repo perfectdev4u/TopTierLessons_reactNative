@@ -172,21 +172,28 @@ export default function DrawerMenu(props) {
             <CustomImage
               source={{uri: user?.userImage || defaultpic}}
               style={{
-                height: 50,
-                width: 50,
-                borderRadius: 50,
+                height: 60,
+                width: 60,
+                borderRadius: 60,
                 alignSelf: 'center',
               }}
             />
             <TouchableOpacity
               onPress={() => navigation.navigate(screenString.EDITPROFILE)}
               style={style.iconContainer}>
-              <Icon size={10} name={'pencil'} color={colors.THEME_BTN} />
+              <Icon
+                size={18}
+                name={'pencil'}
+                style={{alignSelf: 'center'}}
+                color={colors.THEME_BTN}
+              />
             </TouchableOpacity>
           </View>
-          <View style={{marginLeft: 10}}>
+          <View style={{marginLeft: 5, width: '50%'}}>
             <CustomText fontSize={13}>{user?.userName}</CustomText>
-            <CustomText fontSize={10}>{user?.userEmail}</CustomText>
+            <CustomText numberOfLines={1} fontSize={10}>
+              {user?.userEmail}
+            </CustomText>
           </View>
         </View>
         <View style={[commonStyle.container(colors.BLACK), {marginTop: 35}]}>

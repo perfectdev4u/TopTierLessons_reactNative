@@ -48,7 +48,7 @@ export default function Venues({navigation}) {
       .then(({data}) => {
         setIsLoading(false);
         if (data?.statusCode === 200) {
-          console.log(data?.data);
+          //console.log(data?.data);
           setIsVenueList(data?.data?.venueList);
           setLatLan({lat: data?.data?.latitude, lan: data?.data?.longitude});
           setRadius(data?.data?.radius);
@@ -138,7 +138,10 @@ export default function Venues({navigation}) {
                         color={colors.THEME_BTN}
                         size={15}
                       />
-                      <CustomText marginLeft={3} fontSize={13}>
+                      <CustomText
+                        marginLeft={3}
+                        numberOfLines={1}
+                        fontSize={13}>
                         {val.address}
                       </CustomText>
                     </View>

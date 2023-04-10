@@ -2,27 +2,26 @@ import {StyleSheet} from 'react-native';
 import colors from '../../theme/colors';
 
 export default StyleSheet.create({
-    headerContainer:{
-        backgroundColor: colors.THEME_BTN,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 20,
-        paddingHorizontal: 8,
-    },
+  headerContainer: {
+    backgroundColor: colors.THEME_BTN,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 100,
+    width: '100%',
+  },
   imageContaioner: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
+    height: 60,
+    width: 60,
+    borderRadius: 60,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft:10
+    backgroundColor: 'red',
   },
   iconContainer: {
-    height: 15,
-    width: 15,
+    height: 25,
+    width: 25,
     borderRadius: 30,
     bottom: 0,
     right: 0,
@@ -31,5 +30,6 @@ export default StyleSheet.create({
     backgroundColor: colors.WHITE,
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'flex-end',
   },
 });

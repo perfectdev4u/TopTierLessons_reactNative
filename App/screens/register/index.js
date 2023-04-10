@@ -4,7 +4,7 @@ import CustomText from '../../compnents/customText';
 import CustomInput from '../../compnents/CustomInput';
 import PasswordEyeIcon from '../../compnents/passwordEyeIcon';
 import CustomButton from '../../compnents/customButton';
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import DropDown from '../../compnents/dropDown';
 import screenString from '../../navigation/screenString';
 import {useSelector, useDispatch} from 'react-redux';
@@ -36,11 +36,6 @@ export default function Register({navigation}) {
   useEffect(() => {
     userAccount(account);
   }, [account]);
-  useEffect(() => {
-    if (user.userType === 2) {
-      if (isValidEmail(email)) handleEmailVerification();
-    }
-  }, [email]);
   const registerPayload = {
     email: email.trim(),
     name: name.trim(),
@@ -51,24 +46,25 @@ export default function Register({navigation}) {
   };
   const verificationPayload = {
     email: email.trim(),
-    otp: otp,
+    otp: '',
   };
   const handleEmailVerification = () => {
+    if (!isValidEmail(email)) return Alert.alert('Please enter valid email.');
     postReq(
       apiUrl.baseUrl + apiUrl.VerifyEmailAddress,
       verificationPayload,
       null,
     )
       .then(res => {
-        if (res?.data?.statusCode === 200) {
-          setPopUp(true);
-          console.log('isVerified==>', res?.data?.data);
-        }
+        Alert.alert(res?.data?.returnMessage[0]);
+        if (res?.data?.returnStatus === true) setPopUp(true);
+        else setPopUp(false);
+        console.log('isVerified-Status==>', res?.data?.returnStatus);
       })
       .catch(err => {
         console.log('isVerified-Err', err);
         Alert.alert(err?.returnMessage[0]);
-        setOtp('');
+        setEmail('');
       });
   };
   const userAccount = type => {
@@ -108,10 +104,8 @@ export default function Register({navigation}) {
     else if (!password) Alert.alert('Please fill your password.');
     else if (password.length < 6)
       Alert.alert('Password should be more than 5 character.');
-    else if (user?.userType === 2) {
-      if (isVerified !== true)
-        Alert.alert('Please Verify your email before sign up.');
-      else handleSignUp();
+    else if (isVerified !== true) {
+      Alert.alert('Please Verify your email before sign up.');
     } else handleSignUp();
   };
   return (
@@ -135,17 +129,19 @@ export default function Register({navigation}) {
         editable={isVerified ? false : true}
         marginTop={30}
         borderBottomWidth={1}
-        placeholder={'Your Email'}
+        placeholder={'Your Verified Email'}
         value={email}
         onChangeText={txt => setEmail(txt)}
         rightComponent={
-          user?.userType === 2 && (
+          <TouchableOpacity
+            disabled={isVerified ? true : false}
+            onPress={handleEmailVerification}>
             <Icon
               name={isVerified ? 'verified' : 'unverified'}
               size={22}
               color={isVerified ? 'green' : colors.BORDER_COLOR}
             />
-          )
+          </TouchableOpacity>
         }
       />
       <CustomInput
@@ -232,7 +228,7 @@ export default function Register({navigation}) {
           If you allready have an account?
         </CustomText>
         <CustomText
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate(screenString.LOGIN)}
           isPressable={true}
           fontSize={13}
           lineHeight={16}>

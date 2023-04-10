@@ -5,7 +5,7 @@ import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function NearbyCoaches({data, onPress}) {
+export default function NearbyCoaches({data,onPressFilter, onPress}) {
   return (
     <View style={{flex: 1}}>
       <View
@@ -13,15 +13,10 @@ export default function NearbyCoaches({data, onPress}) {
           commonStyle.row('95%', 'space-between', 'center'),
           {marginTop: 15},
         ]}>
-        <CustomText fontSize={16}>
-          Nearby Coaches
-        </CustomText>
-        <Icon
-          name={'filter'}
-          color={colors.WHITE}
-          size={20}
-          onPress={() => alert('inprocess')}
-        />
+        <CustomText>Nearby Coaches</CustomText>
+        <TouchableOpacity onPress={onPressFilter&&onPressFilter}>
+          <Icon name={'filter'} color={colors.WHITE} size={20} />
+        </TouchableOpacity>
       </View>
       <ScrollView
         pagingEnabled={true}
@@ -49,9 +44,7 @@ export default function NearbyCoaches({data, onPress}) {
                 }}>
                 <CustomImage style={{marginLeft: 10}} source={val.img} />
                 <View style={{marginLeft: 10}}>
-                  <CustomText fontSize={13}>
-                    {val.name}
-                  </CustomText>
+                  <CustomText fontSize={13}>{val.name}</CustomText>
                   <View
                     style={{
                       justifyContent: 'flex-start',
@@ -94,12 +87,8 @@ export default function NearbyCoaches({data, onPress}) {
                   borderTopLeftRadius: 100,
                   borderBottomLeftRadius: 30,
                 }}>
-                <CustomText fontSize={10}>
-                  {val.sports}
-                </CustomText>
-                <CustomText fontSize={16}>
-                  {val.price}
-                </CustomText>
+                <CustomText fontSize={10}>{val.sports}</CustomText>
+                <CustomText fontSize={16}>{val.price}</CustomText>
               </View>
             </TouchableOpacity>
           );

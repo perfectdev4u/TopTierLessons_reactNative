@@ -23,7 +23,7 @@ export default function Splash({navigation}) {
   //     }
   //   });
   // }, []);
-  useEffect(() => {
+  useEffect(() => { 
     setTimeout(() => {
       if (user?.access_token) {
         if (user?.user?.userType === 2) {

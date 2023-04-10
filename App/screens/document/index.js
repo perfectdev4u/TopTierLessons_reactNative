@@ -31,7 +31,6 @@ export default function Documents({navigation}) {
   const [documentList, setDocumentList] = useState([]);
   const [url, setUrl] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [isLoader, setIsLoader] = useState(false);
   const documentPayload = {
     docList: [documentList],
   };
@@ -41,11 +40,13 @@ export default function Documents({navigation}) {
   const getUserProfile = () => {
     getReq(apiUrl.baseUrl + apiUrl.getUserProfile, user?.access_token)
       .then(({data}) => {
+        // console.log('data?.data==>', data?.data);
         setCoachDocuments(data?.data?.documentsList);
       })
       .catch(err => console.log(err));
   };
   const getFile = async image => {
+    setIsLoading(true);
     let fileUpload = new FormData();
     fileUpload.append('file', {
       name: image.fileName || image.name,
@@ -58,15 +59,18 @@ export default function Documents({navigation}) {
       user?.access_token,
     )
       .then(({data}) => {
+        setIsLoading(false);
         if (data?.statusCode === 200) {
           setDocumentList({
             ...documentList,
             document: data?.data?.url,
             documentType: isRoaster ? 1 : 2,
           });
+          Alert.alert('Click on Submit for Upload!');
         } else Alert.alert('Something went wrong');
       })
       .catch(err => {
+        setIsLoading(false);
         console.log('error==>', err);
         Alert.alert('Something went wrong');
       });
@@ -83,6 +87,7 @@ export default function Documents({navigation}) {
         if (data?.statusCode === 200) {
           console.log('Document-res', data);
           getUserProfile();
+          setDocumentList([]);
           Alert.alert(data?.returnMessage[0]);
         } else Alert.alert('Something went wrong');
       })
@@ -196,9 +201,8 @@ export default function Documents({navigation}) {
             alignSelf={'center'}
             onPress={handleSubmit}
           />
-          {isLoading ? (
+          {!isLoading || coachDocuments.length > 0 ? (
             <View style={{flex: 1}}>
-              <Loader modalVisible={isLoader} setModalVisible={setIsLoader} />
               <CustomText marginTop={40} alignSelf={'center'} fontSize={18}>
                 Documents List
               </CustomText>

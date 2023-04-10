@@ -123,16 +123,7 @@ export default function ChatScreen({navigation}) {
         }}>
         <TouchableOpacity
           onPress={() => setUserMenuShow(!userMenuShow)}
-          style={{
-            backgroundColor: colors.THEME_BTN,
-            alignSelf: 'flex-end',
-            marginTop: 20,
-            height: 45,
-            width: 45,
-            borderRadius: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+          style={style.userMenuIcon}>
           <Icon
             name={'account-multiple-plus-outline'}
             color={colors.WHITE}

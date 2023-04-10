@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 import screenString from '../navigation/screenString';
+import Images from '../assets/Images';
 
 export const userType = 'userType';
 export const accountType = 'accountType';
@@ -62,3 +63,76 @@ export let imgFormat = [
 ];
 export const defaultpic =
   'https://toptierlessons.s3.amazonaws.com/218f9004-7432-4ade-bcf2-dc69b21d4489_user.png';
+
+export const featuredCoach = [
+  {
+    img: Images.COACH1,
+    name: 'Bozenka Malina',
+  },
+  {img: Images.COACH2, name: 'Anastazja Ziemkowska'},
+  {img: Images.COACH1, name: 'Magdealena Pomorska'},
+  {
+    img: Images.COACH1,
+    name: 'Bozenka Malina',
+  },
+  {img: Images.COACH2, name: 'Anastazja Ziemkowska'},
+  {img: Images.COACH1, name: 'Magdealena Pomorska'},
+];
+export const nearbyCoaches = [
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+  {
+    img: Images.USERPROFILE,
+    name: 'Bozenka Malina',
+    address: 'Panjer,South Denpasar',
+    ratings: '4.5/5',
+    sports: 'Cricket',
+    price: '105$',
+  },
+];
