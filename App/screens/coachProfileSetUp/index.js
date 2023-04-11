@@ -343,7 +343,7 @@ export default function CoachProfileSetUp({route, navigation}) {
             enabledTwo={true}
             containerStyle={{height: 30}}
           />
-          <CustomText fontSize={15} textAlign={'right'}>
+          <CustomText textAlign={'right'}>
             {sliderValue}
           </CustomText>
         </View>

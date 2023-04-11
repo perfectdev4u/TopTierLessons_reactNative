@@ -12,6 +12,7 @@ export default {
   updateProfile: 'User/UpdateUserProfile',
   getUserProfile: 'User/GetUserProfile',
   getNearVenue: 'Sport/GetNearbyVenue',
+  getAllCoaches: 'Sport/GetAllCoaches',
   getCoachById: 'Sport/GetCoachById',
   getAllReviews: 'ReviewRating/GetAllReviews',
   updateChild: 'User/UpdateChild',

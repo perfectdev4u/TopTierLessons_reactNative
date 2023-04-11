@@ -166,7 +166,7 @@ export default function DrawerMenu(props) {
             size={30}
             name={'chevron-left'}
             color={colors.WHITE}
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.closeDrawer()}
           />
           <View style={style.imageContaioner}>
             <CustomImage

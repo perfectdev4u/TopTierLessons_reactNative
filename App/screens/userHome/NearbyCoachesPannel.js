@@ -5,7 +5,7 @@ import colors from '../../theme/colors';
 import commonStyle from '../../theme/commonStyle';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function NearbyCoaches({data,onPressFilter, onPress}) {
+export default function NearbyCoaches({data, onPressFilter, onPress}) {
   return (
     <View style={{flex: 1}}>
       <View
@@ -14,7 +14,14 @@ export default function NearbyCoaches({data,onPressFilter, onPress}) {
           {marginTop: 15},
         ]}>
         <CustomText>Nearby Coaches</CustomText>
-        <TouchableOpacity onPress={onPressFilter&&onPressFilter}>
+        <TouchableOpacity
+          style={{
+            height: 30,
+            width: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={onPressFilter && onPressFilter}>
           <Icon name={'filter'} color={colors.WHITE} size={20} />
         </TouchableOpacity>
       </View>
